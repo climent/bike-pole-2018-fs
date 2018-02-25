@@ -1,5 +1,4 @@
 #include "includes.h"
-// #include "led_utils.h"
 #include <FastLED.h>
 
 #ifndef EFFECT_H
@@ -17,9 +16,12 @@ public:
 class Flash : public Effect {
 public:
   Flash();
+  Flash(CRGB color);
   void Animate(CRGB leds[NUM_LEDS]);
   String Identify();
 private:
+  CRGB _color;
+  bool hasColor;
   long now;
   bool ledOn;
   long timeToFlash;
@@ -28,6 +30,10 @@ private:
   int  elevation;
   uint8_t hue;
   Leds _leds;
+  int _totalFlashes;
+  long flashTime;
+  long lastShortFlash;
+  void Initialize();
 };
 
 class Bounce : public Effect {
@@ -57,6 +63,5 @@ private:
   int _white;
   int _speed;
 };
-
 
 #endif
