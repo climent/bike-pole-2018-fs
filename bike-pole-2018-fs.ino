@@ -2,6 +2,7 @@
 #include "includes.h"
 #include "effect.h"
 #include "led_utils.h"
+#include "buttons.h"
 
 #define DATA_PIN 7
 
@@ -9,13 +10,16 @@
 // buffer 0 and 1 are for mainaining the
 CRGB leds[3][NUM_LEDS];
 
-const int intLedPin = 13;
-
-Effect* effects[] = {
+Effect *effects[] = {
   new Flash(CRGB::Red),
   new Bounce(20, 220),
   new Sparkles(80, 5, true),
 };
+
+#define PIN_UP 9
+#define PIN_DOWN 11
+
+Buttons buttons(PIN_UP, PIN_DOWN);
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
@@ -28,10 +32,10 @@ void setup()
   Serial.println("resetting");
   FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds[2], NUM_LEDS);
 
-  // pinMode(BTN_UP, INPUT_PULLUP);
-  // digitalWrite(BTN_UP, HIGH);
-  // pinMode(BTN_DW, INPUT_PULLUP);
-  // digitalWrite(BTN_DW, HIGH);
+  pinMode(PIN_UP, INPUT_PULLUP);
+  digitalWrite(PIN_UP, HIGH);
+  pinMode(PIN_DOWN, INPUT_PULLUP);
+  digitalWrite(PIN_DOWN, HIGH);
 }
 
 int percent = 0;
@@ -40,7 +44,6 @@ void loop()
   // effects[1]->Animate(leds);
   // effects[0]->Animate(leds[0]);
   // effects[2]->Animate(leds[1]);
-  effects[0]->Animate(leds[2]);
   // EVERY_N_SECONDS(1) {
   //   if (percent < 255) {
   //     percent += 5;
@@ -53,5 +56,22 @@ void loop()
   //   leds[2][i] = blend(leds[2][i], leds[0][i], 255);
   //   leds[2][i] = blend(leds[2][i], leds[1][i], 128);
   // }
+
+  effects[1]->Animate(leds[2]);
+  CheckBrightness();
   FastLED.show();
+}
+
+void CheckBrightness()
+{
+  int8_t button = buttons.Read();
+  switch (button) {
+    case 1:
+      if (briLevel < 4) briLevel += 1;
+      break;
+    case -1:
+      if (briLevel > 0) briLevel -= 1;
+      break;
+  }
+  LEDS.setBrightness(brightnessMap[briLevel]);
 }

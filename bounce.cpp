@@ -14,7 +14,7 @@ void Bounce::Animate(CRGB leds[NUM_LEDS]) {
   if (now - lastMove > _speed) {
     FadeAll(leds, _tail);
     _leds = SetPixels(position);
-    leds[_leds.o] = leds[_leds.p] = leds[_leds.q] = CHSV(hue++, 255, 80);
+    leds[_leds.o] = leds[_leds.p] = leds[_leds.q] = CHSV(hue++, 255, 255);
     // if direction == true, we are going up
     if (direction == true)
     {

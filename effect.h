@@ -34,6 +34,7 @@ private:
   long flashTime;
   long lastShortFlash;
   void Initialize();
+  void Blink(CRGB leds[NUM_LEDS]);
 };
 
 class Bounce : public Effect {
