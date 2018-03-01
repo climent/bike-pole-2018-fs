@@ -6,8 +6,11 @@
 
 class Effect {
 public:
-  virtual void Animate(CRGB leds[NUM_LEDS]);
   virtual String Identify();
+  // Animates the effect based on the timing
+  virtual void Animate(CRGB leds[NUM_LEDS]);
+  // Renders the animation into the LED array
+  virtual void Render(CRGB leds[NUM_LEDS]);
 
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
@@ -19,6 +22,7 @@ public:
   Flash(CRGB color);
   void Animate(CRGB leds[NUM_LEDS]);
   String Identify();
+  void SetColor(CRGB color);
 private:
   CRGB _color;
   bool hasColor;

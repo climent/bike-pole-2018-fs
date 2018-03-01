@@ -16,55 +16,43 @@ Effect *effects[] = {
   new Sparkles(80, 5, true),
 };
 
-#define PIN_UP 9
-#define PIN_DOWN 11
-
-Buttons buttons(PIN_UP, PIN_DOWN);
+Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
+Buttons effectButtons = Buttons(PIN_EFFECT);
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
 uint8_t brightnessMap[brightnessCount] = { 16, 32, 64, 128, 255 };
 uint8_t briLevel = 2;
+uint8_t currentEffect = 0;
+
+// Timers
+
 
 void setup()
 {
   Serial.begin(115200);
   Serial.println("resetting");
   FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds[2], NUM_LEDS);
-
-  pinMode(PIN_UP, INPUT_PULLUP);
-  digitalWrite(PIN_UP, HIGH);
-  pinMode(PIN_DOWN, INPUT_PULLUP);
-  digitalWrite(PIN_DOWN, HIGH);
 }
 
-int percent = 0;
 void loop()
 {
-  // effects[1]->Animate(leds);
-  // effects[0]->Animate(leds[0]);
-  // effects[2]->Animate(leds[1]);
-  // EVERY_N_SECONDS(1) {
-  //   if (percent < 255) {
-  //     percent += 5;
-  //   } else {
-  //     percent = 0;
-  //   }
-  // }
-  // percent = 128;
-  // for (int i = 0; i < NUM_LEDS; i++) {
-  //   leds[2][i] = blend(leds[2][i], leds[0][i], 255);
-  //   leds[2][i] = blend(leds[2][i], leds[1][i], 128);
-  // }
-
-  effects[1]->Animate(leds[2]);
+  effects[currentEffect]->Animate(leds[2]);
   CheckBrightness();
+  CheckEffect();
   FastLED.show();
 }
 
-void CheckBrightness()
-{
-  int8_t button = buttons.Read();
+void CheckEffect() {
+  int8_t button = effectButtons.Read();
+  if (button == 1) {
+    currentEffect += 1;
+    if (currentEffect > 2) currentEffect = 0;
+  }
+}
+
+void CheckBrightness() {
+  int8_t button = briButtons.Read();
   switch (button) {
     case 1:
       if (briLevel < 4) briLevel += 1;

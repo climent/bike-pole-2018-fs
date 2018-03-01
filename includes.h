@@ -3,11 +3,13 @@
 // #define DATA_PIN 7
 
 // Button pins for up and down
-#define BTN_UP 9
-#define BTN_DW 11
+#define PIN_UP 9
+#define PIN_DOWN 11
+#define PIN_EFFECT 17
 
 #ifndef STRUCTS_H
 #define STRUCTS_H
+
 /*
          o
     ############### -     ->###############

@@ -1,7 +1,6 @@
 #include "effect.h"
 
 void Flash::Initialize() {
-  now = millis();
   ledOn = false;
   timeToFlash = 2000;
   lastFlash = millis();
@@ -17,9 +16,13 @@ Flash::Flash() {
   hasColor = false;
 }
 
-Flash::Flash(CRGB color){
+Flash::Flash(CRGB color) {
   Initialize();
   hasColor = true;
+  _color = color;
+}
+
+void Flash::SetColor(CRGB color) {
   _color = color;
 }
 
