@@ -19,3 +19,7 @@ void Effect::FadeAll(CRGB leds[NUM_LEDS], int fade) {
 		leds[i].nscale8(fade);
 	}
 }
+
+bool Effect::CheckEnd() {
+	return true;
+}

@@ -64,6 +64,7 @@ public:
   Bounce(int speed, int tail);
   void Animate();
   String Identify();
+  bool CheckEnd();
 private:
   long now;
   long _speed;

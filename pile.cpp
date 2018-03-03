@@ -30,6 +30,7 @@ Pile::Pile(CRGB fColor, CRGB bColor) {
 
 void Pile::Animate() {
 	now = millis();
+  if (ended) ended = false;
 	if (now - lastMove > _speed) {
 		// FadeAll(leds, _tail);
 		_leds = SetPixels(position);

@@ -7,11 +7,12 @@ Bounce::Bounce(int speed, int tail) {
   direction = true;
   position = 0;
   _tail = tail;
-  ended = true;
+  ended = false;
 }
 
 void Bounce::Animate() {
   now = millis();
+  if (ended) ended = false;
   if (now - lastMove > _speed) {
     FadeAll(dst, _tail);
     _leds = SetPixels(position);
@@ -31,6 +32,7 @@ void Bounce::Animate() {
       {
         direction = true;
         position++;
+        ended = true;
       } else {
         position--;
       }
@@ -38,6 +40,10 @@ void Bounce::Animate() {
     // FastLED.show();
     lastMove = millis();
   }
+}
+
+bool Bounce::CheckEnd() {
+	return ended;
 }
 
 String Bounce::Identify() {

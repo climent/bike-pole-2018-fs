@@ -14,7 +14,7 @@ Effect *effects[] = {
 	new Flash(CRGB::Red),
 	new Bounce(20, 220),
 	new Sparkles(80, 5, true),
-	new Pile(CRGB::White, CRGB::White, 10),
+	new Pile(CRGB::White, CRGB::White, 2),
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
@@ -32,7 +32,7 @@ uint8_t currentEffect = 0;
 
 // Global aggressive var. If set, changing effects does not wait for completion
 bool aggressive = false;
-bool waitForNextEffect = false;
+bool waitForEffectToEnd = false;
 
 void setup() {
 	Serial.begin(115200);
@@ -51,11 +51,10 @@ void loop() {
 }
 
 void WaitForNextEffect() {
-	if (waitForNextEffect) {
-    Serial.println("Waiting for effect to finish...");
+	if (!aggressive && waitForEffectToEnd) {
 		if (effects[currentEffect]->CheckEnd()) {
       NextEffect();
-			waitForNextEffect = false;
+			waitForEffectToEnd = false;
 		}
 	}
 }
@@ -75,7 +74,7 @@ void CheckEffect() {
 		if (aggressive) {
       NextEffect();
 		} else {
-			waitForNextEffect = true;
+			waitForEffectToEnd = true;
 		}
 	}
 }
