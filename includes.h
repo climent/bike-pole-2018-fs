@@ -10,6 +10,8 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
+#define DEBUG 1
+
 /*
          o
     ############### -     ->###############

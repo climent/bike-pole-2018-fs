@@ -4,16 +4,18 @@ Sparkles::Sparkles(int amount, int speed, bool white) {
   _amount = amount;
   _white = white;
   _speed = speed;
+  ended = true;
 }
 
 Sparkles::Sparkles(int amount, bool white) {
   _amount = amount;
   _white = white;
   _speed = 20;
+  ended = true;
 }
 
-void Sparkles::Animate(CRGB leds[NUM_LEDS]) {
-  FadeAll(leds, _speed);
+void Sparkles::Animate() {
+  FadeAll(dst, _speed);
   CRGB color;
   if (random8(100) < _amount) {
     if (_white) {
@@ -21,9 +23,8 @@ void Sparkles::Animate(CRGB leds[NUM_LEDS]) {
     } else {
       color = CRGB(random8(), random8(), random8());
     }
-    leds[random8(NUM_LEDS)] = color;
+    dst[random8(NUM_LEDS)] = color;
   }
-  // FastLED.show();
 }
 
 String Sparkles::Identify() {

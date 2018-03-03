@@ -9,6 +9,7 @@ void Flash::Initialize() {
   _totalFlashes = 0;
   flashTime = 15;
   lastShortFlash = millis();
+  ended = true;
 }
 
 Flash::Flash() {
@@ -26,38 +27,37 @@ void Flash::SetColor(CRGB color) {
   _color = color;
 }
 
-void Flash::Blink(CRGB leds[NUM_LEDS]) {
+void Flash::Blink() {
   now = millis();
   if (now - lastShortFlash > flashTime){
     if (!ledOn){
       for (int i = 0; i < NUM_LEDS / 3; i++){
         _leds = SetPixels(i);
         if (hasColor){
-          leds[_leds.o] = leds[_leds.p] = leds[_leds.q] = _color;
+          dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _color;
         } else {
-          leds[_leds.o] = leds[_leds.p] = leds[_leds.q] = CHSV(hue++, 255, 80);
+          dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CHSV(hue++, 255, 80);
         }
       }
     } else {
       for (int i = 0; i < NUM_LEDS; i++){
-        leds[i] = CHSV(0, 0, 0);
+        dst[i] = CHSV(0, 0, 0);
       }
       _totalFlashes += 1;
     }
     lastShortFlash = millis();
     ledOn = !ledOn;
-    // Serial.println(_totalFlashes);
     if (_totalFlashes >= numberOfFlashes) {
       lastFlash = millis();
       _totalFlashes = 0;
     }
   }
 }
-
-void Flash::Animate(CRGB leds[NUM_LEDS]) {
+void Flash::Animate() {
   now = millis();
+  // Serial.println(now);
   if (now - lastFlash > timeToFlash) {
-    Blink(leds);
+    Blink();
   }
 }
 

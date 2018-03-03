@@ -7,14 +7,15 @@ Bounce::Bounce(int speed, int tail) {
   direction = true;
   position = 0;
   _tail = tail;
+  ended = true;
 }
 
-void Bounce::Animate(CRGB leds[NUM_LEDS]) {
+void Bounce::Animate() {
   now = millis();
   if (now - lastMove > _speed) {
-    FadeAll(leds, _tail);
+    FadeAll(dst, _tail);
     _leds = SetPixels(position);
-    leds[_leds.o] = leds[_leds.p] = leds[_leds.q] = CHSV(hue++, 255, 255);
+    dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CHSV(hue++, 255, 255);
     // if direction == true, we are going up
     if (direction == true)
     {
