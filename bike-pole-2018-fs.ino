@@ -32,13 +32,14 @@ uint8_t currentEffect = 0;
 
 // Global aggressive var. If set, changing effects does not wait for completion
 bool aggressive = false;
-bool waitForEffectToEnd = false;
+bool waitingForEffectToEnd = false;
 
 void setup() {
 	Serial.begin(115200);
 	Serial.println("resetting");
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
 		leds[2], NUM_LEDS).setCorrection(TypicalLEDStrip);;
+	FastLED.setDither(0);
 	effects[currentEffect]->SetBuffer(leds[2]);
 }
 
@@ -51,10 +52,10 @@ void loop() {
 }
 
 void WaitForNextEffect() {
-	if (!aggressive && waitForEffectToEnd) {
+	if (!aggressive && waitingForEffectToEnd) {
 		if (effects[currentEffect]->CheckEnd()) {
-      NextEffect();
-			waitForEffectToEnd = false;
+			NextEffect();
+			waitingForEffectToEnd = false;
 		}
 	}
 }
@@ -64,17 +65,17 @@ void NextEffect() {
 	if (currentEffect == numEffects) currentEffect = 0;
 	Serial.print("Changing effect to ");
 	Serial.println(effects[currentEffect]->Identify());
-  effects[currentEffect]->Reset();
-  effects[currentEffect]->SetBuffer(leds[2]);
+	effects[currentEffect]->Reset();
+	effects[currentEffect]->SetBuffer(leds[2]);
 }
 
 void CheckEffect() {
 	int8_t button = effectButtons.Read();
 	if (button == 1) {
 		if (aggressive) {
-      NextEffect();
+			NextEffect();
 		} else {
-			waitForEffectToEnd = true;
+			waitingForEffectToEnd = true;
 		}
 	}
 }

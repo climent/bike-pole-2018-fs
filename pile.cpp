@@ -4,7 +4,7 @@ void Pile::Reset() {
 	Initialize();
 }
 
-void Pile::Initialize() {
+void Pile::Init() {
 	initPile = 0;
 	height = NUM_LEDS / 3 - 1;
 	now = millis();
@@ -44,10 +44,10 @@ void Pile::Animate() {
 			position = height;
 			if (bottom == height) {
 				bottom = 0;
-				ended = true;
 			} else {
 				bottom++;
 			}
+      if (bottom == 1) ended = true;
 		} else {
 			position--;
 		}

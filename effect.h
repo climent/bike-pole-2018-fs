@@ -43,7 +43,6 @@ public:
 private:
   void Initialize();
   void Blink();
-
   CRGB _color;
   bool hasColor;
   long now;
@@ -64,8 +63,10 @@ public:
   Bounce(int speed, int tail);
   void Animate();
   String Identify();
+  void Reset();
   bool CheckEnd();
 private:
+  void Initialize();
   long now;
   long _speed;
   long lastMove;
@@ -98,7 +99,6 @@ public:
   bool CheckEnd();
 private:
   void Initialize();
-
   int _fcolor;
   int _bcolor;
   int _speed;

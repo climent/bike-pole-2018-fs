@@ -1,13 +1,17 @@
 #include "effect.h"
 
-Bounce::Bounce(int speed, int tail) {
+void Bounce::Initialize() {
   now = millis();
   lastMove = millis();
-  _speed = speed;
   direction = true;
   position = 0;
-  _tail = tail;
   ended = false;
+}
+
+Bounce::Bounce(int speed, int tail) {
+  _speed = speed;
+  _tail = tail;
+  Initialize();
 }
 
 void Bounce::Animate() {
@@ -48,4 +52,8 @@ bool Bounce::CheckEnd() {
 
 String Bounce::Identify() {
   return "bounce";
+}
+
+void Bounce::Reset() {
+  Initialize();
 }
