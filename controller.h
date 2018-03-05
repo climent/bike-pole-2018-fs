@@ -18,6 +18,7 @@ public:
   // void SetLayerEffect(effect* effect);
   bool CheckEnd();
   void Reset();
+  void SetBuffer(CRGB* dest);
 private:
   // void
   int var;

@@ -34,7 +34,7 @@ uint8_t currentEffect = 0;
 // Timers
 
 // Global aggressive var. If set, changing effects does not wait for completion
-bool aggressive = false;
+bool aggressive = true;
 bool waitingForEffectToEnd = false;
 
 void setup() {
@@ -43,8 +43,8 @@ void setup() {
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
 		leds[2], NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
-	effects[currentEffect]->SetBuffer(leds[2]);
 	controller.SetEffect(effects[currentEffect]);
+	controller.SetBuffer(leds[2]);
 }
 
 void loop() {

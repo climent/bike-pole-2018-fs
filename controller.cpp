@@ -25,3 +25,7 @@ bool Controller::CheckEnd() {
 void Controller::Reset() {
   _effect->Reset();
 }
+
+void Controller::SetBuffer(CRGB* dest) {
+  _effect->SetBuffer(dest);
+}

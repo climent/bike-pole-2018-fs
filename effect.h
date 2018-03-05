@@ -25,7 +25,7 @@ public:
 
   virtual void Reset() {};
 
-  bool CheckEnd();
+  virtual bool CheckEnd();
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
 
