@@ -1,6 +1,7 @@
 #include <FastLED.h>
 #include "includes.h"
 #include "effect.h"
+#include "controller.h"
 #include "led_utils.h"
 #include "buttons.h"
 
@@ -10,17 +11,19 @@
 // buffer 0 and 1 are for mainaining the
 CRGB leds[3][NUM_LEDS];
 
-Effect *effects[] = {
+Effect* effects[] = {
 	new Flash(CRGB::Red),
 	new Bounce(20, 220),
 	new Sparkles(80, 5, true),
 	new Pile(CRGB::White, CRGB::White, 2),
+	new Roller(CRGB::White, CRGB::White, 2),
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
 Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
 Buttons effectButtons = Buttons(PIN_EFFECT);
+Controller controller = Controller();
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
@@ -41,10 +44,12 @@ void setup() {
 		leds[2], NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
 	effects[currentEffect]->SetBuffer(leds[2]);
+	controller.SetEffect(effects[currentEffect]);
 }
 
 void loop() {
-	effects[currentEffect]->Animate();
+	// effects[currentEffect]->Animate();
+	controller.Animate();
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();
@@ -53,7 +58,7 @@ void loop() {
 
 void WaitForNextEffect() {
 	if (!aggressive && waitingForEffectToEnd) {
-		if (effects[currentEffect]->CheckEnd()) {
+		if (controller.CheckEnd()) {
 			NextEffect();
 			waitingForEffectToEnd = false;
 		}
@@ -63,9 +68,10 @@ void WaitForNextEffect() {
 void NextEffect() {
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
+	controller.SetEffect(effects[currentEffect]);
 	Serial.print("Changing effect to ");
 	Serial.println(effects[currentEffect]->Identify());
-	effects[currentEffect]->Reset();
+	controller.Reset();
 	effects[currentEffect]->SetBuffer(leds[2]);
 }
 

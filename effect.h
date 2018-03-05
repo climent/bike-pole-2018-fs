@@ -9,6 +9,7 @@ public:
   virtual String Identify();
   // Animates the effect based on the timing
   virtual void Animate();
+  void Animate(unsigned long mics);
   // Renders the animation into the LED array
   // virtual void Render(CRGB leds[NUM_LEDS]);
 
@@ -24,8 +25,7 @@ public:
 
   virtual void Reset() {};
 
-  virtual bool CheckEnd();
-
+  bool CheckEnd();
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
 
@@ -103,6 +103,28 @@ private:
   int _bcolor;
   int _speed;
   int initPile;
+  int height;
+  int now;
+  int lastMove;
+  int position;
+  Leds _leds;
+  int bottom;
+};
+
+class Roller : public Effect {
+public:
+  Roller(CRGB fColor, CRGB bColor);
+  Roller(CRGB fColor, CRGB bColor, int speed);
+  void Reset();
+  void Animate();
+  String Identify();
+  bool CheckEnd();
+private:
+  void Initialize();
+  int _fcolor;
+  int _bcolor;
+  int _speed;
+  // int initPile;
   int height;
   int now;
   int lastMove;

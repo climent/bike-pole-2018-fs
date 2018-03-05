@@ -1,11 +1,11 @@
 #include "effect.h"
 
-void Pile::Reset() {
+void Roller::Reset() {
 	Initialize();
 }
 
-void Pile::Initialize() {
-	// initPile = 0;
+void Roller::Initialize() {
+	// initRoller = 0;
 	height = NUM_LEDS / 3 - 1;
 	now = millis();
 	lastMove = millis();
@@ -14,21 +14,21 @@ void Pile::Initialize() {
 	ended = false;
 }
 
-Pile::Pile(CRGB fColor, CRGB bColor, int speed) {
+Roller::Roller(CRGB fColor, CRGB bColor, int speed) {
 	_fcolor = fColor;
 	_bcolor = bColor;
 	_speed = speed;
 	Initialize();
 }
 
-Pile::Pile(CRGB fColor, CRGB bColor) {
+Roller::Roller(CRGB fColor, CRGB bColor) {
 	_fcolor = fColor;
 	_bcolor = bColor;
 	_speed = 200;
 	Initialize();
 }
 
-void Pile::Animate() {
+void Roller::Animate() {
 	now = millis();
   if (ended) ended = false;
 	if (now - lastMove > _speed) {
@@ -55,10 +55,10 @@ void Pile::Animate() {
 	}
 }
 
-bool Pile::CheckEnd() {
+bool Roller::CheckEnd() {
 	return ended;
 }
 
-String Pile::Identify() {
-	return "pile";
+String Roller::Identify() {
+	return "Roller";
 }
