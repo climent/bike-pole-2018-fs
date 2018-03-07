@@ -13,7 +13,7 @@ void Controller::SetEffect(Effect* effect) {
   _effect = effect;
 }
 
-void Controller::Animate() {
+void Controller::Animate(unsigned long mics) {
 	// Serial.println("test");
   _effect->Animate();
 }

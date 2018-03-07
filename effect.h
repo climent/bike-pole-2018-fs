@@ -9,7 +9,7 @@ public:
   virtual String Identify();
   // Animates the effect based on the timing
   virtual void Animate();
-  void Animate(unsigned long mics);
+  virtual void Animate(unsigned long mics);
   // Renders the animation into the LED array
   // virtual void Render(CRGB leds[NUM_LEDS]);
 

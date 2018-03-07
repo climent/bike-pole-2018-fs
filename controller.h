@@ -9,7 +9,7 @@ class Controller : public Effect {
 public:
   Controller();
   String Identify();
-  void Animate();
+  void Animate(unsigned long mics);
   void SetEffect(Effect* effect);
   Effect* _effect;
   // void Animate(unsigned long mics);

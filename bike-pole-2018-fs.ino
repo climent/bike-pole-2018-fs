@@ -49,7 +49,7 @@ void setup() {
 
 void loop() {
 	// effects[currentEffect]->Animate();
-	controller.Animate();
+	controller.Animate(millis());
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();

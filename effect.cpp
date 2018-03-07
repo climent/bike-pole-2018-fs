@@ -23,3 +23,11 @@ void Effect::FadeAll(CRGB leds[NUM_LEDS], int fade) {
 bool Effect::CheckEnd() {
 	return true;
 }
+
+void Effect::Animate(unsigned long mics) {
+	// Override in inheriting classes.
+}
+
+void Effect::Animate() {
+	// Override in inheriting classes.
+}
