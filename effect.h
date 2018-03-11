@@ -32,6 +32,7 @@ public:
 
   bool waitToEnd;
   bool ended;
+  uint8_t pal; // pal index 0, 1 or 2
 };
 
 class Null : public Effect {

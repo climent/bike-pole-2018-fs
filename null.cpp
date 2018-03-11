@@ -13,6 +13,6 @@ void Reset() {
 void Animate() {
 }
 
-void Render() {
-  FadeOrClear();
-}
+// void Render() {
+//   FadeOrClear();
+// }

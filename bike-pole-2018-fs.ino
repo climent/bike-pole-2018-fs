@@ -2,7 +2,6 @@
 #include "includes.h"
 #include "effect.h"
 #include "controller.h"
-#include "led_utils.h"
 #include "buttons.h"
 
 // #ifdef MOTION

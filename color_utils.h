@@ -10,8 +10,7 @@ CHSV hsvPink = CHSV(HUE_PINK, 255, 255);
 CHSV hsvYellow = CHSV(HUE_YELLOW, 255, 255);
 
 
-void PrintColor(CRGB c)
-{
+void PrintColor(CRGB c) {
   Serial.print("color: ");
   Serial.print(c.r);
   Serial.print(", ");
@@ -20,14 +19,16 @@ void PrintColor(CRGB c)
   Serial.println(c.b);
 }
 
-void PrintColor(CHSV c)
-{
-  Serial.print("hsvcolor: "); Serial.print(c.h); Serial.print(", "); Serial.print(c.s); Serial.print(", "); Serial.println(c.v);
+void PrintColor(CHSV c) {
+  Serial.print("hsvcolor: ");
+  Serial.print(c.h);
+  Serial.print(", ");
+  Serial.print(c.s);
+  Serial.print(", ");
+  Serial.println(c.v);
 }
 
-
-void CheckColor(float r, float g, float b)
-{
+void CheckColor(float r, float g, float b) {
   if (r < 0 || r > 255.0f)
   {
     Serial.print("Bad r value: "); Serial.println(r);
@@ -42,14 +43,11 @@ void CheckColor(float r, float g, float b)
   }
 }
 
-
-CRGB randomcolor()
-{
+CRGB randomcolor() {
   return CRGB(random(0, 256), random(0, 256), random(0, 256));
 }
 
-CHSV randomhsv()
-{
+CHSV randomhsv() {
   return CHSV(random(0, 256), random(0, 256), random(0, 256));
 }
 
@@ -68,7 +66,8 @@ CHSV randomhsv()
   \param fV Hue component, used as output, range: [0, 1]
 
 */
-void RGBtoHSV(float& fR, float& fG, float& fB, float& fH, float& fS, float& fV) {
+void RGBtoHSV(float& fR, float& fG, float& fB,
+              float& fH, float& fS, float& fV) {
   float fCMax = max(max(fR, fG), fB);
   float fCMin = min(min(fR, fG), fB);
   float fDelta = fCMax - fCMin;
@@ -100,8 +99,7 @@ void RGBtoHSV(float& fR, float& fG, float& fB, float& fH, float& fS, float& fV) 
   }
 }
 
-CHSV rgb2hsv(CRGB &in)
-{
+CHSV rgb2hsv(CRGB &in) {
   float r = (float)in.r / 255.0f;
   float g = (float)in.g / 255.0f;
   float b = (float)in.b / 255.0f;

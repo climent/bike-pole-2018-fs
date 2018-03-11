@@ -116,8 +116,7 @@ void Noise::FillNoise8() {
 
 void Noise::MapNoiseToLEDsUsingPalette()
 {
-  for (int i= 0;i<NUM_LEDS; i++)
-  {
+  for (int i = 0; i < NUM_LEDS; i++) {
     // Each led has a height and width that we can use to find the best render value
     int y = (int)(GetHeight(i) * kMatrixHeight) % MAX_DIMENSION;
     int x = ((int)(GetAngle(i) * kMatrixWidth) + (y/4)) % MAX_DIMENSION;
@@ -129,19 +128,19 @@ void Noise::MapNoiseToLEDsUsingPalette()
     uint8_t index = noise[x][y];
     uint8_t bri =   noise[y][x];
 
-
     // brighten up, as the color palette itself often contains the
     // light/dark dynamic range desired
     if( bri > 127 ) {
       bri = 255;
     } else {
-      bri = dim8_raw( bri * 2);
+      bri = dim8_raw(bri * 2);
     }
 
     index += startIndex;
     CRGB c = finalPalette[pal][index];
     c.nscale8(bri);
-    SetPixel(i,c);
+    // SetPixel(i,c);
+    dst[i] = c;
   }
   startIndex++;
 }

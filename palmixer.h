@@ -13,8 +13,7 @@ class palmixer
   float deltaFade[3]; // amount to fade per second
   bool active[3] = {false,false,false}; // are we currently animating anything?
   fract8 fraction[3];
-  
-  
+
   void Animate(float dt)
   {
     for (int i=0; i<3; i++)
@@ -41,7 +40,7 @@ class palmixer
       }
     }
   }
-  
+
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds)
   {
   	//Serial.printf("Set new palette: %d\n", newPal);
@@ -67,7 +66,7 @@ class palmixer
     deltaFade[whichSlot] = 1.0f/seconds;
     active[whichSlot] = true;
   }
-  
+
 } palmixer;
 
 #endif
