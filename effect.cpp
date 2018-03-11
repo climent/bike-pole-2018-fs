@@ -31,3 +31,14 @@ void Effect::Animate(unsigned long mics) {
 void Effect::Animate() {
 	// Override in inheriting classes.
 }
+
+void Effect::FadeOrClear() {
+  // if (clearmode == kClear) {
+  //   Blackout(dst);
+  // } else {
+  //   for (int i = 0; i < NUM_LEDS; i++)
+  //   {
+  //     dst[i].nscale8(fadeunits);
+  //   }
+  // }
+}

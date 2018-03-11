@@ -7,11 +7,16 @@
 
 class Controller : public Effect {
 public:
-  Controller();
+  Controller(CRGB* baseLeds, CRGB* layerLeds);
   String Identify();
   void Animate(unsigned long mics);
   void SetEffect(Effect* effect);
-  Effect* _effect;
+  void SetBaseEffect(Effect* effect);
+  void SetLayerEffect(Effect* effect);
+  Effect* baseEffect;
+  Effect* layerEffect;
+  CRGB* base;
+  CRGB* layer;
   // void Animate(unsigned long mics);
   // void SetEffect(Effect* effect);
   // void SetBaseEffect(effect* effect);

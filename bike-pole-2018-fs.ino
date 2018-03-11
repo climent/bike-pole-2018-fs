@@ -14,6 +14,7 @@
 // Define the array of leds
 // buffer 0 and 1 are for mainaining the
 CRGB leds[3][NUM_LEDS];
+#define mixedBuffer 2
 
 Effect *effects[] = {
 	new Flash(CRGB::Red),
@@ -27,7 +28,7 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
 Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
 Buttons effectButtons = Buttons(PIN_EFFECT);
-Controller controller = Controller();
+Controller controller = Controller(leds[0], leds[1]);
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
@@ -51,7 +52,7 @@ void setup() {
 	InitMotion();
 	// controller.Init();
 
-	controller.SetEffect(effects[currentEffect]);
+	controller.SetBaseEffect(effects[currentEffect]);
 	controller.SetBuffer(leds[2]);
 }
 

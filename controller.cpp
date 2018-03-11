@@ -1,7 +1,10 @@
 #include "controller.h"
 
-Controller::Controller() {
-  _effect = NULL;
+Controller::Controller(CRGB* baseLeds, CRGB* layerLeds) {
+  baseEffect = NULL;
+  layerEffect = NULL;
+  base = baseLeds;
+  layer = layerLeds;
   ended = false;
 }
 
@@ -10,22 +13,33 @@ String Controller::Identify() {
 }
 
 void Controller::SetEffect(Effect* effect) {
-  _effect = effect;
+  SetBaseEffect(effect);
+}
+
+void Controller::SetBaseEffect(Effect* effect) {
+  baseEffect = effect;
+  baseEffect->SetBuffer(base);
+}
+
+void Controller::SetLayerEffect(Effect* effect) {
+  layerEffect = effect;
+  layerEffect->SetBuffer(layer);
 }
 
 void Controller::Animate(unsigned long mics) {
-	// Serial.println("test");
-  _effect->Animate();
+  if (baseEffect != NULL) baseEffect->Animate();
+  if (layerEffect != NULL) layerEffect->Animate();
 }
 
 bool Controller::CheckEnd() {
-  return _effect->CheckEnd();
+  return baseEffect->CheckEnd();
 }
 
 void Controller::Reset() {
-  _effect->Reset();
+  if (baseEffect != NULL) baseEffect->Reset();
+  if (layerEffect != NULL) layerEffect->Reset();
 }
 
 void Controller::SetBuffer(CRGB* dest) {
-  _effect->SetBuffer(dest);
+  baseEffect->SetBuffer(dest);
 }

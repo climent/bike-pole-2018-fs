@@ -11,8 +11,8 @@
 #define STRUCTS_H
 
 #define DEBUG 1
-
 #define MOTION 1
+#define MAX_DIMENSION 32
 
 /*
          o
