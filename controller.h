@@ -13,19 +13,15 @@ public:
   void SetEffect(Effect* effect);
   void SetBaseEffect(Effect* effect);
   void SetLayerEffect(Effect* effect);
+  bool CheckEnd();
+  void Reset();
+  void SetBuffer(CRGB* dest);
+  // void Initialize();
   Effect* baseEffect;
   Effect* layerEffect;
   CRGB* base;
   CRGB* layer;
-  // void Animate(unsigned long mics);
-  // void SetEffect(Effect* effect);
-  // void SetBaseEffect(effect* effect);
-  // void SetLayerEffect(effect* effect);
-  bool CheckEnd();
-  void Reset();
-  void SetBuffer(CRGB* dest);
 private:
-  // void
   int var;
 };
 

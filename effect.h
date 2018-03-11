@@ -26,6 +26,7 @@ public:
   virtual void Reset() {};
 
   virtual bool CheckEnd();
+  virtual void Initialize();
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
@@ -45,6 +46,8 @@ public:
   Noise();
   void Animate(unsigned long mics);
   String Identify();
+  void Initialize();
+  void Reset();
 private:
   // static const int ONEMIL = 1000000;
   unsigned long micsperemit = 1000000;
@@ -71,7 +74,7 @@ private:
   uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
   uint8_t startIndex = 0; // this is where in the palette we start, cycle this slowly to 255 and wrap around
   uint8_t colorLoop = 1;
-  void Initialize();
+
   void Render();
   void FillNoise8();
   void MapNoiseToLEDsUsingPalette();
@@ -84,8 +87,8 @@ public:
   void Animate();
   String Identify();
   void SetColor(CRGB color);
-private:
   void Initialize();
+private:
   void Blink();
   CRGB _color;
   bool hasColor;
@@ -109,8 +112,8 @@ public:
   String Identify();
   void Reset();
   bool CheckEnd();
-private:
   void Initialize();
+private:
   long now;
   long _speed;
   long lastMove;
@@ -135,14 +138,15 @@ private:
 
 class Pile : public Effect {
 public:
+  Pile();
   Pile(CRGB fColor, CRGB bColor);
   Pile(CRGB fColor, CRGB bColor, int speed);
   void Reset();
-  void Animate();
+  void Animate(unsigned long mics);
   String Identify();
   bool CheckEnd();
-private:
   void Initialize();
+private:
   int _fcolor;
   int _bcolor;
   int _speed;
@@ -163,8 +167,8 @@ public:
   void Animate();
   String Identify();
   bool CheckEnd();
-private:
   void Initialize();
+private:
   int _fcolor;
   int _bcolor;
   int _speed;

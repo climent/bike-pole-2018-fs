@@ -12,32 +12,39 @@ void Pile::Initialize() {
 	position = height;
 	bottom = 0;
 	ended = false;
+	_speed = 10;
+	_fcolor = CRGB::Red;
+	_bcolor = CRGB::Black;
 }
 
 Pile::Pile(CRGB fColor, CRGB bColor, int speed) {
+	Initialize();
 	_fcolor = fColor;
 	_bcolor = bColor;
 	_speed = speed;
-	Initialize();
 }
 
 Pile::Pile(CRGB fColor, CRGB bColor) {
+	Initialize();
 	_fcolor = fColor;
 	_bcolor = bColor;
-	_speed = 200;
+}
+
+Pile::Pile() {
 	Initialize();
 }
 
-void Pile::Animate() {
+void Pile::Animate(unsigned long mics) {
+	// unsigned long milliseconds = mics * 1000;
 	now = millis();
   if (ended) ended = false;
 	if (now - lastMove > _speed) {
 		// FadeAll(leds, _tail);
 		_leds = SetPixels(position);
-		dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CRGB::Red;
+		dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _fcolor;
 		if (position + 1 <= height) {
 			_leds = SetPixels(position + 1);
-			dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CRGB::Black;
+			dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _bcolor;
 		}
 		if (position == bottom)
 		{

@@ -24,8 +24,12 @@ bool Effect::CheckEnd() {
 	return true;
 }
 
-void Effect::Animate(unsigned long mics) {
+void Effect::Initialize() {
 	// Override in inheriting classes.
+}
+
+void Effect::Animate(unsigned long mics) {
+  Animate();
 }
 
 void Effect::Animate() {

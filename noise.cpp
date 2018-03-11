@@ -35,17 +35,35 @@ static const int kMatrixHeight = 70;
 unsigned char board[kMatrixHeight][kMatrixWidth];
 unsigned char work[kMatrixHeight][kMatrixWidth];
 
+Noise::Noise() {
+  // Initialize();
+}
+
+void Noise::Reset() {
+  Initialize();
+}
+
 void Noise::Initialize()
 {
   // Initialize our coordinates to some random values
   x = random16();
   y = random16();
   z = random16();
-  FillNoise8();
+
+  GenerateGlobalPalettes();
+
+  int newpal = random(0, kNumPalettes);
+  // one second fade to next palette
+  palmixer.SetNewPalette(1, newpal, 4.0f);
+  Serial.print("Selected palete: ");
+  Serial.println(newpal);
+  // newpal = 1;
+
+  // FillNoise8();
 }
 
 String Noise::Identify() {
-  return "fluid";
+  return "noise";
 }
 
 void Noise::Animate(unsigned long mics)
@@ -56,8 +74,11 @@ void Noise::Animate(unsigned long mics)
   if (timeTillEmit <= 0)
   {
     timeTillEmit = micsperemit;
-    //fillnoise8();
+    FillNoise8();
+    MapNoiseToLEDsUsingPalette();
   }
+  FillNoise8();
+  MapNoiseToLEDsUsingPalette();
 }
 
 void Noise::Render()
@@ -76,7 +97,7 @@ void Noise::FillNoise8() {
   // from frame-to-frame.  In order to reduce this, we can do some fast data-smoothing.
   // The amount of data smoothing we're doing depends on "speed".
   uint8_t dataSmoothing = 0;
-  if( speed < 50) {
+  if (speed < 50) {
     dataSmoothing = 200 - (speed * 4);
   }
 
@@ -93,9 +114,9 @@ void Noise::FillNoise8() {
       data = qsub8(data,16);
       data = qadd8(data,scale8(data,39));
 
-      if( dataSmoothing ) {
+      if (dataSmoothing) {
         uint8_t olddata = noise[i][j];
-        uint8_t newdata = scale8( olddata, dataSmoothing) + scale8( data, 256 - dataSmoothing);
+        uint8_t newdata = scale8(olddata, dataSmoothing) + scale8(data, 256 - dataSmoothing);
         data = newdata;
       }
 
@@ -111,7 +132,7 @@ void Noise::FillNoise8() {
 
   unsigned long endmics = micros();
   unsigned int millis = (endmics-startmics)/1000;
-  //Serial.printf("Noise function takes %d milliseconds\n",millis);
+  // Serial.printf("Noise function takes %d milliseconds\n",millis);
 }
 
 void Noise::MapNoiseToLEDsUsingPalette()

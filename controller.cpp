@@ -27,8 +27,8 @@ void Controller::SetLayerEffect(Effect* effect) {
 }
 
 void Controller::Animate(unsigned long mics) {
-  if (baseEffect != NULL) baseEffect->Animate();
-  if (layerEffect != NULL) layerEffect->Animate();
+  if (baseEffect != NULL) baseEffect->Animate(mics);
+  if (layerEffect != NULL) layerEffect->Animate(mics);
 }
 
 bool Controller::CheckEnd() {
