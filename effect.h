@@ -124,7 +124,6 @@ private:
   int _fcolor;
   int _bcolor;
   int _speed;
-  // int initPile;
   int height;
   int now;
   int lastMove;
