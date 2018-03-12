@@ -12,6 +12,10 @@ String Controller::Identify() {
 	return "controller";
 }
 
+void Controller::Initialize() {
+
+}
+
 void Controller::SetEffect(Effect* effect) {
   SetBaseEffect(effect);
 }

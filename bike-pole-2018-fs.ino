@@ -78,7 +78,7 @@ void setup() {
   set_max_power_in_volts_and_milliamps(5, 1000);
 
 	// InitMotion();
-	// controller.Init();
+	controller.Initialize();
 
 	// GenerateGlobalPalettes();
 
