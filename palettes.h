@@ -55,23 +55,12 @@ enum PalChoice {
 //#define kNumPalettes 64
 CRGBPalette16 palettes[kNumPalettes];
 
-// when we want to blend to a new palette, we assign to nextPalette, then use nblend to modify the target palette over time.
+// when we want to blend to a new palette, we assign to nextPalette, then use
+// nblend to modify the target palette over time.
 // all color fetch functions use the final palette in some way or another
 CRGBPalette256 nextPalette[3];
 CRGBPalette256 curPalette[3];
 CRGBPalette256 finalPalette[3];
-
-CRGBPalette16 randomPalette[3];
-
-void GenerateRandomPalettes()
-{
-    for( int i = 0; i < 16; i++)
-    {
-        randomPalette[0][i] = CHSV( random8(), random8()/2 + 128, random8());
-        randomPalette[1][i] = CHSV( random8(), random8()/2 + 128, random8());
-        randomPalette[2][i] = CHSV( random8(), random8()/2 + 128, random8());
-    }
-}
 
 // This generates in mem copies of all of the progmem palettes that we actually want
 // These get upscaled into 256 entry palettes when assigned to nextPalette
@@ -120,9 +109,6 @@ void GenerateGlobalPalettes()
   palettes[kMango] = mango_mystery_gp;
   palettes[kSprinkles] = sprinkles_gp;
 
-
-
-
 // Make sure all palettes are initialized
   finalPalette[0] = palettes[kSchwarzwald];
   curPalette[0]  = finalPalette[0] ;
@@ -141,5 +127,3 @@ void GenerateGlobalPalettes()
 
 
 #endif
-
-
