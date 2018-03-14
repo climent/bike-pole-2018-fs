@@ -3,7 +3,7 @@
 #include "effect.h"
 #include "controller.h"
 #include "buttons.h"
-// #include "palettes.h"
+#include "palettes.h"
 
 // #ifdef MOTION
 #include "motion.h"
@@ -41,13 +41,13 @@ uint8_t currentEffect = 0;
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
-int timeTillAnimate = 10;
-int timeTillRender = 16; // 60Hz rendering
-int timeTillOrientation = 16; // Let' stry 60hz for motion updates as well
+const int timeTillAnimate = 10;
+const int timeTillRender = 16; // 60Hz rendering
+const int timeTillOrientation = 16; // Let' stry 60hz for motion updates as well
 
-int timeLeftTillAnimate = 0;
-int timeLeftTillRender = 0;
-int timeLeftTillOrientation = 0;
+int timeLeftTillAnimate = timeTillAnimate;
+int timeLeftTillRender = timeTillRender;
+int timeLeftTillOrientation = timeTillOrientation;
 
 unsigned long lastMillis = 0;
 unsigned long lastMicros = 0;
@@ -97,7 +97,15 @@ void loop() {
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();
-	FastLED.show();
+
+	// Render all active buffers and mixdown, then show with power limits applied
+	if (timeLeftTillRender <= 0)
+	{
+		renderCount++;
+		timeLeftTillRender = timeTillRender;
+		controller.Render();
+		FastLED.show();
+	}
 }
 
 void UpdateTimers() {

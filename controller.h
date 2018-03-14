@@ -16,6 +16,7 @@ public:
   bool CheckEnd();
   void Reset();
   void SetBuffer(CRGB* dest);
+  void Render();
   // void Initialize();
   Effect* baseEffect;
   Effect* layerEffect;

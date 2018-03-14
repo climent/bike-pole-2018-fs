@@ -50,7 +50,6 @@ enum PalChoice {
 	kNumPalettes
 };
 
-
 // An array of palette pointers so we can randomly choose one
 //#define kNumPalettes 64
 CRGBPalette16 palettes[kNumPalettes];
@@ -122,8 +121,5 @@ void GenerateGlobalPalettes()
   curPalette[2]  = finalPalette[2] ;
   nextPalette[2]  = curPalette[2] ;
 }
-
-
-
 
 #endif

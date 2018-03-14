@@ -1,6 +1,6 @@
 #include "effect.h"
 #include "led_utils.h"
-#include "palmixer.h"
+// #include "palmixer.h"
 // This example combines two features of FastLED to produce a remarkable range of
 // effects from a relatively small amount of code.  This example combines FastLED's
 // color palette lookup functions with FastLED's Perlin/simplex noise generator, and
@@ -50,7 +50,7 @@ void Noise::Initialize()
   y = random16();
   z = random16();
 
-  GenerateGlobalPalettes();
+  // GenerateGlobalPalettes();
 
   int newpal = random(0, kNumPalettes);
   // one second fade to next palette
