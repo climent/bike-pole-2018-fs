@@ -64,10 +64,8 @@ void Noise::Animate(unsigned long mics)
   {
     timeTillEmit = micsperemit;
     FillNoise8();
-    // MapNoiseToLEDsUsingPalette(CRGB* palette);
   }
   FillNoise8();
-  // MapNoiseToLEDsUsingPalette(CRGB* palette);
 }
 
 void Noise::Render(CRGB* palette)

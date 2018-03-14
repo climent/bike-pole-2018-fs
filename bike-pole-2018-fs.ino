@@ -1,4 +1,6 @@
 #include <FastLED.h>
+#include "palette_data.h"
+#include "palettes.h"
 #include "includes.h"
 #include "effect.h"
 #include "controller.h"
@@ -32,6 +34,7 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
 Buttons effectButtons = Buttons(PIN_EFFECT);
 Controller controller = Controller(leds[0], leds[1]);
+Palmixer palmixer = Palmixer((int)kNumPalettes, palettes);
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
@@ -43,9 +46,9 @@ uint8_t currentEffect = 0;
 // when we want to blend to a new palette, we assign to nextPalette, then use
 // nblend to modify the target palette over time.
 // all color fetch functions use the final palette in some way or another
-CRGBPalette256 nextPalette[3];
-CRGBPalette256 curPalette[3];
-CRGBPalette256 finalPalette[3];
+// CRGBPalette256 nextPalette[3];
+// CRGBPalette256 curPalette[3];
+// CRGBPalette256 finalPalette[3];
 
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
@@ -89,7 +92,7 @@ void setup() {
 	// InitMotion();
 	controller.Initialize();
 
-	// GenerateGlobalPalettes();
+	GenerateGlobalPalettes();
 
 	controller.SetBaseEffect(effects[currentEffect]);
 	controller.SetBuffer(leds[2]);

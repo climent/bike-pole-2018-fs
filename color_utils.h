@@ -1,6 +1,6 @@
 #ifndef COLOR_UTILS_H
 #define COLOR_UTILS_H
-#include <FastLED.h>
+// #include <FastLED.h>
 
 CHSV hsvOrange = CHSV(HUE_ORANGE, 255, 255);
 CHSV hsvPurple = CHSV(HUE_PURPLE, 255, 255);

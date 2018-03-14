@@ -815,6 +815,5 @@ DEFINE_GRADIENT_PALETTE( sprinkles_gp ) {
   212,  55,217,242,
   255,  55,217,242};
 
-  
-#endif
 
+#endif
