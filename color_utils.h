@@ -1,5 +1,6 @@
 #ifndef COLOR_UTILS_H
 #define COLOR_UTILS_H
+#include <FastLED.h>
 
 CHSV hsvOrange = CHSV(HUE_ORANGE, 255, 255);
 CHSV hsvPurple = CHSV(HUE_PURPLE, 255, 255);
@@ -8,7 +9,6 @@ CHSV hsvRed = CHSV(HUE_RED, 255, 255);
 CHSV hsvGreen = CHSV(HUE_GREEN, 255, 255);
 CHSV hsvPink = CHSV(HUE_PINK, 255, 255);
 CHSV hsvYellow = CHSV(HUE_YELLOW, 255, 255);
-
 
 void PrintColor(CRGB c) {
   Serial.print("color: ");

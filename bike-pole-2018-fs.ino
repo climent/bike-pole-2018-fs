@@ -3,7 +3,8 @@
 #include "effect.h"
 #include "controller.h"
 #include "buttons.h"
-#include "palettes.h"
+#include "color_utils.h"
+#include "palmixer.h"
 
 // #ifdef MOTION
 #include "motion.h"
@@ -37,6 +38,14 @@ const uint8_t brightnessCount = 5;
 uint8_t brightnessMap[brightnessCount] = { 16, 32, 64, 128, 255 };
 uint8_t briLevel = 1;
 uint8_t currentEffect = 0;
+
+// Global palettes
+// when we want to blend to a new palette, we assign to nextPalette, then use
+// nblend to modify the target palette over time.
+// all color fetch functions use the final palette in some way or another
+CRGBPalette256 nextPalette[3];
+CRGBPalette256 curPalette[3];
+CRGBPalette256 finalPalette[3];
 
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second

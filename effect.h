@@ -74,10 +74,10 @@ private:
   uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
   uint8_t startIndex = 0; // this is where in the palette we start, cycle this slowly to 255 and wrap around
   uint8_t colorLoop = 1;
-
-  void Render();
+  CRGB* palette = NULL;
+  void Render(CRGB* palette);
   void FillNoise8();
-  void MapNoiseToLEDsUsingPalette();
+  void MapNoiseToLEDsUsingPalette(CRGB* palette);
 };
 
 class Flash : public Effect {

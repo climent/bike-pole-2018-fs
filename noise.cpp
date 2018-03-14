@@ -49,17 +49,6 @@ void Noise::Initialize()
   x = random16();
   y = random16();
   z = random16();
-
-  // GenerateGlobalPalettes();
-
-  int newpal = random(0, kNumPalettes);
-  // one second fade to next palette
-  palmixer.SetNewPalette(1, newpal, 4.0f);
-  Serial.print("Selected palete: ");
-  Serial.println(newpal);
-  // newpal = 1;
-
-  // FillNoise8();
 }
 
 String Noise::Identify() {
@@ -75,17 +64,17 @@ void Noise::Animate(unsigned long mics)
   {
     timeTillEmit = micsperemit;
     FillNoise8();
-    MapNoiseToLEDsUsingPalette();
+    // MapNoiseToLEDsUsingPalette(CRGB* palette);
   }
   FillNoise8();
-  MapNoiseToLEDsUsingPalette();
+  // MapNoiseToLEDsUsingPalette(CRGB* palette);
 }
 
-void Noise::Render()
+void Noise::Render(CRGB* palette)
 {
   FadeOrClear();
-  FillNoise8();
-  MapNoiseToLEDsUsingPalette();
+  // FillNoise8();
+  MapNoiseToLEDsUsingPalette(palette);
 }
 
 // Fill the x/y array of 8-bit noise values using the inoise8 function.
@@ -135,7 +124,7 @@ void Noise::FillNoise8() {
   // Serial.printf("Noise function takes %d milliseconds\n",millis);
 }
 
-void Noise::MapNoiseToLEDsUsingPalette()
+void Noise::MapNoiseToLEDsUsingPalette(CRGB* palette)
 {
   for (int i = 0; i < NUM_LEDS; i++) {
     // Each led has a height and width that we can use to find the best render value
@@ -158,9 +147,9 @@ void Noise::MapNoiseToLEDsUsingPalette()
     }
 
     index += startIndex;
-    CRGB c = finalPalette[pal][index];
+    // CRGB c = finalPalette[pal][index];
+    CRGB c = palette[index];
     c.nscale8(bri);
-    // SetPixel(i,c);
     dst[i] = c;
   }
   startIndex++;
