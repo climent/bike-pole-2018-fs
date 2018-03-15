@@ -46,9 +46,9 @@ uint8_t currentEffect = 0;
 // when we want to blend to a new palette, we assign to nextPalette, then use
 // nblend to modify the target palette over time.
 // all color fetch functions use the final palette in some way or another
-// CRGBPalette256 nextPalette[3];
-// CRGBPalette256 curPalette[3];
-// CRGBPalette256 finalPalette[3];
+CRGBPalette256 nextPalette[3];
+CRGBPalette256 curPalette[3];
+CRGBPalette256 finalPalette[3];
 
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
