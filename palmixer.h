@@ -15,7 +15,7 @@ public:
   int kNumPalettes;
   CRGBPalette16 palettes[];
 
-  void Animate(float dt);
+  void Animate(float mics);
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
 
   // An array of palette pointers so we can randomly choose one
@@ -28,7 +28,6 @@ public:
   CRGBPalette256 nextPalette[3];
   CRGBPalette256 curPalette[3];
   CRGBPalette256 finalPalette[3];
-
 };
 
 #endif
