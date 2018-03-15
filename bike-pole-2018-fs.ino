@@ -53,13 +53,15 @@ uint8_t currentEffect = 0;
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
-const int timeTillAnimate = 10;
-const int timeTillRender = 16; // 60Hz rendering
-const int timeTillOrientation = 16; // Let' stry 60hz for motion updates as well
+const int timeTilAnimate = 10;
+const int timeTilRender = 16; // 60Hz rendering
+const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
+const int timeTilPalChange = 16; // Let' stry 60hz for motion updates as well
 
-int timeLeftTillAnimate = timeTillAnimate;
-int timeLeftTillRender = timeTillRender;
-int timeLeftTillOrientation = timeTillOrientation;
+int timeLeftTilAnimate = timeTilAnimate;
+int timeLeftTilRender = timeTilRender;
+int timeLeftTilOrientation = timeTilOrientation;
+int timeLeftTilPalChange = timeTilPalChange;
 
 unsigned long lastMillis = 0;
 unsigned long lastMicros = 0;
@@ -103,6 +105,7 @@ void loop() {
 	// Serial.println("Looping...");
 
   UpdateTimers();
+	palmixer.Animate(deltaMicros);
 	controller.Animate(deltaMicros);
 	// UpdateMotion(micros());
 	// CheckBumps();
@@ -111,10 +114,10 @@ void loop() {
 	WaitForNextEffect();
 
 	// Render all active buffers and mixdown, then show with power limits applied
-	if (timeLeftTillRender <= 0)
+	if (timeLeftTilRender <= 0)
 	{
 		renderCount++;
-		timeLeftTillRender = timeTillRender;
+		timeLeftTilRender = timeTilRender;
 		controller.Render();
 		FastLED.show();
 	}
@@ -132,9 +135,30 @@ void UpdateTimers() {
 
   // Decrement our timers
   // timeLeftTillPrint -= deltamillis;
-  timeLeftTillRender -= deltaMillis;
-	timeLeftTillAnimate -= deltaMillis;
-  timeLeftTillOrientation -= deltaMillis;
+  timeLeftTilRender -= deltaMillis;
+	timeLeftTilAnimate -= deltaMillis;
+  timeLeftTilOrientation -= deltaMillis;
+}
+
+void UpdatePalette() {
+	// Periodically change the palette
+	timeLeftTilPalChange -= deltaMicros;
+	if (timeLeftTilPalChange <= 0)
+	{
+		// For now change all palettes
+		//Serial.printf("Changing palettes...\n");
+		int newpal = random(0, kNumPalettes);
+		// one second fade to next palette
+		palmixer.SetNewPalette(0, newpal, 4.0f);
+		newpal = random(0, kNumPalettes);
+		// one second fade to next palette
+		palmixer.SetNewPalette(1, newpal, 4.0f);
+		newpal = random(0, kNumPalettes);
+		// one second fade to next palette
+		palmixer.SetNewPalette(2, newpal, 4.0f);
+
+		timeLeftTilPalChange = timeTilPalChange;
+	}
 }
 
 void WaitForNextEffect() {

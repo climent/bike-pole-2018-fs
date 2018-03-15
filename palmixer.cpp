@@ -15,9 +15,13 @@ Palmixer::Palmixer(int kNumPalettes, CRGBPalette16* palettes) {
   // finalPalette[2] = palettes[kMadras];
   // curPalette[2] = finalPalette[2];
   // nextPalette[2] = curPalette[2];
+
+
 }
 
-void Palmixer::Animate(float dt) {
+void Palmixer::Animate(float mics) {
+  float dt = (float)(mics) / 1000000.0f;
+
 	for (int i = 0; i < 3; i++)
 	{
 		if (active[i])
