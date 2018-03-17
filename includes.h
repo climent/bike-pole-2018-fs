@@ -9,6 +9,7 @@
 
 #ifndef STRUCTS_H
 #define STRUCTS_H
+#include "FastLED.h"
 
 #define DEBUG 1
 #define MOTION 1
@@ -26,5 +27,13 @@ struct Leds {
   int o, p, q;
 };
 typedef struct Leds Leds;
+
+// struct Palettes {
+//   CRGBPalette16  palettes[kNumPalettes];
+//   CRGBPalette256 nextPalette[3];
+//   CRGBPalette256 currentPalette[3];
+//   CRGBPalette256 finalPalette[3];
+// };
+// typedef struct Palettes Palettes;
 
 #endif

@@ -68,7 +68,7 @@ void Noise::Animate(unsigned long mics)
   FillNoise8();
 }
 
-void Noise::Render(CRGB* palette)
+void Noise::Render(CRGBPalette256* palette)
 {
   FadeOrClear();
   // FillNoise8();
@@ -122,7 +122,7 @@ void Noise::FillNoise8() {
   // Serial.printf("Noise function takes %d milliseconds\n",millis);
 }
 
-void Noise::MapNoiseToLEDsUsingPalette(CRGB* palette)
+void Noise::MapNoiseToLEDsUsingPalette(CRGBPalette256* palette)
 {
   for (int i = 0; i < NUM_LEDS; i++) {
     // Each led has a height and width that we can use to find the best render value
@@ -144,9 +144,9 @@ void Noise::MapNoiseToLEDsUsingPalette(CRGB* palette)
       bri = dim8_raw(bri * 2);
     }
 
+    int pal = 1;
     index += startIndex;
-    // CRGB c = finalPalette[pal][index];
-    CRGB c = palette[index];
+    CRGB c = palette[pal][index];
     c.nscale8(bri);
     dst[i] = c;
   }

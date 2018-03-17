@@ -17,11 +17,13 @@ public:
   void Reset();
   void SetBuffer(CRGB* dest);
   void Render();
+  void Render(CRGBPalette256* finalPalette);
   // void Initialize();
   Effect* baseEffect;
   Effect* layerEffect;
   CRGB* base;
   CRGB* layer;
+  CRGBPalette256* finalPalette;
 private:
   int var;
 };

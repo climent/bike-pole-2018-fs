@@ -53,67 +53,76 @@ enum PalChoice {
 };
 
 // An array of palette pointers so we can randomly choose one
-//#define kNumPalettes 64
-CRGBPalette16 palettes[kNumPalettes];
+// CRGBPalette16 palettes[kNumPalettes];
+
+struct Palettes {
+  CRGBPalette16  palettes[kNumPalettes];
+  CRGBPalette256 nextPalette[3];
+  CRGBPalette256 currentPalette[3];
+  CRGBPalette256 finalPalette[3];
+};
+typedef struct Palettes Palettes;
+
+Palettes palettes;
 
 // This generates in mem copies of all of the progmem palettes that we actually want
 // These get upscaled into 256 entry palettes when assigned to nextPalette
 void GenerateGlobalPalettes() {
-	palettes[kClouds] = CloudColors_p;
-	palettes[kRainbow] = RainbowColors_p;
-	palettes[kParty] = PartyColors_p;
-	palettes[kPurpleFly] = purplefly_gp;
-	palettes[kIris] = iris_gp;
-	palettes[kMadras] = madras_gp;
-	palettes[kLailah] = lailah1_gp;
-	palettes[kHope] = hopegoddess_gp;
-	palettes[kCompassion] = angelcompassion_gp;
-	palettes[kRepose] = angelrepose_gp;
-	palettes[kMermaid] = aquamarinemermaid_gp;
-	palettes[kFlame] = flame_gp;
-	palettes[kSerendil] = serendil_gp;
-	palettes[kDaisyFae] = daisyfae_gp;
-	palettes[kFaeCat] = faecat_gp;
-	palettes[kFireIce] = fireandice_gp;
-	palettes[kHangOn] = hangonfatboy_gp;
-	palettes[kMistress] = mistressnight_gp;
-	palettes[kOtis] = otis_gp;
-	palettes[kScoutie] = scoutie_gp;
-	palettes[kSunlitWave] = sunlitwave_gp;
-	palettes[kTrove] = trove_gp;
-	palettes[kBlackhorse] = blackhorse_gp;
-	palettes[kPlumbago] = plumbago_gp;
-	palettes[kSchwarzwald] = schwarzwald_gp;
-	palettes[kNrwc] = nrwc_gp;
-	palettes[kEpochs] = epochs_gp;
-	palettes[kSky04] = sky_04_gp;
-	palettes[kSky12] = sky_12_gp;
-	palettes[kSky34] = sky_34_gp;
-	palettes[kSky44] = sky_44_gp;
-	palettes[kSky45] = sky_45_gp;
-	palettes[kSky05] = sky_05_gp;
-	palettes[kSky29] = sky_29_gp;
-	palettes[kRosa36] = es_rosa_36_gp;
-	palettes[kRosa70] = es_rosa_70_gp;
-	palettes[kVintage01] = es_vintage_01_gp;
-	palettes[kLandscape27] = es_landscape_27_gp;
-	palettes[kJul01] = ib_jul01_gp;
-	palettes[kIb63] = ib63_gp;
-	palettes[kMango] = mango_mystery_gp;
-	palettes[kSprinkles] = sprinkles_gp;
+	palettes.palettes[kClouds] = CloudColors_p;
+	palettes.palettes[kRainbow] = RainbowColors_p;
+	palettes.palettes[kParty] = PartyColors_p;
+	palettes.palettes[kPurpleFly] = purplefly_gp;
+	palettes.palettes[kIris] = iris_gp;
+	palettes.palettes[kMadras] = madras_gp;
+	palettes.palettes[kLailah] = lailah1_gp;
+	palettes.palettes[kHope] = hopegoddess_gp;
+	palettes.palettes[kCompassion] = angelcompassion_gp;
+	palettes.palettes[kRepose] = angelrepose_gp;
+	palettes.palettes[kMermaid] = aquamarinemermaid_gp;
+	palettes.palettes[kFlame] = flame_gp;
+	palettes.palettes[kSerendil] = serendil_gp;
+	palettes.palettes[kDaisyFae] = daisyfae_gp;
+	palettes.palettes[kFaeCat] = faecat_gp;
+	palettes.palettes[kFireIce] = fireandice_gp;
+	palettes.palettes[kHangOn] = hangonfatboy_gp;
+	palettes.palettes[kMistress] = mistressnight_gp;
+	palettes.palettes[kOtis] = otis_gp;
+	palettes.palettes[kScoutie] = scoutie_gp;
+	palettes.palettes[kSunlitWave] = sunlitwave_gp;
+	palettes.palettes[kTrove] = trove_gp;
+	palettes.palettes[kBlackhorse] = blackhorse_gp;
+	palettes.palettes[kPlumbago] = plumbago_gp;
+	palettes.palettes[kSchwarzwald] = schwarzwald_gp;
+	palettes.palettes[kNrwc] = nrwc_gp;
+	palettes.palettes[kEpochs] = epochs_gp;
+	palettes.palettes[kSky04] = sky_04_gp;
+	palettes.palettes[kSky12] = sky_12_gp;
+	palettes.palettes[kSky34] = sky_34_gp;
+	palettes.palettes[kSky44] = sky_44_gp;
+	palettes.palettes[kSky45] = sky_45_gp;
+	palettes.palettes[kSky05] = sky_05_gp;
+	palettes.palettes[kSky29] = sky_29_gp;
+	palettes.palettes[kRosa36] = es_rosa_36_gp;
+	palettes.palettes[kRosa70] = es_rosa_70_gp;
+	palettes.palettes[kVintage01] = es_vintage_01_gp;
+	palettes.palettes[kLandscape27] = es_landscape_27_gp;
+	palettes.palettes[kJul01] = ib_jul01_gp;
+	palettes.palettes[kIb63] = ib63_gp;
+	palettes.palettes[kMango] = mango_mystery_gp;
+	palettes.palettes[kSprinkles] = sprinkles_gp;
 
-	// // Make sure all palettes are initialized
-	// finalPalette[0] = palettes[kSchwarzwald];
-	// curPalette[0] = finalPalette[0];
-	// nextPalette[0] = curPalette[0];
+	// Make sure all palettes are initialized
+	// palettes.finalPalette[0] = palettes.palettes[kSchwarzwald];
+	// palettes.currentPalette[0] = palettes.finalPalette[0];
+	// palettes.nextPalette[0] = palettes.currentPalette[0];
   //
-	// finalPalette[1] = palettes[kMistress];
-	// curPalette[1] = finalPalette[1];
-	// nextPalette[1] = curPalette[1];
+	// palettes.finalPalette[1] = palettes.palettes[kMistress];
+	// palettes.currentPalette[1] = palettes.finalPalette[1];
+	// palettes.nextPalette[1] = palettes.currentPalette[1];
   //
-	// finalPalette[2] = palettes[kMadras];
-	// curPalette[2] = finalPalette[2];
-	// nextPalette[2] = curPalette[2];
+	// palettes.finalPalette[2] = palettes.palettes[kMadras];
+	// palettes.currentPalette[2] = palettes.finalPalette[2];
+	// palettes.nextPalette[2] = palettes.currentPalette[2];
 }
 
 #endif

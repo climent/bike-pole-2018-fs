@@ -27,6 +27,7 @@ public:
 
   virtual bool CheckEnd();
   virtual void Initialize();
+  virtual void Render(CRGBPalette256* finalPalette);
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
@@ -48,6 +49,7 @@ public:
   String Identify();
   void Initialize();
   void Reset();
+  void Render(CRGBPalette256* palette);
 private:
   // static const int ONEMIL = 1000000;
   unsigned long micsperemit = 1000000;
@@ -74,10 +76,9 @@ private:
   uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
   uint8_t startIndex = 0; // this is where in the palette we start, cycle this slowly to 255 and wrap around
   uint8_t colorLoop = 1;
-  CRGB* palette = NULL;
-  void Render(CRGB* palette);
+  CRGBPalette256* palette = NULL;
   void FillNoise8();
-  void MapNoiseToLEDsUsingPalette(CRGB* palette);
+  void MapNoiseToLEDsUsingPalette(CRGBPalette256* palette);
 };
 
 class Flash : public Effect {

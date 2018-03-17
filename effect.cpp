@@ -32,6 +32,10 @@ void Effect::Animate(unsigned long mics) {
   Animate();
 }
 
+void Effect::Render(CRGBPalette256* finalPalette) {
+	//Overrided in inheriting classes.
+}
+
 void Effect::Animate() {
 	// Override in inheriting classes.
 }

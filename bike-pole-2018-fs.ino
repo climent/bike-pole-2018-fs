@@ -20,10 +20,9 @@ CRGB leds[3][NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* effects[] = {
-	// new Noise(),
-	// new Flash(CRGB::Red),
-	// new Bounce(20, 220),
-	// new Sparkles(80, 5, true),
+	new Flash(CRGB::Red),
+	new Bounce(20, 220),
+	new Sparkles(80, 5, true),
 	new Pile(),
 	new Noise(),
 	// new Roller(CRGB::White, CRGB::White, 2),
@@ -31,10 +30,13 @@ Effect* effects[] = {
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
+// Palettes palettes;
 Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
 Buttons effectButtons = Buttons(PIN_EFFECT);
 Controller controller = Controller(leds[0], leds[1]);
-Palmixer palmixer = Palmixer((int)kNumPalettes, palettes);
+Palmixer palmixer = Palmixer((int)kNumPalettes,
+		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
+		palettes.finalPalette);
 
 // Global Brightness
 const uint8_t brightnessCount = 5;
@@ -42,26 +44,18 @@ uint8_t brightnessMap[brightnessCount] = { 16, 32, 64, 128, 255 };
 uint8_t briLevel = 1;
 uint8_t currentEffect = 0;
 
-// Global palettes
-// when we want to blend to a new palette, we assign to nextPalette, then use
-// nblend to modify the target palette over time.
-// all color fetch functions use the final palette in some way or another
-CRGBPalette256 nextPalette[3];
-CRGBPalette256 curPalette[3];
-CRGBPalette256 finalPalette[3];
-
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
 const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-const int timeTilPalChange = 16; // Let' stry 60hz for motion updates as well
+const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
 
 int timeLeftTilAnimate = timeTilAnimate;
 int timeLeftTilRender = timeTilRender;
 int timeLeftTilOrientation = timeTilOrientation;
-int timeLeftTilPalChange = timeTilPalChange;
+int timeLeftTilPalChange = 0;
 
 unsigned long lastMillis = 0;
 unsigned long lastMicros = 0;
@@ -89,7 +83,7 @@ void setup() {
 	FastLED.setDither(0);
 
 	// Limit to 2 amps to begin with
-  set_max_power_in_volts_and_milliamps(5, 1000);
+  set_max_power_in_volts_and_milliamps(5, 2000);
 
 	// InitMotion();
 	controller.Initialize();
@@ -105,6 +99,7 @@ void loop() {
 	// Serial.println("Looping...");
 
   UpdateTimers();
+	UpdatePalette();
 	palmixer.Animate(deltaMicros);
 	controller.Animate(deltaMicros);
 	// UpdateMotion(micros());
@@ -118,10 +113,16 @@ void loop() {
 	{
 		renderCount++;
 		timeLeftTilRender = timeTilRender;
-		controller.Render();
+		controller.Render(palettes.finalPalette);
 		FastLED.show();
-	}
+  }
+	// PrintColor(palettes.finalPalette[1][1]);
+	// for (int i = 0; i < 100; i++){
+	// 	leds[2][i] = CRGB::Red;
+	// }
+	// FastLED.show();
 }
+
 
 void UpdateTimers() {
 	unsigned long currentMicros = micros();
@@ -140,13 +141,14 @@ void UpdateTimers() {
   timeLeftTilOrientation -= deltaMillis;
 }
 
+// move this code to palmixer.UpdatePalette() or Animate()
 void UpdatePalette() {
 	// Periodically change the palette
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
 		// For now change all palettes
-		//Serial.printf("Changing palettes...\n");
+		Serial.printf("Changing palettes...\n");
 		int newpal = random(0, kNumPalettes);
 		// one second fade to next palette
 		palmixer.SetNewPalette(0, newpal, 4.0f);

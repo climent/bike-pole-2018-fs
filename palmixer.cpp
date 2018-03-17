@@ -1,29 +1,28 @@
 // #include "palettes.h"
 #include "palmixer.h"
 
-Palmixer::Palmixer(int kNumPalettes, CRGBPalette16* palettes) {
-  kNumPalettes = kNumPalettes;
-  // // Make sure all palettes are initialized
-  // finalPalette[0] = palettes[kSchwarzwald];
-  // curPalette[0] = finalPalette[0];
-  // nextPalette[0] = curPalette[0];
-  //
-  // finalPalette[1] = palettes[kMistress];
-  // curPalette[1] = finalPalette[1];
-  // nextPalette[1] = curPalette[1];
-  //
-  // finalPalette[2] = palettes[kMadras];
-  // curPalette[2] = finalPalette[2];
-  // nextPalette[2] = curPalette[2];
-
-
+Palmixer::Palmixer(int kNumPalettes, CRGBPalette16* palettes,
+    CRGBPalette256* nextPalette,
+    CRGBPalette256* currentPalette,
+    CRGBPalette256* finalPalette) {
+  _kNumPalettes = kNumPalettes;
+  _palettes = palettes;
+  _nextPalette = nextPalette;
+  _currentPalette = currentPalette;
+  _finalPalette = finalPalette;
+  active[0] = false;
+  active[1] = false;
+  active[2] = false;
+  // GenerateGlobalPalettes();
 }
 
 void Palmixer::Animate(float mics) {
   float dt = (float)(mics) / 1000000.0f;
 
+  // Serial.println("Blending...");
 	for (int i = 0; i < 3; i++)
 	{
+    // _finalPalette[i] = _nextPalette[i];
 		if (active[i])
 		{
 			// For now just one animate mode, crossfade
@@ -41,19 +40,19 @@ void Palmixer::Animate(float mics) {
 			// Use blend to move toward target palette
 			for (int j = 0; j < 256; j++)
 			{
-				finalPalette[i][j] = blend(curPalette[i][j], nextPalette[i][j], fraction[i]);
+				_finalPalette[i][j] = blend(_currentPalette[i][j], _nextPalette[i][j], fraction[i]);
 			}
 		}
 	}
 }
 
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
-	//Serial.printf("Set new palette: %d\n", newPal);
-	// guard
-	if (newPal >= kNumPalettes) return;
+  // Serial.println(_kNumPalettes);
+	if (newPal >= 42) return;
+  Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
 
-	curPalette[whichSlot] = finalPalette[whichSlot];
-	nextPalette[whichSlot] = palettes[newPal];
+	_currentPalette[whichSlot] = _finalPalette[whichSlot];
+	_nextPalette[whichSlot] = _palettes[newPal];
 
 	fader[whichSlot] = 0.0f;
 	fraction[whichSlot] = 0;
