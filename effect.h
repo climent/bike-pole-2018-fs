@@ -27,6 +27,7 @@ public:
 
   virtual bool CheckEnd();
   virtual void Initialize();
+  virtual void Render();
   virtual void Render(CRGBPalette256* finalPalette);
   Leds SetPixels(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);

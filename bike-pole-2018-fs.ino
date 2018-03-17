@@ -55,7 +55,7 @@ const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as w
 int timeLeftTilAnimate = timeTilAnimate;
 int timeLeftTilRender = timeTilRender;
 int timeLeftTilOrientation = timeTilOrientation;
-int timeLeftTilPalChange = 0;
+int timeLeftTilPalChange = 0; // Force a palette change.
 
 unsigned long lastMillis = 0;
 unsigned long lastMicros = 0;
@@ -86,10 +86,9 @@ void setup() {
   set_max_power_in_volts_and_milliamps(5, 2000);
 
 	// InitMotion();
-	controller.Initialize();
-
 	GenerateGlobalPalettes();
 
+	controller.Initialize();
 	controller.SetBaseEffect(effects[currentEffect]);
 	controller.SetBuffer(leds[2]);
 	effects[currentEffect]->Initialize();
@@ -116,11 +115,6 @@ void loop() {
 		controller.Render(palettes.finalPalette);
 		FastLED.show();
   }
-	// PrintColor(palettes.finalPalette[1][1]);
-	// for (int i = 0; i < 100; i++){
-	// 	leds[2][i] = CRGB::Red;
-	// }
-	// FastLED.show();
 }
 
 

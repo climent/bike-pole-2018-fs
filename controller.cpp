@@ -15,8 +15,11 @@ String Controller::Identify() {
 // void Controller::Initialize() {
 // }
 
+void Controller::Render() {
+  baseEffect->Render();
+}
+
 void Controller::Render(CRGBPalette256* finalPalette) {
-  // finalPalette = finalPalette;
   baseEffect->Render(finalPalette);
 }
 

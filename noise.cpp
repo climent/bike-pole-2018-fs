@@ -144,7 +144,10 @@ void Noise::MapNoiseToLEDsUsingPalette(CRGBPalette256* palette)
       bri = dim8_raw(bri * 2);
     }
 
+    // The palette holder has 3 slots for palettes. So far we are using just one
+    // but if we want to use several, update this variable.
     int pal = 1;
+
     index += startIndex;
     CRGB c = palette[pal][index];
     c.nscale8(bri);

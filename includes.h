@@ -28,12 +28,4 @@ struct Leds {
 };
 typedef struct Leds Leds;
 
-// struct Palettes {
-//   CRGBPalette16  palettes[kNumPalettes];
-//   CRGBPalette256 nextPalette[3];
-//   CRGBPalette256 currentPalette[3];
-//   CRGBPalette256 finalPalette[3];
-// };
-// typedef struct Palettes Palettes;
-
 #endif
