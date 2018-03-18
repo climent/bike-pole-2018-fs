@@ -19,7 +19,7 @@ public:
 
   void Animate(float mics);
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
-
+private:
   // An array of palette pointers so we can randomly choose one
   int _kNumPalettes;
   CRGBPalette16* _palettes;
@@ -30,7 +30,6 @@ public:
   CRGBPalette256* _nextPalette;
   CRGBPalette256* _currentPalette;
   CRGBPalette256* _finalPalette;
-private:
   bool active[3] = {false, false, false}; // are we currently animating anything?
 };
 

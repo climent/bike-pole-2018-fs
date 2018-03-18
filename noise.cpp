@@ -71,7 +71,6 @@ void Noise::Animate(unsigned long mics)
 void Noise::Render(CRGBPalette256* palette)
 {
   FadeOrClear();
-  // FillNoise8();
   MapNoiseToLEDsUsingPalette(palette);
 }
 

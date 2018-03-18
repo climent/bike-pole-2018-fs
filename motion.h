@@ -22,6 +22,8 @@ float maxAz = 0.0f;
 
 bool gotBumped = false;
 bool gotFlipped = false;
+bool gotPositiveTurned = false;
+bool gotNegativeTurned = false;
 
 bool rightSideUp = true;
 unsigned long micsInOtherOrientation = 0;
@@ -33,13 +35,14 @@ void InitMotion() {
 }
 
 void UpdateMotion(unsigned long mics) {
-	if (imu.available())
-	{
+	if (imu.available()) {
 		// Read the motion sensors
 		imu.readMotionSensor(ax, ay, az, gx, gy, gz, mx, my, mz);
+		// Update the SensorFusion filter
+		filter.update(gx, gy, gz, ax, ay, az, mx, my, mz);
 
-//    Serial.print("updated motion: ");
-//    Serial.println(ax);
+	  //  Serial.print("updated motion: ");
+ 		//  Serial.println(ax);
 
 		if (ax > maxAx) maxAx = ax;
 		if (ay > maxAx) maxAy = ay;
@@ -76,15 +79,15 @@ void UpdateMotion(unsigned long mics) {
 			rightSideUp = !rightSideUp;
 			gotFlipped = true;
 		}
-
-		// Update the SensorFusion filter
-		filter.update(gx, gy, gz, ax, ay, az, mx, my, mz);
 	}
 }
 
+// motion stuff
+float roll, pitch, heading; // Euler orientation
+float x, y, z; // vector orientation
+
 void getOrientation(float *roll, float *pitch, float *heading,
                     float *x, float *y, float *z) {
-	// print the heading, pitch and roll
 	*roll = filter.getRoll() + 180.0f;
 	*pitch = filter.getPitch() + 180.0f;
 	*heading = filter.getYaw();
@@ -92,10 +95,13 @@ void getOrientation(float *roll, float *pitch, float *heading,
 	float headRads = *heading / (TWO_PI);
 	float pitchRads = *pitch / (TWO_PI);
 
-
 	*x = (float)sin(headRads);
 	*y = (float)-(sin(pitchRads) * cos(headRads));
 	*z = (float)-(cos(pitchRads) * cos(headRads));
+}
+
+void analyzeMotion() {
+
 }
 
 #endif

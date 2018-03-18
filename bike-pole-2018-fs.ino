@@ -4,7 +4,7 @@
 #include "includes.h"
 #include "effect.h"
 #include "controller.h"
-#include "buttons.h"
+#include "button.h"
 #include "color_utils.h"
 #include "palmixer.h"
 
@@ -30,33 +30,36 @@ Effect* effects[] = {
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
-// Palettes palettes;
-Buttons briButtons = Buttons(PIN_UP, PIN_DOWN);
-Buttons effectButtons = Buttons(PIN_EFFECT);
+Button briUpButton = Button(PIN_UP);
+Button briDwButton = Button(PIN_DOWN);
+Button effectButton = Button(PIN_EFFECT);
 Controller controller = Controller(leds[0], leds[1]);
 Palmixer palmixer = Palmixer((int)kNumPalettes,
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 		palettes.finalPalette);
 
 // Global Brightness
-const uint8_t brightnessCount = 5;
-uint8_t brightnessMap[brightnessCount] = { 16, 32, 64, 128, 255 };
+uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
+const byte brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
 uint8_t briLevel = 1;
 uint8_t currentEffect = 0;
 
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
+const int timeTilPrint = 1000;
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
 const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
 const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
 
+int timeLeftTillPrint = timeTilPrint;
 int timeLeftTilAnimate = timeTilAnimate;
 int timeLeftTilRender = timeTilRender;
 int timeLeftTilOrientation = timeTilOrientation;
 int timeLeftTilPalChange = 0; // Force a palette change.
 
+unsigned long lastPrint = 0;
 unsigned long lastMillis = 0;
 unsigned long lastMicros = 0;
 unsigned long deltaMillis = 0;
@@ -101,12 +104,20 @@ void loop() {
 	UpdatePalette();
 	palmixer.Animate(deltaMicros);
 	controller.Animate(deltaMicros);
+
 	// UpdateMotion(micros());
+	getOrientation(&roll,&pitch,&heading,&x,&y,&z);
+
 	// CheckBumps();
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();
-
+	
+	if (timeLeftTillPrint <= 0)
+	{
+		timeLeftTillPrint = timeTilPrint;
+		Printer();
+	}
 	// Render all active buffers and mixdown, then show with power limits applied
 	if (timeLeftTilRender <= 0)
 	{
@@ -116,7 +127,6 @@ void loop() {
 		FastLED.show();
   }
 }
-
 
 void UpdateTimers() {
 	unsigned long currentMicros = micros();
@@ -129,7 +139,7 @@ void UpdateTimers() {
   lastMillis = currentMillis;
 
   // Decrement our timers
-  // timeLeftTillPrint -= deltamillis;
+  timeLeftTillPrint -= deltaMillis;
   timeLeftTilRender -= deltaMillis;
 	timeLeftTilAnimate -= deltaMillis;
   timeLeftTilOrientation -= deltaMillis;
@@ -181,21 +191,22 @@ void NextEffect() {
 }
 
 void CheckEffect() {
-	int8_t button = effectButtons.Read();
+	int8_t button = effectButton.Read();
 	if (button == 1) {
 		waitingForEffectToEnd = true;
 	}
 }
 
 void CheckBrightness() {
-	int8_t button = briButtons.Read();
-	switch (button) {
-	case 1:
+	int8_t buttonUp = briUpButton.Read();
+	int8_t buttonDw = briDwButton.Read();	
+	if (buttonUp == 1) {
 		if (briLevel < 4) briLevel += 1;
-		break;
-	case -1:
+		Serial.println("button pressed");		
+	}
+	if (buttonDw == 1) {
 		if (briLevel > 0) briLevel -= 1;
-		break;
+		Serial.println("button pressed");		
 	}
 	FastLED.setBrightness(brightnessMap[briLevel]);
 }
@@ -204,6 +215,15 @@ void DebugPrint(String message) {
 	if (DEBUG) {
 		Serial.println(message);
 	}
+}
+
+void Printer() {
+	Serial.print("Orientation (h, p, r): ");
+  Serial.print(heading);
+  Serial.print(" ");
+  Serial.print(pitch);
+  Serial.print(" ");
+  Serial.println(roll);
 }
 
 void CheckBumps() {

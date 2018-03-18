@@ -1,4 +1,3 @@
-// #include "palettes.h"
 #include "palmixer.h"
 
 Palmixer::Palmixer(int kNumPalettes, CRGBPalette16* palettes,
@@ -22,7 +21,6 @@ void Palmixer::Animate(float mics) {
   // Serial.println("Blending...");
 	for (int i = 0; i < 3; i++)
 	{
-    // _finalPalette[i] = _nextPalette[i];
 		if (active[i])
 		{
 			// For now just one animate mode, crossfade
