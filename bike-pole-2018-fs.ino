@@ -7,6 +7,7 @@
 #include "button.h"
 #include "color_utils.h"
 #include "palmixer.h"
+#include "mixer.h"
 
 // #ifdef MOTION
 #include "motion.h"
@@ -20,11 +21,11 @@ CRGB leds[3][NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* effects[] = {
+	new Noise(),
 	new Flash(CRGB::Red),
 	new Bounce(20, 220),
 	new Sparkles(80, 5, true),
 	new Pile(),
-	new Noise(),
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
@@ -47,7 +48,7 @@ uint8_t currentEffect = 0;
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
-const int timeTilPrint = 1000;
+const int timeTilPrint = 10;
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
 const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
@@ -72,6 +73,7 @@ int renderCount = 0;
 // Global aggressive var. If set, changing effects does not wait for completion
 bool aggressive = true;
 bool waitingForEffectToEnd = false;
+bool demoMode = false;
 
 void setup() {
 	Serial.begin(115200);
@@ -106,17 +108,17 @@ void loop() {
 	controller.Animate(deltaMicros);
 
 	// UpdateMotion(micros());
-	getOrientation(&roll,&pitch,&heading,&x,&y,&z);
+	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
 
 	// CheckBumps();
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();
-	
+
 	if (timeLeftTillPrint <= 0)
 	{
 		timeLeftTillPrint = timeTilPrint;
-		Printer();
+		// Printer();
 	}
 	// Render all active buffers and mixdown, then show with power limits applied
 	if (timeLeftTilRender <= 0)
@@ -152,7 +154,7 @@ void UpdatePalette() {
 	if (timeLeftTilPalChange <= 0)
 	{
 		// For now change all palettes
-		Serial.printf("Changing palettes...\n");
+		if (DEBUG) Serial.printf("Changing palettes...\n");
 		int newpal = random(0, kNumPalettes);
 		// one second fade to next palette
 		palmixer.SetNewPalette(0, newpal, 4.0f);
@@ -184,8 +186,8 @@ void NextEffect() {
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
 	controller.SetEffect(effects[currentEffect]);
-	Serial.print("Changing effect to ");
-	Serial.println(effects[currentEffect]->Identify());
+	if (DEBUG) Serial.print("Changing effect to ");
+	if (DEBUG) Serial.println(effects[currentEffect]->Identify());
 	controller.Reset();
 	effects[currentEffect]->SetBuffer(leds[2]);
 }
@@ -193,20 +195,23 @@ void NextEffect() {
 void CheckEffect() {
 	int8_t button = effectButton.Read();
 	if (button == 1) {
+		if (DEBUG) Serial.println("button change pressed");
 		waitingForEffectToEnd = true;
 	}
 }
 
 void CheckBrightness() {
 	int8_t buttonUp = briUpButton.Read();
-	int8_t buttonDw = briDwButton.Read();	
+	int8_t buttonDw = briDwButton.Read();
 	if (buttonUp == 1) {
+		if (DEBUG) Serial.println("button up pressed");
+		if (DEBUG && briLevel < 4) Serial.println("Bri up");
 		if (briLevel < 4) briLevel += 1;
-		Serial.println("button pressed");		
 	}
 	if (buttonDw == 1) {
+		if (DEBUG) Serial.println("button down pressed");
+		if (DEBUG && briLevel > 0) Serial.println("Bri down");
 		if (briLevel > 0) briLevel -= 1;
-		Serial.println("button pressed");		
 	}
 	FastLED.setBrightness(brightnessMap[briLevel]);
 }
@@ -218,12 +223,14 @@ void DebugPrint(String message) {
 }
 
 void Printer() {
-	Serial.print("Orientation (h, p, r): ");
-  Serial.print(heading);
-  Serial.print(" ");
-  Serial.print(pitch);
-  Serial.print(" ");
-  Serial.println(roll);
+	if (DEBUG) {
+		Serial.print("Orientation (h, p, r): ");
+	  Serial.print(heading);
+	  Serial.print(" ");
+	  Serial.print(pitch);
+	  Serial.print(" ");
+  	Serial.println(roll);
+ }
 }
 
 void CheckBumps() {

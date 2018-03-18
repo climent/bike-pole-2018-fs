@@ -30,6 +30,7 @@ public:
   virtual void Render();
   virtual void Render(CRGBPalette256* finalPalette);
   Leds SetPixels(int elevation);
+  int SetPixelsSingle(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
 

@@ -19,6 +19,7 @@ void Bounce::Animate() {
   if (ended) ended = false;
   if (now - lastMove > _speed) {
     FadeAll(dst, _tail);
+    // dst[SetPixelsSingle(position)] = CHSV(hue++, 255, 255);
     _leds = SetPixels(position);
     dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CHSV(hue++, 255, 255);
     // if direction == true, we are going up

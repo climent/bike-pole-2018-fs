@@ -150,7 +150,8 @@ void Noise::MapNoiseToLEDsUsingPalette(CRGBPalette256* palette)
     index += startIndex;
     CRGB c = palette[pal][index];
     c.nscale8(bri);
-    dst[i] = c;
+    // dst[i] = c;
+    dst[SetPixelsSingle(i)] = c;
   }
   startIndex++;
 }

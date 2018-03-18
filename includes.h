@@ -12,7 +12,7 @@
 #include "FastLED.h"
 
 #define DEBUG 1
-#define MOTION 1
+#define MOTION 0
 #define MAX_DIMENSION 32
 
 /*

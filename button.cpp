@@ -20,7 +20,7 @@ int8_t Button::Read() {
     if (now - millisBtwnPushes > lastPush)
     {
       lastPush = millis();
-      Serial.println("button pressed");
+      if (DEBUG) Serial.println("button pressed");
       lastState = state;
       return 1;
     }

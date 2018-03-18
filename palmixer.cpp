@@ -45,9 +45,8 @@ void Palmixer::Animate(float mics) {
 }
 
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
-  // Serial.println(_kNumPalettes);
 	if (newPal >= 42) return;
-  Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
+  // Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
 
 	_currentPalette[whichSlot] = _finalPalette[whichSlot];
 	_nextPalette[whichSlot] = _palettes[newPal];
