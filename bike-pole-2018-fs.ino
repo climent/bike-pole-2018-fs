@@ -113,10 +113,11 @@ void loop() {
 	palmixer.Animate(deltaMicros);
 	controller.Animate(deltaMicros);
 
+  // Right now all the motion code is not working correctly.
 	// UpdateMotion(micros());
 	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
-
 	// CheckBumps();
+
 	CheckBrightness();
 	CheckEffect();
 	WaitForNextEffect();
@@ -154,14 +155,14 @@ void UpdateTimers() {
   timeLeftTilOrientation -= deltaMillis;
 }
 
-// move this code to palmixer.UpdatePalette() or Animate()
+// move this code to palmixer.UpdatePalette() or palmixer.Animate()
 void UpdatePalette() {
 	// Periodically change the palette
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
 		// For now change all palettes
-		if (DEBUG) Serial.printf("Changing palettes...\n");
+		// if (DEBUG) Serial.printf("Changing palettes...\n");
 		int newpal = random(0, kNumPalettes);
 		// one second fade to next palette
 		palmixer.SetNewPalette(0, newpal, 4.0f);
@@ -196,6 +197,7 @@ void NextEffect() {
 	if (DEBUG) Serial.print("Changing effect to ");
 	if (DEBUG) Serial.println(effects[currentEffect]->Identify());
 	controller.Reset();
+	// Override mixer and directly output the effect into mixed buffer.
 	if (!USEMIXER) effects[currentEffect]->SetBuffer(leds[2]);
 }
 
