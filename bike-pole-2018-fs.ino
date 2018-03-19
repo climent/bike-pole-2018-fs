@@ -38,6 +38,7 @@ Controller controller = Controller(leds[0], leds[1]);
 Palmixer palmixer = Palmixer((int)kNumPalettes,
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 		palettes.finalPalette);
+Mixer mixer = Mixer(leds[0], leds[1], leds[2]);
 
 // Global Brightness
 uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
@@ -94,8 +95,13 @@ void setup() {
 	GenerateGlobalPalettes();
 
 	controller.Initialize();
-	controller.SetBaseEffect(effects[currentEffect]);
-	controller.SetBuffer(leds[2]);
+	if (USEMIXER) {
+		controller.SetBaseEffect(effects[0]);
+		controller.SetLayerEffect(effects[3]);
+  } else {
+		controller.SetEffect(effects[currentEffect]);
+		controller.SetBuffer(leds[2]);
+	}
 	effects[currentEffect]->Initialize();
 }
 
@@ -126,6 +132,7 @@ void loop() {
 		renderCount++;
 		timeLeftTilRender = timeTilRender;
 		controller.Render(palettes.finalPalette);
+		mixer.Mix();
 		FastLED.show();
   }
 }
@@ -189,7 +196,7 @@ void NextEffect() {
 	if (DEBUG) Serial.print("Changing effect to ");
 	if (DEBUG) Serial.println(effects[currentEffect]->Identify());
 	controller.Reset();
-	effects[currentEffect]->SetBuffer(leds[2]);
+	if (!USEMIXER) effects[currentEffect]->SetBuffer(leds[2]);
 }
 
 void CheckEffect() {

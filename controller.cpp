@@ -24,7 +24,7 @@ void Controller::Render(CRGBPalette256* finalPalette) {
 }
 
 void Controller::SetEffect(Effect* effect) {
-  SetBaseEffect(effect);
+  SetBaseEffect(effect);  
 }
 
 void Controller::SetBaseEffect(Effect* effect) {

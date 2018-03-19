@@ -14,6 +14,12 @@ Bounce::Bounce(int speed, int tail) {
   Initialize();
 }
 
+Bounce::Bounce(){
+  _speed = 20;
+  _tail = 220;
+  Initialize();
+}
+
 void Bounce::Animate() {
   now = millis();
   if (ended) ended = false;

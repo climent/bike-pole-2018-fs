@@ -110,6 +110,7 @@ private:
 
 class Bounce : public Effect {
 public:
+  Bounce();
   Bounce(int speed, int tail);
   void Animate();
   String Identify();

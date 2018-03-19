@@ -1,5 +1,5 @@
-#ifndef MIXER_H
-#define MIXER_H
+#ifndef PALMIXER_H
+#define PALMIXER_H
 #include "FastLED.h"
 
 // In this class we animate some faders or increments

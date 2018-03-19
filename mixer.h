@@ -1,7 +1,7 @@
-#include <FastLED.h>
-
 #ifndef MIXER_H
 #define MIXER_H
+#include "includes.h"
+#include <FastLED.h>
 
 class Mixer {
 public:
