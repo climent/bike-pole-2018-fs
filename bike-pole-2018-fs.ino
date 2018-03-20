@@ -8,6 +8,7 @@
 #include "color_utils.h"
 #include "palmixer.h"
 #include "mixer.h"
+#include "selector.h"
 
 // #ifdef MOTION
 #include "motion.h"

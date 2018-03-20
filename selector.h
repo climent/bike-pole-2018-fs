@@ -4,3 +4,11 @@
 #define SELECTOR_H
 #include "includes.h"
 #include <FastLED.h>
+
+class Selector {
+public:
+  Selector();
+  void ChangeEffect();
+};
+
+#endif
