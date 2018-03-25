@@ -27,10 +27,10 @@
 // palettes.
 
 //#define MAX_DIMENSION ((kMatrixWidth>kMatrixHeight) ? kMatrixWidth : kMatrixHeight)
-#define MAX_DIMENSION 32
+#define MAX_DIMENSION 16
 
 // Create some "boards" to do image and fluid and flame effects into
-static const int kMatrixWidth = 8;
+static const int kMatrixWidth = 4;
 static const int kMatrixHeight = 70;
 unsigned char board[kMatrixHeight][kMatrixWidth];
 unsigned char work[kMatrixHeight][kMatrixWidth];
@@ -77,10 +77,11 @@ void Noise::Render()
 // Fill the x/y array of 8-bit noise values using the inoise8 function.
 void Noise::FillNoise8() {
 
-  unsigned long startmics = micros();
+  // unsigned long startmics = micros();
 
   // If we're runing at a low "speed", some 8-bit artifacts become visible
-  // from frame-to-frame.  In order to reduce this, we can do some fast data-smoothing.
+  // from frame-to-frame.  In order to reduce this, we can do some fast
+  // data-smoothing.
   // The amount of data smoothing we're doing depends on "speed".
   uint8_t dataSmoothing = 0;
   if (speed < 50) {
@@ -116,8 +117,8 @@ void Noise::FillNoise8() {
   x += speed / 8;
   y -= speed / 16;
 
-  unsigned long endmics = micros();
-  unsigned int millis = (endmics-startmics)/1000;
+  // unsigned long endmics = micros();
+  // unsigned int millis = (endmics-startmics)/1000;
   // Serial.printf("Noise function takes %d milliseconds\n",millis);
 }
 
@@ -148,9 +149,8 @@ void Noise::MapNoiseToLEDsUsingPalette(CRGBPalette256* palette)
     int pal = 1;
 
     index += startIndex;
-    CRGB c = palette[pal][index];
+    CRGB c = finalPalette[pal][index];
     c.nscale8(bri);
-    // dst[i] = c;
     dst[SetPixelsSingle(i)] = c;
   }
   startIndex++;

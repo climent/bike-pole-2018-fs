@@ -26,20 +26,23 @@
 //  * finally, outputBuffer is used to transition from one effect to another
 //    * selector->ChangeEffect selects a new effect combination
 //    *
-CRGB leds[2][3][NUM_LEDS];
+CRGB leds[3][NUM_LEDS];
 CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* null = new Null();
 Effect* noise = new Noise();
 Effect* flash =	new Flash(CRGB::Red);
+Effect* bounce = new Bounce(20, 220);
+Effect* sparkles = new Sparkles(80, 5, true);
+Effect* pile = new Pile();
 
 Effect* effects[] = {
 	noise,
 	flash,
-	new Bounce(20, 220),
-	new Sparkles(80, 5, true),
-	new Pile(),
+	bounce,
+	sparkles,
+	pile,
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
@@ -48,11 +51,14 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 Button briUpButton = Button(PIN_UP);
 Button briDwButton = Button(PIN_DOWN);
 Button effectButton = Button(PIN_EFFECT);
-Controller controller = Controller(leds[0][0], leds[0][1]);
+
+Controller controller = Controller(leds[0], leds[1]);
+
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 	  palettes.finalPalette);
 // Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
+
 Mixer mixer = Mixer(outputBuffer);
 
 // Global Brightness
@@ -72,8 +78,8 @@ const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as w
 
 int timeLeftTillPrint = timeTilPrint;
 int timeLeftTilAnimate = timeTilAnimate;
-int timeLeftTilRender = timeTilRender;
 int timeLeftTilOrientation = timeTilOrientation;
+int timeLeftTilRender = timeTilRender;
 int timeLeftTilPalChange = 0; // Force a palette change.
 
 unsigned long lastPrint = 0;
@@ -110,26 +116,27 @@ void setup() {
 	GenerateGlobalPalettes();
 
 	controller.Initialize();
+
 	if (USEMIXER) {
 		controller.SetBaseEffect(effects[0]);
-		// mixer.SetCurrentBuffer(leds[0][0]);
 		controller.SetLayerEffect(effects[1]);
   } else {
 		controller.SetEffect(effects[currentEffect]);
 		controller.SetBuffer(outputBuffer);
 	}
+
 	controller.SetTimer(timeTilRender);
 	effects[currentEffect]->Initialize();
-	// Serial.println("Palettes");
-	// Serial.println(sizeof(palettes.palettes));
-	// Serial.println(sizeof(palettes.palettes[0]));
 
+  // noise effect uses a palette to render colors
+  noise->SetPaleteIndex(0);
 	noise->SetPalette(palettes.finalPalette);
+
+	palmixer.SetTimer(timeTilPalChange);
 }
 
 void loop() {
 	// Serial.print("Looping...");
-	// Serial.println(framesCount);
 	framesCount++;
 
   UpdateTimers();

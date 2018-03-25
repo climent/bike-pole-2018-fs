@@ -8,7 +8,7 @@
 class Palmixer {
 public:
   Palmixer(
-    CRGBPalette16 palettes[],
+    CRGBPalette16* palettes,
     CRGBPalette256* nextPalette,
     CRGBPalette256* currentPalette,
     CRGBPalette256* finalPalette
@@ -19,7 +19,7 @@ public:
   void UpdatePalettes(int deltaMicros);
   void Animate(float mics);
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
-  // void SetTimer(int timeTilPalChange);
+  void SetTimer(int timeTilPalChange);
 private:
   // An array of palette pointers so we can randomly choose one
   int _kNumPalettes;

@@ -55,10 +55,10 @@ void Effect::FadeOrClear() {
   // if (clearmode == kClear) {
   //   Blackout(dst);
   // } else {
-  //   for (int i = 0; i < NUM_LEDS; i++)
-  //   {
-  //     dst[i].nscale8(fadeunits);
-  //   }
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+      dst[i].nscale8(100);
+    }
   // }
 }
 

@@ -1,11 +1,10 @@
 // #include "palettes.h"
 #include "palmixer.h"
 
-Palmixer::Palmixer(CRGBPalette16 palettes[],
+Palmixer::Palmixer(CRGBPalette16* palettes,
     CRGBPalette256* nextPalette,
     CRGBPalette256* currentPalette,
     CRGBPalette256* finalPalette) {
-  _kNumPalettes = *(&palettes + 1) - palettes;
   _palettes = palettes;
   _nextPalette = nextPalette;
   _currentPalette = currentPalette;
@@ -13,12 +12,8 @@ Palmixer::Palmixer(CRGBPalette16 palettes[],
   active[0] = false;
   active[1] = false;
   active[2] = false;
+  // Set a sane default.
 	timer = 10000000;
-  // GenerateGlobalPalettes();
-  // Serial.println("Palettes");
-  // Serial.println(sizeof(_palettes));
-  // Serial.println(sizeof(_palettes[0]));
-
 }
 
 void Palmixer::Animate(float mics) {
@@ -50,11 +45,13 @@ void Palmixer::Animate(float mics) {
 	}
 }
 
-// void SetTimer(int timeTilPalChange) {
-// 	timer = timeTilPalChange;
-// }
+void Palmixer::SetTimer(int timeTilPalChange) {
+	timer = timeTilPalChange;
+}
 
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
+  // Serial.println(_kNumPalettes);
 	if (newPal >= _kNumPalettes) return;
   // Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
 
@@ -68,6 +65,7 @@ void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
 }
 
 void Palmixer::UpdatePalettes(int deltaMicros) {
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{

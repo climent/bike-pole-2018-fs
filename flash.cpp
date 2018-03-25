@@ -53,6 +53,7 @@ void Flash::Blink() {
     }
   }
 }
+
 void Flash::Animate() {
   now = millis();
   // Serial.println(now);
