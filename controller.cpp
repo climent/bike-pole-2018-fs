@@ -15,14 +15,21 @@ String Controller::Identify() {
 // void Controller::Initialize() {
 // }
 
-void Controller::Render() {
-  if (baseEffect != NULL) baseEffect->Render();
-  if (layerEffect != NULL) layerEffect->Render();
+void Controller::SetTimer(int timer) {
+  timeTilRender = timer;
 }
 
-void Controller::Render(CRGBPalette256* finalPalette) {
-  if (baseEffect != NULL) baseEffect->Render(finalPalette);
-  if (layerEffect != NULL) layerEffect->Render();
+bool Controller::Render(int deltaMillis) {
+  timeLeftTilRender -= deltaMillis;
+  if (timeLeftTilRender <= 0)
+	{
+		timeLeftTilRender = timeTilRender;
+    if (baseEffect != NULL) baseEffect->Render();
+    if (layerEffect != NULL) layerEffect->Render();
+    if (baseEffect == NULL && layerEffect == NULL) return false;
+    return true;
+  }
+  return false;
 }
 
 void Controller::SetEffect(Effect* effect) {

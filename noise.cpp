@@ -68,10 +68,10 @@ void Noise::Animate(unsigned long mics)
   FillNoise8();
 }
 
-void Noise::Render(CRGBPalette256* palette)
+void Noise::Render()
 {
   FadeOrClear();
-  MapNoiseToLEDsUsingPalette(palette);
+  MapNoiseToLEDsUsingPalette(finalPalette);
 }
 
 // Fill the x/y array of 8-bit noise values using the inoise8 function.

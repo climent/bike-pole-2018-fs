@@ -43,10 +43,6 @@ void Effect::Animate(unsigned long mics) {
   Animate();
 }
 
-void Effect::Render(CRGBPalette256* finalPalette) {
-	//Overrided in inheriting classes.
-}
-
 void Effect::Render() {
 	//Overrided in inheriting classes.
 }
@@ -64,4 +60,12 @@ void Effect::FadeOrClear() {
   //     dst[i].nscale8(fadeunits);
   //   }
   // }
+}
+
+void Effect::SetPaleteIndex(uint8_t palIndex) {
+	pal = palIndex;
+}
+
+void Effect::SetPalette(CRGBPalette256* palette) {
+	finalPalette = palette;
 }

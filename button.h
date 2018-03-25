@@ -7,7 +7,7 @@
 class Button {
 public:
   Button(int pin);
-  int8_t Read();
+  bool Read();
 private:
   int _pin;
   int millisBtwnPushes;

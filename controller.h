@@ -18,14 +18,18 @@ public:
   bool CheckEnd();
   void Reset();
   void SetBuffer(CRGB* dest);
-  void Render();
-  void Render(CRGBPalette256* finalPalette);
-  // void Initialize();
+  bool Render(int deltaMillis);
+  void SetTimer(int timer);
+
   Effect* baseEffect;
   Effect* layerEffect;
   CRGB* base;
   CRGB* layer;
   CRGBPalette256* finalPalette;
+
+  int timeLeftTilRender;
+  int timeTilRender;
+  
 private:
   int var;
 };

@@ -9,11 +9,11 @@ Button::Button(int pin) {
   digitalWrite(_pin, HIGH);
 }
 
-int8_t Button::Read() {
+bool Button::Read() {
   now = millis();
   state = digitalRead(_pin);
 
-  if (state == lastState) return 0;
+  if (state == lastState) return false;
 
   if (state != lastState && state == LOW)
   {
@@ -22,10 +22,10 @@ int8_t Button::Read() {
       lastPush = millis();
       if (DEBUG) Serial.println("button pressed");
       lastState = state;
-      return 1;
+      return true;
     }
   } else {
     lastState = state;
   }
-  return 0;
+  return false;
 }

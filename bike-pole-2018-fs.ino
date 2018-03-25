@@ -30,16 +30,18 @@ CRGB leds[2][3][NUM_LEDS];
 CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
+Effect* null = new Null();
+Effect* noise = new Noise();
+Effect* flash =	new Flash(CRGB::Red);
+
 Effect* effects[] = {
-	new Noise(),
-	new Flash(CRGB::Red),
+	noise,
+	flash,
 	new Bounce(20, 220),
 	new Sparkles(80, 5, true),
 	new Pile(),
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
-
-Effect* null = new Null();
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
@@ -47,7 +49,7 @@ Button briUpButton = Button(PIN_UP);
 Button briDwButton = Button(PIN_DOWN);
 Button effectButton = Button(PIN_EFFECT);
 Controller controller = Controller(leds[0][0], leds[0][1]);
-Palmixer palmixer = Palmixer((int)kNumPalettes,
+Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 	  palettes.finalPalette);
 // Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
@@ -116,10 +118,13 @@ void setup() {
 		controller.SetEffect(effects[currentEffect]);
 		controller.SetBuffer(outputBuffer);
 	}
+	controller.SetTimer(timeTilRender);
 	effects[currentEffect]->Initialize();
 	// Serial.println("Palettes");
 	// Serial.println(sizeof(palettes.palettes));
 	// Serial.println(sizeof(palettes.palettes[0]));
+
+	noise->SetPalette(palettes.finalPalette);
 }
 
 void loop() {
@@ -128,8 +133,10 @@ void loop() {
 	framesCount++;
 
   UpdateTimers();
-	UpdatePalette();
+
+	palmixer.UpdatePalettes(deltaMicros);
 	palmixer.Animate(deltaMicros);
+
 	controller.Animate(deltaMicros);
 
   // Right now all the motion code is not working correctly.
@@ -146,15 +153,12 @@ void loop() {
 		timeLeftTillPrint = timeTilPrint;
 		Printer();
 	}
-	// Render all active buffers and mixdown, then show with power limits applied
-	if (timeLeftTilRender <= 0)
-	{
+
+	// Render all active buffers and mixdown
+	if (controller.Render(deltaMillis)) {
 		renderCount++;
-		timeLeftTilRender = timeTilRender;
-		controller.Render(palettes.finalPalette);
-		// if (USEMIXER) mixer.Mix();
 		FastLED.show();
-  }
+	}
 }
 
 void UpdateTimers() {
@@ -172,17 +176,6 @@ void UpdateTimers() {
   timeLeftTilRender -= deltaMillis;
 	timeLeftTilAnimate -= deltaMillis;
   timeLeftTilOrientation -= deltaMillis;
-}
-
-void UpdatePalette() {
-	// Periodically change the palette
-	timeLeftTilPalChange -= deltaMicros;
-	if (timeLeftTilPalChange <= 0)
-	{
-		if (DEBUG) Serial.printf("Changing palettes...\n");
-		palmixer.UpdatePalettes(4.0f);
-		timeLeftTilPalChange = timeTilPalChange;
-	}
 }
 
 void WaitForNextEffect() {
@@ -216,22 +209,19 @@ void NextEffect() {
 }
 
 void CheckEffect() {
-	int8_t button = effectButton.Read();
-	if (button == 1) {
+	if (effectButton.Read()) {
 		if (DEBUG) Serial.println("  button change pressed");
 		waitingForEffectToEnd = true;
 	}
 }
 
 void CheckBrightness() {
-	int8_t buttonUp = briUpButton.Read();
-	int8_t buttonDw = briDwButton.Read();
-	if (buttonUp == 1) {
+	if (briUpButton.Read()) {
 		if (DEBUG) Serial.println("  button up pressed");
 		if (DEBUG && briLevel < 4) Serial.println("> Bri up");
 		if (briLevel < 4) briLevel += 1;
 	}
-	if (buttonDw == 1) {
+	if (briDwButton.Read()) {
 		if (DEBUG) Serial.println("  button down pressed");
 		if (DEBUG && briLevel > 0) Serial.println("> Bri down");
 		if (briLevel > 0) briLevel -= 1;

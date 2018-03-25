@@ -28,15 +28,18 @@ public:
   virtual bool CheckEnd();
   virtual void Initialize();
   virtual void Render();
-  virtual void Render(CRGBPalette256* finalPalette);
+  // virtual void Render(CRGBPalette256* finalPalette);
   Leds SetPixels(int elevation);
   int SetPixelsSingle(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
-
+  void SetPalette(CRGBPalette256* finalPalette);
+  void SetPaleteIndex(uint8_t pal);
+  
   bool waitToEnd;
   bool ended;
   uint8_t pal; // pal index 0, 1 or 2
+  CRGBPalette256* finalPalette = NULL;
 };
 
 class Null : public Effect {
@@ -52,7 +55,7 @@ public:
   String Identify();
   void Initialize();
   void Reset();
-  void Render(CRGBPalette256* palette);
+  void Render();
 private:
   // static const int ONEMIL = 1000000;
   unsigned long micsperemit = 1000000;
