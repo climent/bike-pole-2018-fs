@@ -41,6 +41,7 @@ public:
 
 class Null : public Effect {
 public:
+  String Identify();
 private:
 };
 

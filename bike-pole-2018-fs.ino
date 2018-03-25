@@ -16,9 +16,18 @@
 
 #define DATA_PIN 7
 
-// Define the array of leds
-// buffer 0 and 1 are for mainaining the
-CRGB leds[3][NUM_LEDS];
+// Define the array of leds:
+// There 2 sets of 3 buffers. For each set:
+//  * buffer 0 and 1 are for base and layer effects
+//    * effect->Animate animates the effects
+//    * effect->Render renders the effect in the buffers
+//  * buffer 2 is a buffer for layer composition
+//    * mixer->Mix renders the layering
+//  * finally, outputBuffer is used to transition from one effect to another
+//    * selector->ChangeEffect selects a new effect combination
+//    *
+CRGB leds[2][3][NUM_LEDS];
+CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* effects[] = {
@@ -30,16 +39,19 @@ Effect* effects[] = {
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
+Effect* null = new Null();
+
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
 Button briUpButton = Button(PIN_UP);
 Button briDwButton = Button(PIN_DOWN);
 Button effectButton = Button(PIN_EFFECT);
-Controller controller = Controller(leds[0], leds[1]);
+Controller controller = Controller(leds[0][0], leds[0][1]);
 Palmixer palmixer = Palmixer((int)kNumPalettes,
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
-		palettes.finalPalette);
-Mixer mixer = Mixer(leds[0], leds[1], leds[2]);
+	  palettes.finalPalette);
+// Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
+Mixer mixer = Mixer(outputBuffer);
 
 // Global Brightness
 uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
@@ -50,7 +62,7 @@ uint8_t currentEffect = 0;
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
-const int timeTilPrint = 10;
+const int timeTilPrint = 10000;
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
 const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
@@ -86,7 +98,7 @@ void setup() {
   randomSeed(val);
 
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
-		leds[2], NUM_LEDS).setCorrection(TypicalLEDStrip);;
+		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
 
 	// Limit to 2 amps to begin with
@@ -98,16 +110,22 @@ void setup() {
 	controller.Initialize();
 	if (USEMIXER) {
 		controller.SetBaseEffect(effects[0]);
-		controller.SetLayerEffect(effects[3]);
+		// mixer.SetCurrentBuffer(leds[0][0]);
+		controller.SetLayerEffect(effects[1]);
   } else {
 		controller.SetEffect(effects[currentEffect]);
-		controller.SetBuffer(leds[2]);
+		controller.SetBuffer(outputBuffer);
 	}
 	effects[currentEffect]->Initialize();
+	// Serial.println("Palettes");
+	// Serial.println(sizeof(palettes.palettes));
+	// Serial.println(sizeof(palettes.palettes[0]));
 }
 
 void loop() {
-	// Serial.println("Looping...");
+	// Serial.print("Looping...");
+	// Serial.println(framesCount);
+	framesCount++;
 
   UpdateTimers();
 	UpdatePalette();
@@ -126,7 +144,7 @@ void loop() {
 	if (timeLeftTillPrint <= 0)
 	{
 		timeLeftTillPrint = timeTilPrint;
-		// Printer();
+		Printer();
 	}
 	// Render all active buffers and mixdown, then show with power limits applied
 	if (timeLeftTilRender <= 0)
@@ -134,7 +152,7 @@ void loop() {
 		renderCount++;
 		timeLeftTilRender = timeTilRender;
 		controller.Render(palettes.finalPalette);
-		mixer.Mix();
+		// if (USEMIXER) mixer.Mix();
 		FastLED.show();
   }
 }
@@ -156,24 +174,13 @@ void UpdateTimers() {
   timeLeftTilOrientation -= deltaMillis;
 }
 
-// move this code to palmixer.UpdatePalette() or palmixer.Animate()
 void UpdatePalette() {
 	// Periodically change the palette
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
-		// For now change all palettes
-		// if (DEBUG) Serial.printf("Changing palettes...\n");
-		int newpal = random(0, kNumPalettes);
-		// one second fade to next palette
-		palmixer.SetNewPalette(0, newpal, 4.0f);
-		newpal = random(0, kNumPalettes);
-		// one second fade to next palette
-		palmixer.SetNewPalette(1, newpal, 4.0f);
-		newpal = random(0, kNumPalettes);
-		// one second fade to next palette
-		palmixer.SetNewPalette(2, newpal, 4.0f);
-
+		if (DEBUG) Serial.printf("Changing palettes...\n");
+		palmixer.UpdatePalettes(4.0f);
 		timeLeftTilPalChange = timeTilPalChange;
 	}
 }
@@ -195,17 +202,23 @@ void NextEffect() {
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
 	controller.SetEffect(effects[currentEffect]);
-	if (DEBUG) Serial.print("Changing effect to ");
-	if (DEBUG) Serial.println(effects[currentEffect]->Identify());
+	if (DEBUG) {
+		Serial.print("> Changing effects to: ");
+	  Serial.print("[");
+		Serial.print(controller.GetBaseEffect());
+		Serial.print("] [");
+		Serial.print(controller.GetLayerEffect());
+		Serial.println("]");
+	}
 	controller.Reset();
-	// Override mixer and directly output the effect into mixed buffer.
-	if (!USEMIXER) effects[currentEffect]->SetBuffer(leds[2]);
+	// Override mixer and directly output the effect into output buffer.
+	if (!USEMIXER) effects[currentEffect]->SetBuffer(outputBuffer);
 }
 
 void CheckEffect() {
 	int8_t button = effectButton.Read();
 	if (button == 1) {
-		if (DEBUG) Serial.println("button change pressed");
+		if (DEBUG) Serial.println("  button change pressed");
 		waitingForEffectToEnd = true;
 	}
 }
@@ -214,13 +227,13 @@ void CheckBrightness() {
 	int8_t buttonUp = briUpButton.Read();
 	int8_t buttonDw = briDwButton.Read();
 	if (buttonUp == 1) {
-		if (DEBUG) Serial.println("button up pressed");
-		if (DEBUG && briLevel < 4) Serial.println("Bri up");
+		if (DEBUG) Serial.println("  button up pressed");
+		if (DEBUG && briLevel < 4) Serial.println("> Bri up");
 		if (briLevel < 4) briLevel += 1;
 	}
 	if (buttonDw == 1) {
-		if (DEBUG) Serial.println("button down pressed");
-		if (DEBUG && briLevel > 0) Serial.println("Bri down");
+		if (DEBUG) Serial.println("  button down pressed");
+		if (DEBUG && briLevel > 0) Serial.println("> Bri down");
 		if (briLevel > 0) briLevel -= 1;
 	}
 	FastLED.setBrightness(brightnessMap[briLevel]);
@@ -233,13 +246,23 @@ void DebugPrint(String message) {
 }
 
 void Printer() {
+	Serial.printf("> frames: run [%d] render [%d]\n", framesCount, renderCount);
+	framesCount = 0;
+	renderCount = 0;
+	Serial.print("> running effects: ");
+	Serial.print("[");
+	Serial.print(controller.GetBaseEffect());
+	Serial.print("] [");
+	Serial.print(controller.GetLayerEffect());
+	Serial.println("]");
+
 	if (DEBUG) {
-		Serial.print("Orientation (h, p, r): ");
-	  Serial.print(heading);
-	  Serial.print(" ");
-	  Serial.print(pitch);
-	  Serial.print(" ");
-  	Serial.println(roll);
+		// Serial.print("Orientation (h, p, r): ");
+	  // Serial.print(heading);
+	  // Serial.print(" ");
+	  // Serial.print(pitch);
+	  // Serial.print(" ");
+  	// Serial.println(roll);
  }
 }
 

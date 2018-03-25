@@ -16,15 +16,21 @@ String Controller::Identify() {
 // }
 
 void Controller::Render() {
-  baseEffect->Render();
+  if (baseEffect != NULL) baseEffect->Render();
+  if (layerEffect != NULL) layerEffect->Render();
 }
 
 void Controller::Render(CRGBPalette256* finalPalette) {
-  baseEffect->Render(finalPalette);
+  if (baseEffect != NULL) baseEffect->Render(finalPalette);
+  if (layerEffect != NULL) layerEffect->Render();
 }
 
 void Controller::SetEffect(Effect* effect) {
-  SetBaseEffect(effect);  
+  SetBaseEffect(effect);
+}
+
+void Controller::SetBuffer(CRGB* dest) {
+  baseEffect->SetBuffer(dest);
 }
 
 void Controller::SetBaseEffect(Effect* effect) {
@@ -35,6 +41,16 @@ void Controller::SetBaseEffect(Effect* effect) {
 void Controller::SetLayerEffect(Effect* effect) {
   layerEffect = effect;
   layerEffect->SetBuffer(layer);
+}
+
+String Controller::GetBaseEffect() {
+  if (baseEffect != NULL) return baseEffect->Identify();
+  return "";
+}
+
+String Controller::GetLayerEffect() {
+  if (layerEffect != NULL) return layerEffect->Identify();
+  return "";
 }
 
 void Controller::Animate(unsigned long mics) {
@@ -49,8 +65,4 @@ bool Controller::CheckEnd() {
 void Controller::Reset() {
   if (baseEffect != NULL) baseEffect->Reset();
   if (layerEffect != NULL) layerEffect->Reset();
-}
-
-void Controller::SetBuffer(CRGB* dest) {
-  baseEffect->SetBuffer(dest);
 }

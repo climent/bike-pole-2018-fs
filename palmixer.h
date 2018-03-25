@@ -8,7 +8,7 @@
 class Palmixer {
 public:
   Palmixer(int kNumPalettes,
-    CRGBPalette16* palettes,
+    CRGBPalette16 palettes[],
     CRGBPalette256* nextPalette,
     CRGBPalette256* currentPalette,
     CRGBPalette256* finalPalette
@@ -16,7 +16,7 @@ public:
   float fader[3] = {0.0f, 0.0f, 0.0f};    // Goes from 0.0f to 1.0f
   float deltaFade[3];                     // amount to fade per second
   fract8 fraction[3];
-
+  void UpdatePalettes(float seconds);
   void Animate(float mics);
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
 private:

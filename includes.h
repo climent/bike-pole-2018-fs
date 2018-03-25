@@ -13,7 +13,7 @@
 
 #define DEBUG 1
 #define MOTION 0
-#define USEMIXER 1
+#define USEMIXER 0
 #define MAX_DIMENSION 32
 
 /*

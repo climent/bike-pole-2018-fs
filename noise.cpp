@@ -57,14 +57,14 @@ String Noise::Identify() {
 
 void Noise::Animate(unsigned long mics)
 {
-  timeTillEmit -= mics;
-
-  // Move the patterns when it is time
-  if (timeTillEmit <= 0)
-  {
-    timeTillEmit = micsperemit;
-    FillNoise8();
-  }
+  // timeTillEmit -= mics;
+  //
+  // // Move the patterns when it is time
+  // if (timeTillEmit <= 0)
+  // {
+  //   timeTillEmit = micsperemit;
+  //   // FillNoise8();
+  // }
   FillNoise8();
 }
 

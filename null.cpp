@@ -1,16 +1,7 @@
 #include "effect.h"
 
-void Init() {
-}
-
-String Identify() {
+String Null::Identify() {
   return "null effect";
-}
-
-void Reset() {
-}
-
-void Animate() {
 }
 
 // void Render() {

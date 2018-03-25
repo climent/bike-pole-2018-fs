@@ -13,6 +13,8 @@ public:
   void SetEffect(Effect* effect);
   void SetBaseEffect(Effect* effect);
   void SetLayerEffect(Effect* effect);
+  String GetBaseEffect();
+  String GetLayerEffect();
   bool CheckEnd();
   void Reset();
   void SetBuffer(CRGB* dest);
