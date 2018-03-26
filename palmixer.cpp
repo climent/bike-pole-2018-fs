@@ -53,7 +53,7 @@ void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
   _kNumPalettes = *(&_palettes + 1) - _palettes;
   // Serial.println(_kNumPalettes);
 	if (newPal >= _kNumPalettes) return;
-  // Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
+  Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
 
 	_currentPalette[whichSlot] = _finalPalette[whichSlot];
 	_nextPalette[whichSlot] = _palettes[newPal];

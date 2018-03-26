@@ -35,7 +35,7 @@ public:
   void FadeOrClear();
   void SetPalette(CRGBPalette256* finalPalette);
   void SetPaleteIndex(uint8_t pal);
-  
+
   bool waitToEnd;
   bool ended;
   uint8_t pal; // pal index 0, 1 or 2
@@ -171,9 +171,9 @@ class Roller : public Effect {
 public:
   Roller(CRGB fColor, CRGB bColor);
   Roller(CRGB fColor, CRGB bColor, int speed);
+  String Identify();
   void Reset();
   void Animate();
-  String Identify();
   bool CheckEnd();
   void Initialize();
 private:
@@ -186,6 +186,45 @@ private:
   int position;
   Leds _leds;
   int bottom;
+};
+
+class Pools : public Effect {
+public:
+  float nodes[9]; // units are frontpalette space (0-255)
+  float vels[9];  // in frontpalette units per second
+  int locs[9]; // the node locations in strip space
+  int m_length;
+
+  Pools();
+  String Identify();
+  void Animate(unsigned long mics);
+  void Render();
+private:
+  void SlowVels();
+  void FastVels();
+  void Rythmic();
+};
+
+class Modchase : public Effect {
+public:
+  unsigned long micspershift = (unsigned long)((1.0f/30) * (float)1000000);
+  int timeTillShift = 0;
+  unsigned long micsperlaunch = 2000000;
+  int timeTillLaunch = 0;
+  unsigned long micsperpalchange = 150000;
+  int timeTillPalChange = 0;
+
+  unsigned char palIndex = 0;
+  int numToShift = 0;
+  int numToEmit = 0;
+
+  Modchase();
+  String Identify();
+  void Reset();
+  void SetSpeed(float ledspersec);
+  void SetFrequency(float f);
+	void Animate(unsigned long mics);
+	void Render();
 };
 
 #endif

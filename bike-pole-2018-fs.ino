@@ -31,18 +31,25 @@ CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* null = new Null();
+// Effect* null;
 Effect* noise = new Noise();
 Effect* flash =	new Flash(CRGB::Red);
 Effect* bounce = new Bounce(20, 220);
 Effect* sparkles = new Sparkles(80, 5, true);
 Effect* pile = new Pile();
+Effect* pools = new Pools();
+Effect* modchase = new Modchase();
 
 Effect* effects[] = {
+	// null,
+	modchase,
+	pools,
 	noise,
 	flash,
 	bounce,
 	sparkles,
 	pile,
+
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
@@ -131,6 +138,8 @@ void setup() {
   // noise effect uses a palette to render colors
   noise->SetPaleteIndex(0);
 	noise->SetPalette(palettes.finalPalette);
+	pools->SetPaleteIndex(0);
+	pools->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
 }
