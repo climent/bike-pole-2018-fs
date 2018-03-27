@@ -140,6 +140,7 @@ void setup() {
 	noise->SetPalette(palettes.finalPalette);
 	pools->SetPaleteIndex(0);
 	pools->SetPalette(palettes.finalPalette);
+	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
 }

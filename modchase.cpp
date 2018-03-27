@@ -4,6 +4,7 @@
 #include "effect.h"
 
 Modchase::Modchase() {
+  Reset();
 }
 
 String Modchase::Identify() {
@@ -13,9 +14,10 @@ String Modchase::Identify() {
 void Modchase::Reset() {
   micspershift = (unsigned long)((1.0f/30) * (float)1000000);
   timeTillShift = 0;
-
-  micsperlaunch = 100000;
+  micsperlaunch = 1800000;
   timeTillLaunch = 0;
+  micsperpalchange = 150000;
+  timeTillPalChange = 0;
 
   palIndex = 0;
   numToShift = 0;
@@ -50,12 +52,13 @@ void Modchase::Animate(unsigned long mics) {
 
   // Launch when it is time
   if (timeTillLaunch <= 0) {
-    numToEmit = (int)60;
+    numToEmit = (int)40;
     timeTillLaunch = micsperlaunch;
   }
 
   if (timeTillPalChange <= 0) {
     palIndex += 1;
+    // if (palIndex = 3) palIndex = 0;
     timeTillPalChange = micsperpalchange;
   }
 
