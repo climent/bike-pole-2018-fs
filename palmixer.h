@@ -1,6 +1,6 @@
 #ifndef PALMIXER_H
 #define PALMIXER_H
-#include "FastLED.h"
+#include <FastLED.h>
 
 // In this class we animate some faders or increments
 // and then support mixing of the two renderbuffers into the frontbuffer

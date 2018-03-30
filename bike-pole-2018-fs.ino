@@ -27,6 +27,8 @@
 //    * selector->ChangeEffect selects a new effect combination
 //    *
 CRGB leds[3][NUM_LEDS];
+CRGB currentBuffers[3][NUM_LEDS];
+CRGB nextBuffers[3][NUM_LEDS];
 CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
@@ -45,10 +47,10 @@ Effect* effects[] = {
 	modchase,
 	pools,
 	noise,
-	flash,
-	bounce,
-	sparkles,
-	pile,
+	// flash,
+	// bounce,
+	// sparkles,
+	// pile,
 
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
@@ -59,7 +61,9 @@ Button briUpButton = Button(PIN_UP);
 Button briDwButton = Button(PIN_DOWN);
 Button effectButton = Button(PIN_EFFECT);
 
-Controller controller = Controller(leds[0], leds[1]);
+// Controller controller = Controller(leds[0], leds[1]);
+Controller controller = Controller(currentBuffers[0], currentBuffers[1],
+		nextBuffers[0], nextBuffers[1]);
 
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
@@ -127,6 +131,7 @@ void setup() {
 	if (USEMIXER) {
 		controller.SetBaseEffect(effects[0]);
 		controller.SetLayerEffect(effects[1]);
+		controller.SetOutputBuffer(outputBuffer);
   } else {
 		controller.SetEffect(effects[currentEffect]);
 		controller.SetBuffer(outputBuffer);
@@ -211,7 +216,7 @@ void NextEffect() {
 	waitingForEffectToEnd = false;
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
-	controller.SetEffect(effects[currentEffect]);
+	controller.SetNextBaseEffect(effects[currentEffect]);
 	if (DEBUG) {
 		Serial.print("> Changing effects to: ");
 	  Serial.print("[");

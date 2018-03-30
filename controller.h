@@ -8,6 +8,7 @@
 class Controller : public Effect {
 public:
   Controller(CRGB* baseLeds, CRGB* layerLeds);
+  Controller(CRGB* baseLeds, CRGB* layerLeds, CRGB* nextBaseLeds, CRGB* nextLayerLeds);
   String Identify();
   void Animate(unsigned long mics);
   void SetEffect(Effect* effect);
@@ -15,9 +16,14 @@ public:
   void SetLayerEffect(Effect* effect);
   String GetBaseEffect();
   String GetLayerEffect();
+  void SetNextBaseEffect(Effect* effect);
+  void SetNextLayerEffect(Effect* effect);
+  String GetNextBaseEffect();
+  String GetNextLayerEffect();
   bool CheckEnd();
   void Reset();
   void SetBuffer(CRGB* dest);
+  void SetOutputBuffer(CRGB* dest);
   bool Render(int deltaMillis);
   void SetTimer(int timer);
 
@@ -25,13 +31,26 @@ public:
   Effect* layerEffect;
   CRGB* base;
   CRGB* layer;
+  CRGB* outputBuffer;
+  Effect* nextBaseEffect;
+  Effect* nextLayerEffect;
+  CRGB* nextBase;
+  CRGB* nextLayer;
   CRGBPalette256* finalPalette;
+  CRGBPalette256* nextFinalPalette;
+
+
+private:
+  float fader[2] = {0.0f, 0.0f};
+  float deltaFade[2];                     // amount to fade per second
+  fract8 fraction[2];
+
+  int var;
+  int timer;
+  // int timeLeftTilEffectChanges;
 
   int timeLeftTilRender;
   int timeTilRender;
-  
-private:
-  int var;
 };
 
 #endif

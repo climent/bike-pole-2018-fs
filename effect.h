@@ -209,7 +209,7 @@ class Modchase : public Effect {
 public:
   unsigned long micspershift = (unsigned long)((1.0f/30) * (float)1000000);
   int timeTillShift = 0;
-  unsigned long micsperlaunch = 2000000;
+  unsigned long micsperlaunch = 1800000;
   int timeTillLaunch = 0;
   unsigned long micsperpalchange = 150000;
   int timeTillPalChange = 0;
