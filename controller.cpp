@@ -12,6 +12,8 @@ Controller::Controller(CRGB* baseLeds, CRGB* layerLeds,
     CRGB* nextBaseLeds, CRGB* nextLayerLeds) {
   baseEffect = NULL;
   layerEffect = NULL;
+  nextBaseEffect = NULL;
+  nextLayerEffect = NULL;
   base = baseLeds;
   layer = layerLeds;
   nextBase = nextBaseLeds;
@@ -37,6 +39,8 @@ bool Controller::Render(int deltaMillis) {
 		timeLeftTilRender = timeTilRender;
     if (baseEffect != NULL) baseEffect->Render();
     if (layerEffect != NULL) layerEffect->Render();
+    if (nextBaseEffect != NULL) nextBaseEffect->Render();
+    if (nextLayerEffect != NULL) nextLayerEffect->Render();
     if (baseEffect == NULL && layerEffect == NULL) return false;
     return true;
   }
@@ -128,6 +132,7 @@ void Controller::Animate(unsigned long mics) {
 
 bool Controller::CheckEnd() {
   if (baseEffect != NULL) return baseEffect->CheckEnd();
+  return true;
 }
 
 void Controller::Reset() {

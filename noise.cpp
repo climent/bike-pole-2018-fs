@@ -39,6 +39,7 @@ Noise::Noise() {
   // Initialize();
 }
 
+
 void Noise::Reset() {
   Initialize();
 }

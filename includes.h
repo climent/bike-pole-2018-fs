@@ -1,3 +1,6 @@
+// This FASTLED_INTERNAL is only here to avoid warning messages.
+#define FASTLED_INTERNAL 1
+
 // How many leds in your strip?
 #define NUM_LEDS 210
 // #define DATA_PIN 7
@@ -9,7 +12,7 @@
 
 #ifndef STRUCTS_H
 #define STRUCTS_H
-#include "FastLED.h"
+#include <FastLED.h>
 
 #define DEBUG 1
 #define MOTION 0

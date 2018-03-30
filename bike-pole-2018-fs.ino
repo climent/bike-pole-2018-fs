@@ -1,3 +1,5 @@
+// This FASTLED_INTERNAL is only here to avoid warning messages.
+#define FASTLED_INTERNAL 1
 #include <FastLED.h>
 #include "palette_data.h"
 #include "palettes.h"
