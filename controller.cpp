@@ -105,28 +105,33 @@ void Controller::Animate(unsigned long mics) {
   if (nextBaseEffect != NULL) nextBaseEffect->Animate(mics);
   if (nextLayerEffect != NULL) nextLayerEffect->Animate(mics);
 
+  // Serial.println("Animating done...");
+
   // For now, assume that if we have a next Base Effect, we are in transition
   if (nextBaseEffect != NULL) {
     float dt = (float)(mics) / 1000000.0f;
     float fadeIncrement = deltaFade[0] * dt;
     fader[0] += fadeIncrement;
     fraction[0] = (uint8_t)(fader[0] * 255.0f);
-    if (fader[0] > 1.0f)
-    {
-      fader[0] = 1.0f;
-      fraction[0] = 255;
+    if (fader[0] > 1.0f)  {
+      fader[0] = 0.0f;
+      fraction[0] = 0;
       baseEffect = nextBaseEffect;
       baseEffect->SetBuffer(base);
       nextBaseEffect = NULL;
+      Serial.println("Blending done...");
+    } else {
+      // Serial.printf("Blending: %d",fraction);
+      Serial.printf("Fading: %f", fader[0]);
+      Serial.println("");
+      // Use blend to move toward target palette
+      for (int j = 0; j < NUM_LEDS; j++)  {
+        outputBuffer[j] = blend(
+            baseEffect->GetBuffer()[j],
+            nextBaseEffect->GetBuffer()[j],
+            fraction[0]);
+      }
     }
-
-    // Serial.printf("Blending: %d",fraction);
-    // Use blend to move toward target palette
-    for (int j = 0; j < NUM_LEDS; j++)
-    {
-      outputBuffer[j] = blend(base[j], nextBase[j], fraction[0]);
-    }
-
   }
 }
 

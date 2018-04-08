@@ -23,6 +23,7 @@ int Effect::SetPixelsSingle(int elevation) {
 	if (elevation >= 100 && elevation < 140) return 70 + elevation;
 	if (elevation >= 140 && elevation < 170) return elevation - 80;
 	if (elevation >= 170 && elevation < 210) return elevation - 170 + 90;
+	return -1;
 }
 
 void Effect::FadeAll(CRGB leds[NUM_LEDS], int fade) {

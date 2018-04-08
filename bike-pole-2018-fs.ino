@@ -75,7 +75,7 @@ Palmixer palmixer = Palmixer(
 Mixer mixer = Mixer(outputBuffer);
 
 // Global Brightness
-uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
+uint8_t brightnessMap[] = { 8, 16, 32, 64, 128, 255 };
 const byte brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
 uint8_t briLevel = 1;
 uint8_t currentEffect = 0;
@@ -137,6 +137,7 @@ void setup() {
   } else {
 		controller.SetEffect(effects[currentEffect]);
 		controller.SetBuffer(outputBuffer);
+		controller.SetOutputBuffer(outputBuffer);
 	}
 
 	controller.SetTimer(timeTilRender);
@@ -150,10 +151,12 @@ void setup() {
 	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
+
+	Serial.println("Setup done...");
 }
 
 void loop() {
-	// Serial.print("Looping...");
+	// Serial.println("Looping...");
 	framesCount++;
 
   UpdateTimers();
@@ -161,12 +164,16 @@ void loop() {
 	palmixer.UpdatePalettes(deltaMicros);
 	palmixer.Animate(deltaMicros);
 
+	// Serial.println("Animating...");
+
 	controller.Animate(deltaMicros);
 
   // Right now all the motion code is not working correctly.
 	// UpdateMotion(micros());
 	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
 	// CheckBumps();
+
+	// Serial.println("Checking buttons...");
 
 	CheckBrightness();
 	CheckEffect();
@@ -218,7 +225,8 @@ void NextEffect() {
 	waitingForEffectToEnd = false;
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
-	controller.SetNextBaseEffect(effects[currentEffect]);
+	// controller.SetNextBaseEffect(effects[currentEffect]);
+	controller.SetBaseEffect(effects[currentEffect]);
 	if (DEBUG) {
 		Serial.print("> Changing effects to: ");
 	  Serial.print("[");
@@ -242,13 +250,21 @@ void CheckEffect() {
 void CheckBrightness() {
 	if (briUpButton.Read()) {
 		if (DEBUG) Serial.println("  button up pressed");
-		if (DEBUG && briLevel < 4) Serial.println("> Bri up");
-		if (briLevel < 4) briLevel += 1;
+		if (DEBUG && briLevel < brightnessCount - 1)
+			Serial.print("> Bri up: ");
+		if (briLevel < brightnessCount - 1) {
+			briLevel += 1;
+			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+		}
 	}
 	if (briDwButton.Read()) {
 		if (DEBUG) Serial.println("  button down pressed");
-		if (DEBUG && briLevel > 0) Serial.println("> Bri down");
-		if (briLevel > 0) briLevel -= 1;
+		if (DEBUG && briLevel > 0)
+		  Serial.print("> Bri down: ");
+		if (briLevel > 0) {
+			briLevel -= 1;
+			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+		}
 	}
 	FastLED.setBrightness(brightnessMap[briLevel]);
 }

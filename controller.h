@@ -42,8 +42,8 @@ public:
 
 private:
   float fader[2] = {0.0f, 0.0f};
-  float deltaFade[2];                     // amount to fade per second
-  fract8 fraction[2];
+  float deltaFade[2] = {1.0f / 4, 1.0f / 4}; // amount to fade per second
+  fract8 fraction[2] = {0, 0};
 
   int var;
   int timer;

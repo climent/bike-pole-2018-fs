@@ -1,5 +1,6 @@
 // #include "palettes.h"
 #include "palmixer.h"
+#define FASTLED_INTERNAL 1
 
 Palmixer::Palmixer(CRGBPalette16* palettes,
     CRGBPalette256* nextPalette,
