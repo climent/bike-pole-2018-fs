@@ -99,6 +99,47 @@ String Controller::GetNextLayerEffect() {
   return "";
 }
 
+void Controller::InitiateTransition() {
+  transitionActive = true;
+}
+
+void Controller::Mix(unsigned long mics) {
+  // For now, assume that if we have a next Base Effect, we are in transition
+  if (nextBaseEffect != NULL) {
+    float dt = (float)(mics) / 1000000.0f;
+    float fadeIncrement = deltaFade[0] * dt;
+    fader[0] += fadeIncrement;
+    fraction[0] = (uint8_t)(fader[0] * 255.0f);
+    if (fader[0] > 1.0f)  {
+      for (int j = 0; j < NUM_LEDS; j++) {
+        outputBuffer[j] = nextBaseEffect->GetBuffer()[j];
+      }
+      fader[0] = 0.0f;
+      fraction[0] = 0;
+      SetBaseEffect(nextBaseEffect);
+      nextBaseEffect = NULL;
+      Serial.println("Blending done...");
+    } else {
+      // Serial.printf("Blending: %d", fraction[0]);
+      // Serial.printf("Fading: %f", fader[0]);
+      // Serial.println("");
+      // Use blend to move toward target palette
+      for (int j = 0; j < NUM_LEDS; j++)  {
+        outputBuffer[j] = blend(
+            CRGB::Black, baseEffect->GetBuffer()[j], 255 - fraction[0]);
+        outputBuffer[j] += blend(
+            baseEffect->GetBuffer()[j],
+            nextBaseEffect->GetBuffer()[j],
+            fraction[0]);
+      }
+    }
+  } else {
+    for (int j = 0; j < NUM_LEDS; j++) {
+      outputBuffer[j] = baseEffect->GetBuffer()[j];
+    }
+  }
+}
+
 void Controller::Animate(unsigned long mics) {
   if (baseEffect != NULL) baseEffect->Animate(mics);
   if (layerEffect != NULL) layerEffect->Animate(mics);
@@ -107,35 +148,7 @@ void Controller::Animate(unsigned long mics) {
 
   // Serial.println("Animating done...");
 
-  // For now, assume that if we have a next Base Effect, we are in transition
-  if (nextBaseEffect != NULL) {
-    float dt = (float)(mics) / 1000000.0f;
-    float fadeIncrement = deltaFade[0] * dt;
-    fader[0] += fadeIncrement;
-    fraction[0] = (uint8_t)(fader[0] * 255.0f);
-    if (fader[0] > 1.0f)  {
-      fader[0] = 0.0f;
-      fraction[0] = 0;
-      SetBaseEffect(nextBaseEffect);
-      nextBaseEffect = NULL;
-      Serial.println("Blending done...");
-    } else {
-      // Serial.printf("Blending: %d",fraction);
-      Serial.printf("Fading: %f", fader[0]);
-      Serial.println("");
-      // Use blend to move toward target palette
-      for (int j = 0; j < NUM_LEDS; j++)  {
-        outputBuffer[j] = blend(
-            baseEffect->GetBuffer()[j],
-            nextBaseEffect->GetBuffer()[j],
-            fraction[0]);
-      }
-    }
-  } else {
-    for (int j = 0; j < NUM_LEDS; j++) {
-      outputBuffer[j] =  baseEffect->GetBuffer()[j];
-    }
-  }
+  Mix(mics);
 }
 
 bool Controller::CheckEnd() {

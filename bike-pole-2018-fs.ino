@@ -28,8 +28,7 @@
 //  * finally, outputBuffer is used to transition from one effect to another
 //    * selector->ChangeEffect selects a new effect combination
 //    *
-
-// CRGB leds[3][NUM_LEDS];
+CRGB leds[3][NUM_LEDS];
 CRGB currentBuffers[3][NUM_LEDS];
 CRGB nextBuffers[3][NUM_LEDS];
 CRGB outputBuffer[NUM_LEDS];
@@ -37,6 +36,7 @@ CRGB outputBuffer[NUM_LEDS];
 
 Effect* null = new Null();
 // Effect* null;
+// Effect* white = new White();
 Effect* noise = new Noise();
 Effect* flash =	new Flash(CRGB::Red);
 Effect* bounce = new Bounce(20, 220);
@@ -47,12 +47,13 @@ Effect* modchase = new Modchase();
 
 Effect* effects[] = {
 	// null,
-	modchase,
+  // test,
+	// modchase,
 	pools,
 	noise,
 	// flash,
 	// bounce,
-	// sparkles,
+	sparkles,
 	// pile,
 
 	// new Roller(CRGB::White, CRGB::White, 2),
@@ -70,7 +71,7 @@ Controller controller = Controller(currentBuffers[0], currentBuffers[1],
 
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
-		palettes.finalPalette);
+	  palettes.finalPalette);
 // Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
 
 Mixer mixer = Mixer(outputBuffer);
@@ -87,8 +88,8 @@ uint8_t currentEffect = 0;
 const int timeTilPrint = 10000;
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
-const int timeTilOrientation = 16; // Let's try 60hz for motion updates as well
-const int timeTilPalChange = 10000000; // Time for palettes updates
+const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
+const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
 
 int timeLeftTillPrint = timeTilPrint;
 int timeLeftTilAnimate = timeTilAnimate;
@@ -178,7 +179,7 @@ void loop() {
 
 	CheckBrightness();
 	CheckEffect();
-	WaitForNextEffect();
+	// WaitForNextEffect();
 
 	if (timeLeftTillPrint <= 0)
 	{
@@ -212,12 +213,12 @@ void UpdateTimers() {
 
 void WaitForNextEffect() {
 	if (waitingForEffectToEnd) {
-		if (!aggressive) {
+		if (aggressive) {
+			NextEffect();
+		} else {
 			if (controller.CheckEnd()) {
 				NextEffect();
 			}
-		} else {
-			NextEffect();
 		}
 	}
 }
@@ -226,8 +227,8 @@ void NextEffect() {
 	waitingForEffectToEnd = false;
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
-	// controller.SetNextBaseEffect(effects[currentEffect]);
-	controller.SetBaseEffect(effects[currentEffect]);
+	controller.SetNextBaseEffect(effects[currentEffect]);
+	// controller.SetBaseEffect(effects[currentEffect]);
 	if (DEBUG) {
 		Serial.print("> Changing effects to: ");
 	  Serial.print("[");
@@ -238,13 +239,14 @@ void NextEffect() {
 	}
 	controller.Reset();
 	// Override mixer and directly output the effect into output buffer.
-	if (!USEMIXER) effects[currentEffect]->SetBuffer(outputBuffer);
+	// if (!USEMIXER) effects[currentEffect]->SetBuffer(outputBuffer);
 }
 
 void CheckEffect() {
 	if (effectButton.Read()) {
 		if (DEBUG) Serial.println("  button change pressed");
-		waitingForEffectToEnd = true;
+		// waitingForEffectToEnd = true;
+		NextEffect();
 	}
 }
 
