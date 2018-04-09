@@ -28,7 +28,8 @@
 //  * finally, outputBuffer is used to transition from one effect to another
 //    * selector->ChangeEffect selects a new effect combination
 //    *
-CRGB leds[3][NUM_LEDS];
+
+// CRGB leds[3][NUM_LEDS];
 CRGB currentBuffers[3][NUM_LEDS];
 CRGB nextBuffers[3][NUM_LEDS];
 CRGB outputBuffer[NUM_LEDS];
@@ -69,7 +70,7 @@ Controller controller = Controller(currentBuffers[0], currentBuffers[1],
 
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
-	  palettes.finalPalette);
+		palettes.finalPalette);
 // Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
 
 Mixer mixer = Mixer(outputBuffer);
@@ -86,8 +87,8 @@ uint8_t currentEffect = 0;
 const int timeTilPrint = 10000;
 const int timeTilAnimate = 10;
 const int timeTilRender = 16; // 60Hz rendering
-const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
+const int timeTilOrientation = 16; // Let's try 60hz for motion updates as well
+const int timeTilPalChange = 10000000; // Time for palettes updates
 
 int timeLeftTillPrint = timeTilPrint;
 int timeLeftTilAnimate = timeTilAnimate;
@@ -136,7 +137,7 @@ void setup() {
 		controller.SetOutputBuffer(outputBuffer);
   } else {
 		controller.SetEffect(effects[currentEffect]);
-		controller.SetBuffer(outputBuffer);
+		// controller.SetBuffer(outputBuffer);
 		controller.SetOutputBuffer(outputBuffer);
 	}
 

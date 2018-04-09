@@ -29,13 +29,13 @@ public:
 
   Effect* baseEffect;
   Effect* layerEffect;
-  CRGB* base;
-  CRGB* layer;
+  CRGB* baseBuffer;
+  CRGB* layerBuffer;
   CRGB* outputBuffer;
   Effect* nextBaseEffect;
   Effect* nextLayerEffect;
-  CRGB* nextBase;
-  CRGB* nextLayer;
+  CRGB* nextBaseBuffer;
+  CRGB* nextLayerBuffer;
   CRGBPalette256* finalPalette;
   CRGBPalette256* nextFinalPalette;
 

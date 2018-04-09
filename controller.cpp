@@ -3,8 +3,8 @@
 Controller::Controller(CRGB* baseLeds, CRGB* layerLeds) {
   baseEffect = NULL;
   layerEffect = NULL;
-  base = baseLeds;
-  layer = layerLeds;
+  baseBuffer = baseLeds;
+  layerBuffer = layerLeds;
   ended = false;
 }
 
@@ -14,10 +14,10 @@ Controller::Controller(CRGB* baseLeds, CRGB* layerLeds,
   layerEffect = NULL;
   nextBaseEffect = NULL;
   nextLayerEffect = NULL;
-  base = baseLeds;
-  layer = layerLeds;
-  nextBase = nextBaseLeds;
-  nextLayer = nextLayerLeds;
+  baseBuffer = baseLeds;
+  layerBuffer = layerLeds;
+  nextBaseBuffer = nextBaseLeds;
+  nextLayerBuffer = nextLayerLeds;
   ended = false;
 }
 
@@ -61,22 +61,22 @@ void Controller::SetOutputBuffer(CRGB* dest) {
 
 void Controller::SetBaseEffect(Effect* effect) {
   baseEffect = effect;
-  baseEffect->SetBuffer(base);
+  baseEffect->SetBuffer(baseBuffer);
 }
 
 void Controller::SetLayerEffect(Effect* effect) {
   layerEffect = effect;
-  layerEffect->SetBuffer(layer);
+  layerEffect->SetBuffer(layerBuffer);
 }
 
 void Controller::SetNextBaseEffect(Effect* effect) {
   nextBaseEffect = effect;
-  nextBaseEffect->SetBuffer(nextBase);
+  nextBaseEffect->SetBuffer(nextBaseBuffer);
 }
 
 void Controller::SetNextLayerEffect(Effect* effect) {
   nextLayerEffect = effect;
-  nextLayerEffect->SetBuffer(nextLayer);
+  nextLayerEffect->SetBuffer(nextLayerBuffer);
 }
 
 String Controller::GetBaseEffect() {
@@ -116,8 +116,7 @@ void Controller::Animate(unsigned long mics) {
     if (fader[0] > 1.0f)  {
       fader[0] = 0.0f;
       fraction[0] = 0;
-      baseEffect = nextBaseEffect;
-      baseEffect->SetBuffer(base);
+      SetBaseEffect(nextBaseEffect);
       nextBaseEffect = NULL;
       Serial.println("Blending done...");
     } else {
@@ -131,6 +130,10 @@ void Controller::Animate(unsigned long mics) {
             nextBaseEffect->GetBuffer()[j],
             fraction[0]);
       }
+    }
+  } else {
+    for (int j = 0; j < NUM_LEDS; j++) {
+      outputBuffer[j] =  baseEffect->GetBuffer()[j];
     }
   }
 }
