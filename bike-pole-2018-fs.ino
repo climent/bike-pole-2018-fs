@@ -66,12 +66,14 @@ Button briDwButton = Button(PIN_DOWN);
 Button effectButton = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
+
 Controller controller = Controller(currentBuffers[0], currentBuffers[1],
 		nextBuffers[0], nextBuffers[1]);
 
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 	  palettes.finalPalette);
+
 // Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
 
 Mixer mixer = Mixer(outputBuffer);
@@ -114,6 +116,8 @@ bool demoMode = false;
 
 void setup() {
 	Serial.begin(115200);
+	delay(1000); // Let the serial monitor come up
+
 	Serial.print("Resetting... ");
 
 	int val = analogRead(0); // read random value;
@@ -138,7 +142,6 @@ void setup() {
 		controller.SetOutputBuffer(outputBuffer);
   } else {
 		controller.SetEffect(effects[currentEffect]);
-		// controller.SetBuffer(outputBuffer);
 		controller.SetOutputBuffer(outputBuffer);
 	}
 
@@ -156,6 +159,8 @@ void setup() {
 
 	Serial.println("Setup done...");
 }
+
+bool black = true;
 
 void loop() {
 	// Serial.println("Looping...");
@@ -192,6 +197,12 @@ void loop() {
 		renderCount++;
 		FastLED.show();
 	}
+	// black = true;
+	// for (int i = 0; i < NUM_LEDS; i++) {
+	// 	if (outputBuffer[i].r > 12 || outputBuffer[i].g > 12 || outputBuffer[i].b > 12)
+	// 		black = false;
+	// }
+  // if (black == true) Serial.println("BLACK!");
 }
 
 void UpdateTimers() {

@@ -7,8 +7,20 @@
 
 class Controller : public Effect {
 public:
-  Controller(CRGB* baseLeds, CRGB* layerLeds);
-  Controller(CRGB* baseLeds, CRGB* layerLeds, CRGB* nextBaseLeds, CRGB* nextLayerLeds);
+  Controller(
+      CRGB* baseLeds,
+      CRGB* layerLeds);
+  Controller(
+      CRGB* baseLeds,
+      CRGB* layerLeds,
+      CRGB* nextBaseLeds,
+      CRGB* nextLayerLeds);
+  Controller(
+      CRGB* baseLeds,
+      CRGB* layerLeds,
+      CRGB* nextBaseLeds,
+      CRGB* nextLayerLeds,
+      CRGB* outputLeds);
   String Identify();
   void Animate(unsigned long mics);
   void SetEffect(Effect* effect);
@@ -32,20 +44,21 @@ public:
   Effect* layerEffect;
   CRGB* baseBuffer;
   CRGB* layerBuffer;
-  CRGB* outputBuffer;
   Effect* nextBaseEffect;
   Effect* nextLayerEffect;
   CRGB* nextBaseBuffer;
   CRGB* nextLayerBuffer;
+
+  CRGB* outputBuffer;
+
   CRGBPalette256* finalPalette;
   CRGBPalette256* nextFinalPalette;
-
 
 private:
   void Mix(unsigned long mics);
 
   bool transitionActive = false;
-  
+
   float fader[2] = {0.0f, 0.0f};
   float deltaFade[2] = {1.0f / 4, 1.0f / 4}; // amount to fade per second
   fract8 fraction[2] = {0, 0};

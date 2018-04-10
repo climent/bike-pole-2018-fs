@@ -21,6 +21,20 @@ Controller::Controller(CRGB* baseLeds, CRGB* layerLeds,
   ended = false;
 }
 
+Controller::Controller(CRGB* baseLeds, CRGB* layerLeds,
+    CRGB* nextBaseLeds, CRGB* nextLayerLeds, CRGB* outputLeds) {
+  baseEffect = NULL;
+  layerEffect = NULL;
+  nextBaseEffect = NULL;
+  nextLayerEffect = NULL;
+  baseBuffer = baseLeds;
+  layerBuffer = layerLeds;
+  nextBaseBuffer = nextBaseLeds;
+  nextLayerBuffer = nextLayerLeds;
+  outputBuffer = outputLeds;
+  ended = false;
+}
+
 String Controller::Identify() {
 	return "controller";
 }
@@ -125,10 +139,12 @@ void Controller::Mix(unsigned long mics) {
       // Serial.println("");
       // Use blend to move toward target palette
       for (int j = 0; j < NUM_LEDS; j++)  {
+        // outputBuffer[j] = baseEffect->GetBuffer()[j];
+
         outputBuffer[j] = blend(
             CRGB::Black, baseEffect->GetBuffer()[j], 255 - fraction[0]);
-        outputBuffer[j] += blend(
-            baseEffect->GetBuffer()[j],
+        outputBuffer[j] = blend(
+            outputBuffer[j],
             nextBaseEffect->GetBuffer()[j],
             fraction[0]);
       }
