@@ -48,17 +48,19 @@ void Controller::SetTimer(int timer) {
 
 bool Controller::Render(int deltaMillis) {
   timeLeftTilRender -= deltaMillis;
-  if (timeLeftTilRender <= 0)
-	{
+  bool response = false;
+  if (timeLeftTilRender <= 0)	{
 		timeLeftTilRender = timeTilRender;
     if (baseEffect != NULL) baseEffect->Render();
     if (layerEffect != NULL) layerEffect->Render();
     if (nextBaseEffect != NULL) nextBaseEffect->Render();
     if (nextLayerEffect != NULL) nextLayerEffect->Render();
+
     if (baseEffect == NULL && layerEffect == NULL) return false;
-    return true;
+    response = true;
   }
-  return false;
+  Mix(deltaMillis * 1000);
+  return response;
 }
 
 void Controller::SetEffect(Effect* effect) {
@@ -164,7 +166,7 @@ void Controller::Animate(unsigned long mics) {
 
   // Serial.println("Animating done...");
 
-  Mix(mics);
+  // Mix(mics);
 }
 
 bool Controller::CheckEnd() {
