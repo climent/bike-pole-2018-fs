@@ -46,9 +46,40 @@ void Controller::SetTimer(int timer) {
   timeTilRender = timer;
 }
 
+void Controller::PreRender(int millis) {
+  // Before the actual render occurs we need to decide which effect goes where
+  // if (nextBaseEffect != NULL) {
+  if (transitionActive) {
+    float dt = (float)(millis) / 1000.0f;
+    float fadeIncrement = deltaFade[0] * dt;
+    fader[0] += fadeIncrement;
+    fraction[0] = (uint8_t)(fader[0] * 255.0f);
+    if (fader[0] > 1.0f)  {
+      // Serial.printf("Fader final value: %f", fader[0]);
+      // Serial.println("");
+      // for (int j = 0; j < NUM_LEDS; j++) {
+      //   outputBuffer[j] = nextBaseEffect->GetBuffer()[j];
+      // }
+      fader[0] = 0.0f;
+      fraction[0] = 0;
+      // Transition the data from the next buffer to the current buffer
+      for ( uint16_t i = 0; i < NUM_LEDS; i++) {
+        baseBuffer[i] = nextLayerBuffer[i];
+      }
+      SetBaseEffect(nextBaseEffect);
+      nextBaseEffect = NULL;
+      transitionActive = false;
+      Serial.println("Blending done...");
+    }
+  }
+}
+
 bool Controller::Render(int deltaMillis) {
   timeLeftTilRender -= deltaMillis;
   bool response = false;
+
+  PreRender(deltaMillis);
+
   if (timeLeftTilRender <= 0)	{
 		timeLeftTilRender = timeTilRender;
     if (baseEffect != NULL) baseEffect->Render();
@@ -59,8 +90,32 @@ bool Controller::Render(int deltaMillis) {
     if (baseEffect == NULL && layerEffect == NULL) return false;
     response = true;
   }
-  Mix(deltaMillis * 1000);
+
+  Mix();
+
   return response;
+}
+
+void Controller::Mix() {
+  // For now, assume that if we have a next Base Effect, we are in transition
+  if (transitionActive) {
+    // Serial.printf("Blending: %d", fraction[0]);
+    // Serial.printf("Fading: %f", fader[0]);
+    // Serial.println("");
+    // Use blend to move toward target palette
+    for (int j = 0; j < NUM_LEDS; j++)  {
+      outputBuffer[j] = blend(
+          CRGB::Black, baseEffect->GetBuffer()[j], 255 - fraction[0]);
+      outputBuffer[j] = blend(
+          outputBuffer[j],
+          nextBaseEffect->GetBuffer()[j],
+          fraction[0]);
+    }
+  } else {
+    for (int j = 0; j < NUM_LEDS; j++) {
+      outputBuffer[j] = baseEffect->GetBuffer()[j];
+    }
+  }
 }
 
 void Controller::SetEffect(Effect* effect) {
@@ -115,47 +170,9 @@ String Controller::GetNextLayerEffect() {
   return "";
 }
 
-void Controller::InitiateTransition() {
+void Controller::InitiateTransition(Effect* effect) {
+  SetNextBaseEffect(effect);
   transitionActive = true;
-}
-
-void Controller::Mix(unsigned long mics) {
-  // For now, assume that if we have a next Base Effect, we are in transition
-  if (nextBaseEffect != NULL) {
-    float dt = (float)(mics) / 1000000.0f;
-    float fadeIncrement = deltaFade[0] * dt;
-    fader[0] += fadeIncrement;
-    fraction[0] = (uint8_t)(fader[0] * 255.0f);
-    if (fader[0] > 1.0f)  {
-      for (int j = 0; j < NUM_LEDS; j++) {
-        outputBuffer[j] = nextBaseEffect->GetBuffer()[j];
-      }
-      fader[0] = 0.0f;
-      fraction[0] = 0;
-      SetBaseEffect(nextBaseEffect);
-      nextBaseEffect = NULL;
-      Serial.println("Blending done...");
-    } else {
-      // Serial.printf("Blending: %d", fraction[0]);
-      // Serial.printf("Fading: %f", fader[0]);
-      // Serial.println("");
-      // Use blend to move toward target palette
-      for (int j = 0; j < NUM_LEDS; j++)  {
-        // outputBuffer[j] = baseEffect->GetBuffer()[j];
-
-        outputBuffer[j] = blend(
-            CRGB::Black, baseEffect->GetBuffer()[j], 255 - fraction[0]);
-        outputBuffer[j] = blend(
-            outputBuffer[j],
-            nextBaseEffect->GetBuffer()[j],
-            fraction[0]);
-      }
-    }
-  } else {
-    for (int j = 0; j < NUM_LEDS; j++) {
-      outputBuffer[j] = baseEffect->GetBuffer()[j];
-    }
-  }
 }
 
 void Controller::Animate(unsigned long mics) {
@@ -163,10 +180,6 @@ void Controller::Animate(unsigned long mics) {
   if (layerEffect != NULL) layerEffect->Animate(mics);
   if (nextBaseEffect != NULL) nextBaseEffect->Animate(mics);
   if (nextLayerEffect != NULL) nextLayerEffect->Animate(mics);
-
-  // Serial.println("Animating done...");
-
-  // Mix(mics);
 }
 
 bool Controller::CheckEnd() {

@@ -44,17 +44,25 @@ Effect* sparkles = new Sparkles(80, 5, true);
 Effect* pile = new Pile();
 Effect* pools = new Pools();
 Effect* modchase = new Modchase();
+Effect* twinkles = new Twinkles(80, 5);
+
+Effect* test0 = new Test(20, CRGB::Black);
+Effect* test1 = new Test(10, CRGB::Red);
+Effect* test2 = new Test(20, CRGB::Blue);
 
 Effect* effects[] = {
 	// null,
-  // test,
+	// test0,
+  // test1,
+	// test2,
 	// modchase,
 	pools,
 	noise,
 	// flash,
 	// bounce,
-	sparkles,
-	// pile,
+	twinkles,
+	// sparkles,
+	pile,
 
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
@@ -197,12 +205,6 @@ void loop() {
 		renderCount++;
 		FastLED.show();
 	}
-	// black = true;
-	// for (int i = 0; i < NUM_LEDS; i++) {
-	// 	if (outputBuffer[i].r > 12 || outputBuffer[i].g > 12 || outputBuffer[i].b > 12)
-	// 		black = false;
-	// }
-  // if (black == true) Serial.println("BLACK!");
 }
 
 void UpdateTimers() {
@@ -238,14 +240,14 @@ void NextEffect() {
 	waitingForEffectToEnd = false;
 	currentEffect += 1;
 	if (currentEffect == numEffects) currentEffect = 0;
-	controller.SetNextBaseEffect(effects[currentEffect]);
+	controller.InitiateTransition(effects[currentEffect]);
 	// controller.SetBaseEffect(effects[currentEffect]);
 	if (DEBUG) {
 		Serial.print("> Changing effects to: ");
 	  Serial.print("[");
-		Serial.print(controller.GetBaseEffect());
+		Serial.print(controller.GetNextBaseEffect());
 		Serial.print("] [");
-		Serial.print(controller.GetLayerEffect());
+		Serial.print(controller.GetNextLayerEffect());
 		Serial.println("]");
 	}
 	controller.Reset();
