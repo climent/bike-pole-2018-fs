@@ -97,7 +97,6 @@ bool Controller::Render(int deltaMillis) {
 }
 
 void Controller::Mix() {
-  // For now, assume that if we have a next Base Effect, we are in transition
   if (transitionActive) {
     // Serial.printf("Blending: %d", fraction[0]);
     // Serial.printf("Fading: %f", fader[0]);
@@ -173,6 +172,10 @@ String Controller::GetNextLayerEffect() {
 void Controller::InitiateTransition(Effect* effect) {
   SetNextBaseEffect(effect);
   transitionActive = true;
+}
+
+bool Controller::IsTransitionActive() {
+  return transitionActive;
 }
 
 void Controller::Animate(unsigned long mics) {

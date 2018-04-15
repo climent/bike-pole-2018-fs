@@ -39,6 +39,7 @@ public:
   bool Render(int deltaMillis);
   void SetTimer(int timer);
   void InitiateTransition(Effect* effect);
+  bool IsTransitionActive();
 
   Effect* baseEffect;
   Effect* layerEffect;

@@ -46,9 +46,9 @@ Effect* pools = new Pools();
 Effect* modchase = new Modchase();
 Effect* twinkles = new Twinkles(80, 5);
 
-Effect* test0 = new Test(20, CRGB::Black);
-Effect* test1 = new Test(10, CRGB::Red);
-Effect* test2 = new Test(20, CRGB::Blue);
+// Effect* test0 = new Test(20, CRGB::Black);
+// Effect* test1 = new Test(10, CRGB::Red);
+// Effect* test2 = new Test(20, CRGB::Blue);
 
 Effect* effects[] = {
 	// null,
@@ -63,7 +63,6 @@ Effect* effects[] = {
 	twinkles,
 	// sparkles,
 	pile,
-
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
@@ -187,8 +186,6 @@ void loop() {
 	// UpdateMotion(micros());
 	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
 	// CheckBumps();
-
-	// Serial.println("Checking buttons...");
 
 	CheckBrightness();
 	CheckEffect();

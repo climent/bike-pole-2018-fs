@@ -1,6 +1,3 @@
-#ifndef MODCHASE_H
-#define MODCHASE_H
-
 #include "effect.h"
 
 Modchase::Modchase() {
@@ -137,5 +134,3 @@ void Modchase::Render()
   //   }
   // }
 }
-
-#endif
