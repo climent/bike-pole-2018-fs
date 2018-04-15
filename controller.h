@@ -38,7 +38,7 @@ public:
   void SetOutputBuffer(CRGB* dest);
   bool Render(int deltaMillis);
   void SetTimer(int timer);
-  void InitiateTransition();
+  void InitiateTransition(Effect* effect);
 
   Effect* baseEffect;
   Effect* layerEffect;
@@ -55,12 +55,13 @@ public:
   CRGBPalette256* nextFinalPalette;
 
 private:
-  void Mix(unsigned long mics);
+  void PreRender(int deltaMillis);
+  void Mix();
 
   bool transitionActive = false;
 
   float fader[2] = {0.0f, 0.0f};
-  float deltaFade[2] = {1.0f / 4, 1.0f / 4}; // amount to fade per second
+  float deltaFade[2] = {1.0f / 5, 1.0f / 5}; // amount to fade per second
   fract8 fraction[2] = {0, 0};
 
   int var;

@@ -44,8 +44,19 @@ public:
 
 class Null : public Effect {
 public:
+  void Animate();
   String Identify();
 private:
+};
+
+class Test : public Effect {
+public:
+  String Identify();
+  Test(int length, CRGB color);
+  void Render();
+private:
+  int length;
+  CRGB color;
 };
 
 class Noise : public Effect {
@@ -146,14 +157,34 @@ private:
   int _speed;
 };
 
+class Twinkles : public Effect {
+public:
+  Twinkles(int amount, bool white);
+  Twinkles(int amount, int speed, bool white);
+  void Animate(unsigned long mics);
+  void Render();
+  String Identify();
+private:
+  void Twinkle();
+  int _amount;
+  int _white;
+  int _speed;
+  const CRGB peak_color = CRGB(150, 150, 150);
+  int ledState[NUM_LEDS];
+  CRGB ledColors[NUM_LEDS] = {CRGB::Black};
+  enum {SteadyDim, GettingBrighter, GettingDimmerAgain};
+  long timeToTinkle = 0;
+};
+
 class Pile : public Effect {
 public:
   Pile();
   Pile(CRGB fColor, CRGB bColor);
   Pile(CRGB fColor, CRGB bColor, int speed);
+  String Identify();
   void Reset();
   void Animate(unsigned long mics);
-  String Identify();
+  void Render();
   bool CheckEnd();
   void Initialize();
 private:
@@ -167,6 +198,7 @@ private:
   int position;
   Leds _leds;
   int bottom;
+  CRGB ledColors[NUM_LEDS];
 };
 
 class Roller : public Effect {

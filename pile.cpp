@@ -34,6 +34,12 @@ Pile::Pile() {
 	Initialize();
 }
 
+void Pile::Render() {
+	for (int i = 0; i < NUM_LEDS; i++) {
+		dst[i] = ledColors[i];
+	}
+}
+
 void Pile::Animate(unsigned long mics) {
 	// unsigned long milliseconds = mics * 1000;
 	now = millis();
@@ -41,10 +47,10 @@ void Pile::Animate(unsigned long mics) {
 	if (now - lastMove > _speed) {
 		// FadeAll(leds, _tail);
 		_leds = SetPixels(position);
-		dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _fcolor;
+		ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _fcolor;
 		if (position + 1 <= height) {
 			_leds = SetPixels(position + 1);
-			dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _bcolor;
+			ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _bcolor;
 		}
 		if (position == bottom)
 		{
