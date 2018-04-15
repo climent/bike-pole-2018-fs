@@ -66,21 +66,23 @@ private:
   uint16_t y;
   uint16_t z;
 
-  // We're using the x/y dimensions to map to the x/y pixels on the matrix.  We'll
-  // use the z-axis for "time".  speed determines how fast time moves forward.  Try
-  // 1 for a very slow moving effect, or 60 for something that ends up looking like
-  // water.
+  // We're using the x/y dimensions to map to the x/y pixels on the matrix.
+  // We'll use the z-axis for "time". speed determines how fast time moves
+  // forward. Try 1 for a very slow moving effect, or 60 for something that
+  // ends up looking like water.
   uint16_t speed = 10; // speed is set dynamically once we've started up
 
-  // Scale determines how far apart the pixels in our noise matrix are.  Try
-  // changing these values around to see how it affects the motion of the display.  The
-  // higher the value of scale, the more "zoomed out" the noise iwll be.  A value
-  // of 1 will be so zoomed in, you'll mostly see solid colors.
+  // Scale determines how far apart the pixels in our noise matrix are. Try
+  // changing these values around to see how it affects the motion of the
+  // display. The higher the value of scale, the more "zoomed out" the noise
+  // will be. A value of 1 will be so zoomed in, you'll mostly see solid colors.
   uint16_t scale = 30; // scale is set dynamically once we've started up
 
   // This is the array that we keep our computed noise values in
   uint8_t noise[MAX_DIMENSION][MAX_DIMENSION];
-  uint8_t startIndex = 0; // this is where in the palette we start, cycle this slowly to 255 and wrap around
+  // this is where in the palette we start, cycle this slowly to 255 and wrap
+  // around
+  uint8_t startIndex = 0;
   uint8_t colorLoop = 1;
   CRGBPalette256* palette = NULL;
   void FillNoise8();
