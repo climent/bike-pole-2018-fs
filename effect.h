@@ -261,4 +261,14 @@ public:
 	void Render();
 };
 
+class Explode : public Effect {
+public:
+  Explode();
+  String Identify();
+  void Animate(unsigned long mics);
+  void Render();
+  
+private:
+};
+
 #endif

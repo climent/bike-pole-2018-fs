@@ -8,7 +8,7 @@
 // Button pins for up and down
 #define PIN_UP 9
 #define PIN_DOWN 11
-#define PIN_EFFECT 17
+#define PIN_EFFECT 6 //17
 
 #ifndef STRUCTS_H
 #define STRUCTS_H

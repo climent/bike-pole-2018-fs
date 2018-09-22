@@ -1,17 +1,20 @@
 #include "effect.h"
 
+int lowerBlock = 30;
+int upperBlock = 40;
+
 // Returns a triplet of pixels for a single pixel elevation, turning then
-// entire pole into a single 3x elevation.
+// entire pole into a single elevation.
 Leds Effect::SetPixels(int elevation) {
 	Leds leds;
-	if (elevation < 30) {
+	if (elevation < lowerBlock) {
 		leds.o = elevation;
-		leds.p = 60 - elevation - 1;
-		leds.q = elevation + 60;
-	} else if (elevation >= 30) {
-		leds.o = elevation + 60;
-		leds.p = 200 - elevation - 1;
-		leds.q = elevation + 140;
+		leds.p = lowerBlock * 2 - elevation - 1;
+		leds.q = elevation + lowerBlock * 2;
+	} else if (elevation >= lowerBlock) {
+		leds.o = elevation + lowerBlock * 3;
+		leds.p = lowerBlock * 4 + upperBlock * 2 - elevation - 1;
+		leds.q = elevation + lowerBlock * 2 + upperBlock * 2;
 	}
 	return leds;
 }

@@ -15,6 +15,3 @@ void Test::Render() {
 String Test::Identify() {
   return "test";
 }
-
-// void Test::Twinkle() {
-// }

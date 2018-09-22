@@ -16,7 +16,8 @@
 #include "motion.h"
 // #endif
 
-#define DATA_PIN 7
+#define DATA_PIN 8
+#define HEARTBEAT_PIN 13
 
 // Define the array of leds:
 // There 2 sets of 3 buffers. For each set:
@@ -68,9 +69,11 @@ Effect* effects[] = {
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
-Button briUpButton = Button(PIN_UP);
-Button briDwButton = Button(PIN_DOWN);
-Button effectButton = Button(PIN_EFFECT);
+//Button briUpButton = Button(PIN_UP);
+//Button briDwButton = Button(PIN_DOWN);
+//Button effectButton = Button(PIN_EFFECT);
+
+Button eventButton = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
 
@@ -80,8 +83,6 @@ Controller controller = Controller(currentBuffers[0], currentBuffers[1],
 Palmixer palmixer = Palmixer(
 		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
 	  palettes.finalPalette);
-
-// Mixer mixer = Mixer(leds[0][0], leds[0][1], outputBuffer);
 
 Mixer mixer = Mixer(outputBuffer);
 
@@ -164,10 +165,13 @@ void setup() {
 
 	palmixer.SetTimer(timeTilPalChange);
 
+	pinMode(HEARTBEAT_PIN, OUTPUT);
+
 	Serial.println("Setup done...");
 }
 
 bool black = true;
+bool hearbeat = true;
 
 void loop() {
 	// Serial.println("Looping...");
@@ -187,9 +191,11 @@ void loop() {
 	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
 	// CheckBumps();
 
-	CheckBrightness();
-	CheckEffect();
+	// CheckBrightness();
+	// CheckEffect();
 	// WaitForNextEffect();
+
+  CheckButtonEvent();
 
 	if (timeLeftTillPrint <= 0)
 	{
@@ -202,6 +208,11 @@ void loop() {
 		renderCount++;
 		FastLED.show();
 	}
+	
+	EVERY_N_SECONDS(1) {
+    hearbeat == true ? hearbeat = false : hearbeat = true;
+  }
+  hearbeat == true ? digitalWrite(HEARTBEAT_PIN, HIGH) : digitalWrite(HEARTBEAT_PIN, LOW);
 }
 
 void UpdateTimers() {
@@ -252,35 +263,62 @@ void NextEffect() {
 	// if (!USEMIXER) effects[currentEffect]->SetBuffer(outputBuffer);
 }
 
+void CheckButtonEvent() {
+	int event	= eventButton.ReadEvent();
+	switch(event) {
+		case 1:
+			if (DEBUG) Serial.println("  button event 1");
+			NextEffect();
+			break;
+		case 2:
+			if (DEBUG && briLevel > 0)
+			  Serial.print("> Bri down: ");
+			if (briLevel > 0) {
+				briLevel -= 1;
+				if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+			}
+			break;
+		case 3:
+			if (DEBUG && briLevel < brightnessCount - 1)
+				Serial.print("> Bri up: ");
+			if (briLevel < brightnessCount - 1) {
+				briLevel += 1;
+			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+			}
+			break;
+	}
+	FastLED.setBrightness(brightnessMap[briLevel]);
+}
+
 void CheckEffect() {
-	if (effectButton.Read()) {
+	if (eventButton.Read()) {
 		if (DEBUG) Serial.println("  button change pressed");
 		// waitingForEffectToEnd = true;
 		NextEffect();
 	}
 }
 
-void CheckBrightness() {
-	if (briUpButton.Read()) {
-		if (DEBUG) Serial.println("  button up pressed");
-		if (DEBUG && briLevel < brightnessCount - 1)
-			Serial.print("> Bri up: ");
-		if (briLevel < brightnessCount - 1) {
-			briLevel += 1;
-			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
-		}
-	}
-	if (briDwButton.Read()) {
-		if (DEBUG) Serial.println("  button down pressed");
-		if (DEBUG && briLevel > 0)
-		  Serial.print("> Bri down: ");
-		if (briLevel > 0) {
-			briLevel -= 1;
-			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
-		}
-	}
-	FastLED.setBrightness(brightnessMap[briLevel]);
-}
+// void CheckBrightness() {
+// 	if (briUpButton.Read()) {
+// 		if (DEBUG) Serial.println("  button up pressed");
+// 		if (DEBUG && briLevel < brightnessCount - 1)
+// 			Serial.print("> Bri up: ");
+// 		if (briLevel < brightnessCount - 1) {
+// 			briLevel += 1;
+// 			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+// 		}
+// 	}
+// 	if (briDwButton.Read()) {
+// 		if (DEBUG) Serial.println("  button down pressed");
+// 		if (DEBUG && briLevel > 0)
+// 		  Serial.print("> Bri down: ");
+// 		if (briLevel > 0) {
+// 			briLevel -= 1;
+// 			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
+// 		}
+// 	}
+// 	FastLED.setBrightness(brightnessMap[briLevel]);
+// }
 
 void DebugPrint(String message) {
 	if (DEBUG) {

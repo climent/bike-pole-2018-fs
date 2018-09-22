@@ -10,7 +10,7 @@ Pools::Pools() {
   {
     int r = random(10, 255);
     vels[i] = (float)(r);
-    locs[i] = i * (m_length / 8);
+    locs[i] = i * (m_length / 9);
     nodes[i] = 0;
   }
   locs[8] = m_length - 1; // put last node at the end
