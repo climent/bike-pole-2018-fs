@@ -26,6 +26,15 @@ int Effect::SetPixelsSingle(int elevation) {
 	if (elevation >= 100 && elevation < 140) return 70 + elevation;
 	if (elevation >= 140 && elevation < 170) return elevation - 80;
 	if (elevation >= 170 && elevation < 210) return elevation - 170 + 90;
+
+	// if (elevation < lowerBlock) return elevation; // o
+	// if (elevation >= lowerBlock && elevation < lowerBlock + upperBlock) return lowerBlock * 4 + upperBlock * 2 - elevation - 1; // p'
+
+	// if (elevation >= lowerBlock + upperBlock && elevation < lowerBlock * 2 + upperBlock) return lowerBlock * 2 - elevation - 1; // p
+	// if (elevation >= lowerBlock * 2 + upperBlock && elevation < lowerBlock * 2 + upperBlock * 2) return lowerBlock * 2 + upperBlock * 2 + elevation; // o'
+
+	// if (elevation >= lowerBlock * 2 + upperBlock * 2 && elevation < lowerBlock * 3 + upperBlock * 2) return elevation + lowerBlock * 2; // q
+	// if (elevation >= lowerBlock * 3 + upperBlock * 2 && elevation < lowerBlock * 3 + upperBlock * 3) return elevation + 3 * lowerBlock; // q'
 	return -1;
 }
 
