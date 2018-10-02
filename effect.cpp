@@ -12,7 +12,7 @@ Leds Effect::SetPixels(int elevation) {
 		leds.p = lowerBlock * 2 - elevation - 1;
 		leds.q = elevation + lowerBlock * 2;
 	} else if (elevation >= lowerBlock) {
-		leds.o = elevation + lowerBlock * 3;
+		leds.o = elevation + lowerBlock * 2;
 		leds.p = lowerBlock * 4 + upperBlock * 2 - elevation - 1;
 		leds.q = elevation + lowerBlock * 2 + upperBlock * 2;
 	}

@@ -226,7 +226,7 @@ class Pools : public Effect {
 public:
   float nodes[9]; // units are frontpalette space (0-255)
   float vels[9];  // in frontpalette units per second
-  int locs[9]; // the node locations in strip space
+  int locs[9];    // the node locations in strip space
   int m_length;
 
   Pools();

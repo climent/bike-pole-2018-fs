@@ -10,7 +10,7 @@ Pools::Pools() {
   {
     int r = random(10, 255);
     vels[i] = (float)(r);
-    locs[i] = i * (m_length / 9);
+    locs[i] = i * (m_length / 9); // TODO(): check what changes when we change the 9
     nodes[i] = 0;
   }
   locs[8] = m_length - 1; // put last node at the end
@@ -72,6 +72,8 @@ void Pools::Animate(unsigned long mics) {
 void Pools::Render() {
   FadeOrClear();
 
+  bool output_single_string = true;
+
   for (int i = 0; i < 8; i++) {
     // interpolate from node i to i+1 in frontpalette space
     float startp = nodes[i];
@@ -83,7 +85,11 @@ void Pools::Render() {
       int palindex = (int)(curp);
       if (palindex < 0) palindex = 0;
       if (palindex > 255) palindex = 255;
-      dst[SetPixelsSingle(l)] = finalPalette[pal][palindex];
+      if (output_single_string) {
+        dst[l] = finalPalette[pal][palindex];
+      } else {
+        dst[SetPixelsSingle(l)] = finalPalette[pal][palindex];
+      }
       curp += pdelta;
     }
   }
