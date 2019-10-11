@@ -5,41 +5,57 @@ int upperBlock = 40;
 
 // Returns a triplet of pixels for a single pixel elevation, turning then
 // entire pole into a single elevation.
-Leds Effect::SetPixels(int elevation) {
+Leds Effect::SetPixels(uint16_t elevation) {
 	Leds leds;
 	if (elevation < lowerBlock) {
 		leds.o = elevation;
 		leds.p = lowerBlock * 2 - elevation - 1;
-		leds.q = elevation + lowerBlock * 2;
+		leds.q = lowerBlock * 2 + elevation;
 	} else if (elevation >= lowerBlock) {
-		leds.o = elevation + lowerBlock * 2;
+		leds.o = lowerBlock * 2 + elevation;
 		leds.p = lowerBlock * 4 + upperBlock * 2 - elevation - 1;
-		leds.q = elevation + lowerBlock * 2 + upperBlock * 2;
+		leds.q = lowerBlock * 2 + upperBlock * 2 + elevation;
 	}
 	return leds;
 }
 
-int Effect::SetPixelsSingle(int elevation) {
-	if (elevation < 30) return elevation;
-	if (elevation >= 30 && elevation < 70) return 200 - 1 - elevation;
-	if (elevation >= 70 && elevation < 100) return 130 - 1 - elevation;
-	if (elevation >= 100 && elevation < 140) return 70 + elevation;
-	if (elevation >= 140 && elevation < 170) return elevation - 80;
-	if (elevation >= 170 && elevation < 210) return elevation - 170 + 90;
+uint16_t Effect::SetPixelsSingle(uint16_t elevation) {
+	if (elevation < NUM_LEDS) return elevation;
 
-	// if (elevation < lowerBlock) return elevation; // o
-	// if (elevation >= lowerBlock && elevation < lowerBlock + upperBlock) return lowerBlock * 4 + upperBlock * 2 - elevation - 1; // p'
+	if (elevation < lowerBlock)
+			return elevation; // o
+	if (elevation >= lowerBlock && 
+		  elevation < lowerBlock + upperBlock) 
+			return lowerBlock * 4 + upperBlock * 2 - elevation - 1; // p'
 
-	// if (elevation >= lowerBlock + upperBlock && elevation < lowerBlock * 2 + upperBlock) return lowerBlock * 2 - elevation - 1; // p
-	// if (elevation >= lowerBlock * 2 + upperBlock && elevation < lowerBlock * 2 + upperBlock * 2) return lowerBlock * 2 + upperBlock * 2 + elevation; // o'
+	if (elevation >= lowerBlock + upperBlock && 
+			elevation < lowerBlock * 2 + upperBlock)
+			return lowerBlock * 2 - elevation - 1; // p
+	if (elevation >= lowerBlock * 2 + upperBlock &&
+			elevation < lowerBlock * 2 + upperBlock * 2) 
+			return lowerBlock * 2 + upperBlock * 2 + elevation; // o'
 
-	// if (elevation >= lowerBlock * 2 + upperBlock * 2 && elevation < lowerBlock * 3 + upperBlock * 2) return elevation + lowerBlock * 2; // q
-	// if (elevation >= lowerBlock * 3 + upperBlock * 2 && elevation < lowerBlock * 3 + upperBlock * 3) return elevation + 3 * lowerBlock; // q'
-	return -1;
+	if (elevation >= lowerBlock * 2 + upperBlock * 2 && 
+			elevation < lowerBlock * 3 + upperBlock * 2)
+			return elevation + lowerBlock * 2; // q
+	if (elevation >= lowerBlock * 3 + upperBlock * 2 &&
+			elevation < lowerBlock * 3 + upperBlock * 3)
+			return elevation + 3 * lowerBlock; // q'
+	// return -1;
+	return 0;
+}
+
+uint16_t Effect::SetPixel(uint16_t elevation) {
+	if (_singleString) {
+    if (elevation < NUM_LEDS) return elevation;
+		return -1;
+	} else {
+		return -1;
+	}
 }
 
 void Effect::FadeAll(CRGB leds[NUM_LEDS], int fade) {
-	for (int i = 0; i < NUM_LEDS; i++) {
+	for (uint16_t i = 0; i < NUM_LEDS; i++) {
 		leds[i].nscale8(fade);
 	}
 }
@@ -68,7 +84,7 @@ void Effect::FadeOrClear() {
   // if (clearmode == kClear) {
   //   Blackout(dst);
   // } else {
-    for (int i = 0; i < NUM_LEDS; i++)
+    for (uint16_t i = 0; i < NUM_LEDS; i++)
     {
       dst[i].nscale8(100);
     }

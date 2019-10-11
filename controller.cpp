@@ -42,18 +42,32 @@ String Controller::Identify() {
 // void Controller::Initialize() {
 // }
 
-void Controller::SetTimer(int timer) {
+void Controller::SetTimer(long timer) {
   timeTilRender = timer;
 }
 
-void Controller::PreRender(int millis) {
+void Controller::PreRender(unsigned long millis) {
   // Before the actual render occurs we need to decide which effect goes where
   // if (nextBaseEffect != NULL) {
   if (transitionActive) {
-    float dt = (float)(millis) / 1000.0f;
+    // EVERY_N_MILLISECONDS(10) {
+    //   Serial.printf("millis: %f ", (float)(millis));
+    //   Serial.println("");
+    // }
+    float dt = (float)(millis) / (float)1000.0f;
     float fadeIncrement = deltaFade[0] * dt;
+    // EVERY_N_MILLISECONDS(10) {
+    //   Serial.printf("dt: %f ", dt);
+    //   Serial.printf("fadeIncrement: %f ", fadeIncrement);
+    //   Serial.println("");
+    // }
     fader[0] += fadeIncrement;
     fraction[0] = (uint8_t)(fader[0] * 255.0f);
+    // EVERY_N_MILLISECONDS(10) {
+    //   Serial.printf("fader: %f ", fader[0]);
+    //   Serial.printf("fraction: %f ", fraction[0]);
+    //   Serial.println("");
+    // }
     if (fader[0] > 1.0f)  {
       // Serial.printf("Fader final value: %f", fader[0]);
       // Serial.println("");
@@ -70,17 +84,22 @@ void Controller::PreRender(int millis) {
       nextBaseEffect = NULL;
       transitionActive = false;
       Serial.println("Blending done...");
+      Serial.print("fader: ");
+      Serial.println(fader[0]);
+      Serial.print("fraction: ");
+      Serial.println(fraction[0]);
     }
   }
 }
 
-bool Controller::Render(int deltaMillis) {
+bool Controller::Render(unsigned long deltaMillis) {
   timeLeftTilRender -= deltaMillis;
   bool response = false;
 
   PreRender(deltaMillis);
 
   if (timeLeftTilRender <= 0)	{
+    // Serial.println("Rendering...");
 		timeLeftTilRender = timeTilRender;
     if (baseEffect != NULL) baseEffect->Render();
     if (layerEffect != NULL) layerEffect->Render();
@@ -98,20 +117,24 @@ bool Controller::Render(int deltaMillis) {
 
 void Controller::Mix() {
   if (transitionActive) {
-    // Serial.printf("Blending: %d", fraction[0]);
-    // Serial.printf("Fading: %f", fader[0]);
-    // Serial.println("");
+    // EVERY_N_MILLISECONDS(10) {
+      Serial.printf("Mixing:: Blending: %d ", fraction[0]);
+      Serial.printf("Fading: %f ", fader[0]);
+      Serial.println("");
+    // }
     // Use blend to move toward target palette
-    for (int j = 0; j < NUM_LEDS; j++)  {
+    for (uint16_t j = 0; j < NUM_LEDS; j++)  {
       outputBuffer[j] = blend(
-          CRGB::Black, baseEffect->GetBuffer()[j], 255 - fraction[0]);
+          CRGB::Black,
+          baseEffect->GetBuffer()[j],
+          255 - fraction[0]);
       outputBuffer[j] = blend(
           outputBuffer[j],
           nextBaseEffect->GetBuffer()[j],
           fraction[0]);
     }
   } else {
-    for (int j = 0; j < NUM_LEDS; j++) {
+    for (uint16_t j = 0; j < NUM_LEDS; j++) {
       outputBuffer[j] = baseEffect->GetBuffer()[j];
     }
   }
@@ -141,11 +164,13 @@ void Controller::SetLayerEffect(Effect* effect) {
 
 void Controller::SetNextBaseEffect(Effect* effect) {
   nextBaseEffect = effect;
+  nextBaseEffect->Reset();
   nextBaseEffect->SetBuffer(nextBaseBuffer);
 }
 
 void Controller::SetNextLayerEffect(Effect* effect) {
   nextLayerEffect = effect;
+  nextLayerEffect->Reset();
   nextLayerEffect->SetBuffer(nextLayerBuffer);
 }
 
@@ -169,9 +194,24 @@ String Controller::GetNextLayerEffect() {
   return "";
 }
 
+void Controller::InitiateTransition(Effect* effect, bool fast) {
+  // FIXME(broken code)
+  // if (fast) {
+  //   for ( uint16_t i = 0; i < NUM_LEDS; i++) {
+  //     baseBuffer[i] = nextLayerBuffer[i];
+  //   }
+  //   SetBaseEffect(nextBaseEffect);
+  //   nextBaseEffect = NULL;
+  //   transitionActive = false;
+  //   Serial.println("Blending done...");
+  // } else {
+    SetNextBaseEffect(effect);
+    transitionActive = true;
+  // }
+}
+
 void Controller::InitiateTransition(Effect* effect) {
-  SetNextBaseEffect(effect);
-  transitionActive = true;
+  InitiateTransition(effect, false);
 }
 
 bool Controller::IsTransitionActive() {

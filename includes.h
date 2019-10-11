@@ -2,8 +2,8 @@
 #define FASTLED_INTERNAL 1
 
 // How many leds in your strip?
-// #define NUM_LEDS 210
-#define NUM_LEDS 166
+#define NUM_LEDS 288
+// #define NUM_LEDS 120
 // #define DATA_PIN 7
 
 // Button pins for up and down

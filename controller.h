@@ -36,9 +36,10 @@ public:
   void Reset();
   void SetBuffer(CRGB* dest);
   void SetOutputBuffer(CRGB* dest);
-  bool Render(int deltaMillis);
-  void SetTimer(int timer);
+  bool Render(unsigned long deltaMillis);
+  void SetTimer(long timer);
   void InitiateTransition(Effect* effect);
+  void InitiateTransition(Effect* effect, bool fast);
   bool IsTransitionActive();
 
   Effect* baseEffect;
@@ -56,7 +57,7 @@ public:
   CRGBPalette256* nextFinalPalette;
 
 private:
-  void PreRender(int deltaMillis);
+  void PreRender(unsigned long deltaMillis);
   void Mix();
 
   bool transitionActive = false;
@@ -69,8 +70,8 @@ private:
   int timer;
   // int timeLeftTilEffectChanges;
 
-  int timeLeftTilRender;
-  int timeTilRender;
+  long timeLeftTilRender;
+  long timeTilRender;
 };
 
 #endif

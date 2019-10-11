@@ -1,0 +1,6 @@
+{
+    "sketch": "bike-pole-2018-fs.ino",
+    "board": "arduino:avr:teensy31",
+    "configuration": "usb=serial,speed=96,opt=o2std,keys=en-us",
+    "port": "/dev/cu.usbmodem9966901"
+}

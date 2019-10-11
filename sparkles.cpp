@@ -23,7 +23,7 @@ void Sparkles::Animate() {
     } else {
       color = CRGB(random8(), random8(), random8());
     }
-    dst[random8(NUM_LEDS)] = color;
+    dst[random16(NUM_LEDS)] = color;
   }
 }
 

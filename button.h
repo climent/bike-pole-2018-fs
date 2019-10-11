@@ -11,8 +11,8 @@ public:
   int ReadEvent();
 private:
   int _pin;
-  int millisBtwnPushes;
-  int lastPush;
+  unsigned long millisBtwnPushes;
+  unsigned long lastPush;
   int lastState;
   int state;
 

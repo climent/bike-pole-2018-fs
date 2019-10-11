@@ -5,11 +5,11 @@ void Pile::Reset() {
 }
 
 void Pile::Initialize() {
-	// initPile = 0;
-	height = NUM_LEDS / 3 - 1;
+	position = height = NUM_LEDS / 3 - 1;
+	_singleString = false;
 	now = millis();
 	lastMove = millis();
-	position = height;
+	// position = height;
 	bottom = 0;
 	ended = false;
 	_speed = 10;
@@ -34,6 +34,14 @@ Pile::Pile() {
 	Initialize();
 }
 
+Pile::Pile(bool singleString) {
+	Initialize();
+  if (singleString) {
+		position = height = NUM_LEDS - 1;
+		_singleString = true;
+	}
+}
+
 void Pile::Render() {
 	for (int i = 0; i < NUM_LEDS; i++) {
 		dst[i] = ledColors[i];
@@ -45,12 +53,18 @@ void Pile::Animate(unsigned long mics) {
 	now = millis();
   if (ended) ended = false;
 	if (now - lastMove > _speed) {
-		// FadeAll(leds, _tail);
-		_leds = SetPixels(position);
-		ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _fcolor;
-		if (position + 1 <= height) {
-			_leds = SetPixels(position + 1);
-			ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _bcolor;
+		if (_singleString) {
+			ledColors[position] = _fcolor;
+			if (position + 1 <= height) {
+				ledColors[position + 1] = _bcolor;
+			}
+		} else {
+			_leds = SetPixels(position);
+			ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _fcolor;
+			if (position + 1 <= height) {
+				_leds = SetPixels(position + 1);
+				ledColors[_leds.o] = ledColors[_leds.p] = ledColors[_leds.q] = _bcolor;
+			}
 		}
 		if (position == bottom)
 		{

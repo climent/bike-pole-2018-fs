@@ -10,8 +10,6 @@ public:
   // Animates the effect based on the timing
   virtual void Animate();
   virtual void Animate(unsigned long mics);
-  // Renders the animation into the LED array
-  // virtual void Render(CRGB leds[NUM_LEDS]);
 
   CRGB* dst = NULL;
 
@@ -28,9 +26,11 @@ public:
   virtual bool CheckEnd();
   virtual void Initialize();
   virtual void Render();
-  // virtual void Render(CRGBPalette256* finalPalette);
-  Leds SetPixels(int elevation);
-  int SetPixelsSingle(int elevation);
+
+  Leds SetPixels(uint16_t elevation);
+  uint16_t SetPixelsSingle(uint16_t elevation);
+  uint16_t SetPixel(uint16_t elevation);
+
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
   void SetPalette(CRGBPalette256* finalPalette);
@@ -40,6 +40,8 @@ public:
   bool ended;
   uint8_t pal; // pal index 0, 1 or 2
   CRGBPalette256* finalPalette = NULL;
+private:
+  bool _singleString = false;
 };
 
 class Null : public Effect {
@@ -70,7 +72,7 @@ public:
 private:
   // static const int ONEMIL = 1000000;
   unsigned long micsperemit = 1000000;
-  int timeTillEmit = 0;
+  unsigned long timeTillEmit = 0;
 
   // The 16 bit version of our coordinates
   uint16_t x;
@@ -104,8 +106,8 @@ class Flash : public Effect {
 public:
   Flash();
   Flash(CRGB color);
-  void Animate();
   String Identify();
+  void Animate();
   void SetColor(CRGB color);
   void Initialize();
 private:
@@ -117,7 +119,7 @@ private:
   long timeToFlash;
   long lastFlash;
   int  numberOfFlashes;
-  int  elevation;
+  uint16_t elevation;
   uint8_t hue;
   Leds _leds;
   int _totalFlashes;
@@ -129,8 +131,8 @@ class Bounce : public Effect {
 public:
   Bounce();
   Bounce(int speed, int tail);
-  void Animate();
   String Identify();
+  void Animate();
   void Reset();
   bool CheckEnd();
   void Initialize();
@@ -139,7 +141,7 @@ private:
   long _speed;
   long lastMove;
   bool direction;
-  int position;
+  uint16_t position;
   uint8_t hue;
   Leds _leds;
   int _tail;
@@ -149,8 +151,8 @@ class Sparkles : public Effect {
 public:
   Sparkles(int amount, bool white);
   Sparkles(int amount, int speed, bool white);
-  void Animate();
   String Identify();
+  void Animate();
 private:
   int _amount;
   int _white;
@@ -161,9 +163,9 @@ class Twinkles : public Effect {
 public:
   Twinkles(int amount, bool white);
   Twinkles(int amount, int speed, bool white);
+  String Identify();
   void Animate(unsigned long mics);
   void Render();
-  String Identify();
 private:
   void Twinkle();
   int _amount;
@@ -179,25 +181,26 @@ private:
 class Pile : public Effect {
 public:
   Pile();
+  Pile(bool singleString);
   Pile(CRGB fColor, CRGB bColor);
   Pile(CRGB fColor, CRGB bColor, int speed);
   String Identify();
-  void Reset();
   void Animate(unsigned long mics);
   void Render();
+  void Reset();
   bool CheckEnd();
   void Initialize();
 private:
+  bool _singleString;
   int _fcolor;
   int _bcolor;
-  int _speed;
-  int initPile;
-  int height;
-  int now;
-  int lastMove;
-  int position;
+  unsigned long _speed;
+  uint16_t height;
+  unsigned long now;
+  unsigned long lastMove;
+  uint16_t position;
   Leds _leds;
-  int bottom;
+  uint16_t bottom;
   CRGB ledColors[NUM_LEDS];
 };
 
@@ -206,8 +209,8 @@ public:
   Roller(CRGB fColor, CRGB bColor);
   Roller(CRGB fColor, CRGB bColor, int speed);
   String Identify();
-  void Reset();
   void Animate();
+  void Reset();
   bool CheckEnd();
   void Initialize();
 private:
@@ -224,16 +227,18 @@ private:
 
 class Pools : public Effect {
 public:
-  float nodes[9]; // units are frontpalette space (0-255)
-  float vels[9];  // in frontpalette units per second
-  int locs[9];    // the node locations in strip space
-  int m_length;
-
   Pools();
+  Pools(bool singleString);
   String Identify();
+  void Initialize();
   void Animate(unsigned long mics);
   void Render();
+  float nodes[9];    // units are frontpalette space (0-255)
+  float vels[9];     // in frontpalette units per second
+  float locs[9];  // the node locations in strip space
+  uint16_t m_length;
 private:
+  bool _singleString;
   void SlowVels();
   void FastVels();
   void Rythmic();
@@ -241,17 +246,6 @@ private:
 
 class Modchase : public Effect {
 public:
-  unsigned long micspershift = (unsigned long)((1.0f/30) * (float)1000000);
-  int timeTillShift = 0;
-  unsigned long micsperlaunch = 1800000;
-  int timeTillLaunch = 0;
-  unsigned long micsperpalchange = 150000;
-  int timeTillPalChange = 0;
-
-  unsigned char palIndex = 0;
-  int numToShift = 0;
-  int numToEmit = 0;
-
   Modchase();
   String Identify();
   void Reset();
@@ -259,6 +253,15 @@ public:
   void SetFrequency(float f);
 	void Animate(unsigned long mics);
 	void Render();
+  unsigned long micspershift = (unsigned long)((1.0f/30) * (float)1000000);
+  int timeTillShift = 0;
+  unsigned long micsperlaunch = 1800000;
+  int timeTillLaunch = 0;
+  unsigned long micsperpalchange = 150000;
+  int timeTillPalChange = 0;
+  unsigned char palIndex = 0;
+  int numToShift = 0;
+  int numToEmit = 0;
 };
 
 class Explode : public Effect {
@@ -267,7 +270,6 @@ public:
   String Identify();
   void Animate(unsigned long mics);
   void Render();
-  
 private:
 };
 
