@@ -47,21 +47,23 @@ Effect* pools = new Pools();
 Effect* modchase = new Modchase();
 Effect* twinkles = new Twinkles(80, 5);
 
+Effect* paltest = new PalTest(25);
 // Effect* test0 = new Test(20, CRGB::Black);
 // Effect* test1 = new Test(10, CRGB::Red);
 // Effect* test2 = new Test(20, CRGB::Blue);
 
 Effect* effects[] = {
+	paltest,
 	// null,
 	// test0,
   // test1,
 	// test2,
 	// modchase,
-	pools,
+	// pools,
 	// noise,
 	// flash,
 	// bounce,
-	twinkles,
+	// twinkles,
 	// sparkles,
 	// pile,
 	// new Roller(CRGB::White, CRGB::White, 2),
@@ -167,6 +169,8 @@ void setup() {
 	noise->SetPalette(palettes.finalPalette);
 	pools->SetPaleteIndex(0);
 	pools->SetPalette(palettes.finalPalette);
+  paltest->SetPaleteIndex(0);
+	paltest->SetPalette(palettes.finalPalette);
 	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);

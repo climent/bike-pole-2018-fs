@@ -51,10 +51,20 @@ public:
 private:
 };
 
+class PalTest : public Effect {
+public:
+  PalTest(int length);
+  String Identify();
+  void Render();
+private:
+  int length;
+};
+
 class Test : public Effect {
 public:
-  String Identify();
+  Test();
   Test(int length, CRGB color);
+  String Identify();
   void Render();
 private:
   int length;
