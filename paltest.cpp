@@ -1,21 +1,15 @@
 #include "effect.h"
 
-PalTest::PalTest(int _inc) {
-  length = _inc;
+PalTest::PalTest() {
 }
 
 void PalTest::Render() {
-  uint16_t level = 0;
-  int blocks = 8;
   fadeToBlackBy(dst, NUM_LEDS, 1);
-  for (int block = 0; block < blocks; block++){    
-    for (uint16_t j = 0; j < length; j++) {
-      if (level < NUM_LEDS) {
-          CRGB c = finalPalette[0][level];
-          dst[SetPixelsSingle(level)] = c;
-          level++;
-      }
-    }
+  for (uint16_t j = 0; j < NUM_LEDS; j++) {
+    int palindex = j;
+    if (NUM_LEDS < 255) map(palindex, 0, NUM_LEDS, 0, 255);
+    CRGB c = finalPalette[0][palindex];
+    dst[SetPixelsSingle(j)] = c;
   }
 }
 

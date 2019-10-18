@@ -36,8 +36,6 @@ CRGB outputBuffer[NUM_LEDS];
 #define mixedBuffer 2
 
 Effect* null = new Null();
-// Effect* null;
-// Effect* white = new White();
 Effect* noise = new Noise();
 Effect* flash =	new Flash(CRGB::Red);
 Effect* bounce = new Bounce(20, 220);
@@ -46,11 +44,11 @@ Effect* pile = new Pile();
 Effect* pools = new Pools();
 Effect* modchase = new Modchase();
 Effect* twinkles = new Twinkles(80, 5);
-
-Effect* paltest = new PalTest(25);
+Effect* paltest = new PalTest();
 // Effect* test0 = new Test(20, CRGB::Black);
 // Effect* test1 = new Test(10, CRGB::Red);
 // Effect* test2 = new Test(20, CRGB::Blue);
+// Effect* roller = new Roller(CRGB::White, CRGB::White, 2),
 
 Effect* effects[] = {
 	paltest,
@@ -66,7 +64,6 @@ Effect* effects[] = {
 	// twinkles,
 	// sparkles,
 	// pile,
-	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
@@ -74,11 +71,9 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 //Button briUpButton = Button(PIN_UP);
 //Button briDwButton = Button(PIN_DOWN);
 //Button effectButton = Button(PIN_EFFECT);
-
 Button eventButton = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
-
 Controller controller = Controller(currentBuffers[0], currentBuffers[1],
 		nextBuffers[0], nextBuffers[1]);
 

@@ -53,11 +53,10 @@ private:
 
 class PalTest : public Effect {
 public:
-  PalTest(int length);
+  PalTest();
   String Identify();
   void Render();
 private:
-  int length;
 };
 
 class Test : public Effect {
