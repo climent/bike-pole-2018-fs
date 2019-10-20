@@ -37,8 +37,8 @@ public:
   void SetPaleteIndex(uint8_t pal);
 
   bool waitToEnd;
-  bool ended;
-  uint8_t pal; // pal index 0, 1 or 2
+  bool ended = true;
+  uint8_t pal = 0; // pal index 0, 1 or 2; defaults to 0
   CRGBPalette256* finalPalette = NULL;
 private:
   bool _singleString = false;

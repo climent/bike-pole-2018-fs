@@ -18,6 +18,7 @@
 
 #define DATA_PIN 8
 #define HEARTBEAT_PIN 13
+#define AGRESSIVE 1
 
 // Define the array of leds:
 // There 2 sets of 3 buffers. For each set:
@@ -74,12 +75,17 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 Button eventButton = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
-Controller controller = Controller(currentBuffers[0], currentBuffers[1],
-		nextBuffers[0], nextBuffers[1]);
+Controller controller = Controller(
+		currentBuffers[0],
+		currentBuffers[1],
+		nextBuffers[0],
+		nextBuffers[1]);
 
 Palmixer palmixer = Palmixer(
-		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
-	  palettes.finalPalette);
+		palettes.palettes,
+		palettes.currentPalette,
+		palettes.nextPalette,
+		palettes.finalPalette);
 
 Mixer mixer = Mixer(outputBuffer);
 
@@ -97,13 +103,16 @@ const long timeTilPrint = 1000;
 const long timeTilAnimate = 10;
 const long timeTilRender = 16; // 60Hz rendering
 const long timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-const long timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
+// const long timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
+const long timeTilPalChange = 1000000; 
 
 long timeLeftTillPrint = timeTilPrint;
 long timeLeftTilAnimate = timeTilAnimate;
 long timeLeftTilOrientation = timeTilOrientation;
 long timeLeftTilRender = timeTilRender;
 long timeLeftTilPalChange = 0; // Force a palette change.
+
+float timeForPaletteTransition = 0.2f;  // time 
 
 unsigned long lastPrint = 0;
 unsigned long lastMillis = 0;
@@ -126,14 +135,13 @@ bool outputSingleString = false;
 void setup() {
 	Serial.begin(115200);
 	delay(1000); // Let the serial monitor come up
-
-	Serial.print("Resetting... ");
+	Serial.print("Initializing... ");
 
 	int val = analogRead(0); // read random value;
-  Serial.printf("Random seed is: %d\n", val);
   randomSeed(val);
-	Serial.print("Number of Effects: ");
-	Serial.println(numEffects);
+
+  Serial.printf("Random seed is: %d\n", val);
+	Serial.printf("Number of Effects: %d\n", numEffects);
 
 	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
 		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip);;
@@ -157,18 +165,17 @@ void setup() {
 	}
 
 	controller.SetTimer(timeTilRender);
+	// controller.SetPalette(palettes.finalPalette);
 	effects[currentEffect]->Initialize();
 
   // noise effect uses a palette to render colors
-  noise->SetPaleteIndex(0);
 	noise->SetPalette(palettes.finalPalette);
-	pools->SetPaleteIndex(0);
 	pools->SetPalette(palettes.finalPalette);
-  paltest->SetPaleteIndex(0);
 	paltest->SetPalette(palettes.finalPalette);
 	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
+	palmixer.SetTransitionTimer(timeForPaletteTransition);
 
 	pinMode(HEARTBEAT_PIN, OUTPUT);
 
@@ -196,10 +203,6 @@ void loop() {
 	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
 	// CheckBumps();
 
-	// CheckBrightness();
-	// CheckEffect();
-	// WaitForNextEffect();
-
   CheckButtonEvent();
 
 	if (timeLeftTillPrint <= 0)
@@ -208,11 +211,6 @@ void loop() {
 		Printer();
 	}
 
-	// EVERY_N_MILLISECONDS(10) {
-	// 	Serial.print("deltaMillis: ");
-	// 	Serial.print(deltaMillis);
-	// 	Serial.println("");
-	// }
 	// Render all active buffers and mixdown
 	if (controller.Render(deltaMillis)) {
 		renderCount++;

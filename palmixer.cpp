@@ -1,20 +1,17 @@
-// #include "palettes.h"
 #include "palmixer.h"
 #define FASTLED_INTERNAL 1
 
-Palmixer::Palmixer(CRGBPalette16* palettes,
-    CRGBPalette256* nextPalette,
+Palmixer::Palmixer(
+		CRGBPalette16* palettes,
     CRGBPalette256* currentPalette,
+    CRGBPalette256* nextPalette,
     CRGBPalette256* finalPalette) {
   _palettes = palettes;
   _nextPalette = nextPalette;
   _currentPalette = currentPalette;
   _finalPalette = finalPalette;
-  active[0] = false;
-  active[1] = false;
-  active[2] = false;
-  // Set a sane default.
-	timer = 10000000;
+	// Number of palettes in the array
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
 }
 
 void Palmixer::Animate(float mics) {
@@ -46,15 +43,28 @@ void Palmixer::Animate(float mics) {
 	}
 }
 
-void Palmixer::SetTimer(int timeTilPalChange) {
+void Palmixer::SetTimer(long timeTilPalChange) {
 	timer = timeTilPalChange;
 }
 
+void Palmixer::SetTransitionTimer(float transitionTimer) {
+	seconds = transitionTimer;
+}
+
+void Palmixer::SetDefaultPalette(int _defaultPalette) {
+	defaultPalette = _defaultPalette;
+}
+
+CRGBPalette256 Palmixer::GetPalette(int8_t slot) {
+	return _finalPalette[slot];
+}
+
+CRGBPalette256 Palmixer::GetPalette() {
+	return GetPalette(defaultPalette);
+}
+
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
-  _kNumPalettes = *(&_palettes + 1) - _palettes;
-  // Serial.println(_kNumPalettes);
 	if (newPal >= _kNumPalettes) return;
-  // Serial.printf("Setting new palette: slot[%d] -> [%d]\n", whichSlot, newPal);
 
 	_currentPalette[whichSlot] = _finalPalette[whichSlot];
 	_nextPalette[whichSlot] = _palettes[newPal];
@@ -66,22 +76,17 @@ void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
 }
 
 void Palmixer::UpdatePalettes(int deltaMicros) {
-  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
 		// Serial.printf("Changing palettes...\n");
-		int newpal = random(0, _kNumPalettes);
-		float seconds = 4.0f;
-		// one second fade to next palette
+		int newpal;  // random value of the new palette
+		newpal = random(0, _kNumPalettes);
 		SetNewPalette(0, newpal, seconds);
 		newpal = random(0, _kNumPalettes);
-		// one second fade to next palette
 		SetNewPalette(1, newpal, seconds);
 		newpal = random(0, _kNumPalettes);
-		// one second fade to next palette
 		SetNewPalette(2, newpal, seconds);
 		timeLeftTilPalChange = timer;
 	}
-
 }

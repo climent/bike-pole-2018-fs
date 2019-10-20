@@ -57,7 +57,7 @@ DEFINE_GRADIENT_PALETTE( iris_gp ) {
   249,  17,  3, 34,
   255,  10,  1, 25};
 
-  // Gradient palette "madras_gp", originally from
+// Gradient palette "madras_gp", originally from
 // http://soliton.vm.bytemark.co.uk/pub/cpt-city/pd/food/tn/madras.png.index.html
 // converted for FastLED with gammas (2.6, 2.2, 2.5)
 // Size: 196 bytes of program space.
@@ -225,7 +225,7 @@ DEFINE_GRADIENT_PALETTE( daisyfae_gp ) {
   178, 161,175, 41,
   255, 237,139,  0};
 
-  // Gradient palette "faecat_gp", originally from
+// Gradient palette "faecat_gp", originally from
 // http://soliton.vm.bytemark.co.uk/pub/cpt-city/rc/tn/faecat.png.index.html
 // converted for FastLED with gammas (2.6, 2.2, 2.5)
 // Size: 36 bytes of program space.

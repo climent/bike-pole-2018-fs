@@ -205,6 +205,7 @@ void Controller::InitiateTransition(Effect* effect, bool fast) {
   //   transitionActive = false;
   //   Serial.println("Blending done...");
   // } else {
+    // effect->SetPalette(finalPalette);
     SetNextBaseEffect(effect);
     transitionActive = true;
   // }

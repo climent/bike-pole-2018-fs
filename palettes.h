@@ -3,9 +3,6 @@
 
 #include "palette_data.h"
 
-// #define kNumPalettes 64
-// int kNumPalettes = 64;
-
 enum PalChoice {
   kClouds = 0,
   kRainbow,
@@ -49,7 +46,7 @@ enum PalChoice {
   kIb63,
   kMango,
   kSprinkles,
-  kNumPalettes
+  kNumPalettes // Not a palette, just used as counter
 };
 
 // An array of palette pointers so we can randomly choose one
@@ -57,8 +54,8 @@ enum PalChoice {
 
 struct Palettes {
   CRGBPalette16  palettes[kNumPalettes];
-  CRGBPalette256 nextPalette[3];
   CRGBPalette256 currentPalette[3];
+  CRGBPalette256 nextPalette[3];
   CRGBPalette256 finalPalette[3];
 };
 typedef struct Palettes Palettes;
@@ -110,19 +107,6 @@ void GenerateGlobalPalettes() {
 	palettes.palettes[kIb63] = ib63_gp;
 	palettes.palettes[kMango] = mango_mystery_gp;
 	palettes.palettes[kSprinkles] = sprinkles_gp;
-
-	// Make sure all palettes are initialized
-	// palettes.finalPalette[0] = palettes.palettes[kSchwarzwald];
-	// palettes.currentPalette[0] = palettes.finalPalette[0];
-	// palettes.nextPalette[0] = palettes.currentPalette[0];
-  //
-	// palettes.finalPalette[1] = palettes.palettes[kMistress];
-	// palettes.currentPalette[1] = palettes.finalPalette[1];
-	// palettes.nextPalette[1] = palettes.currentPalette[1];
-  //
-	// palettes.finalPalette[2] = palettes.palettes[kMadras];
-	// palettes.currentPalette[2] = palettes.finalPalette[2];
-	// palettes.nextPalette[2] = palettes.currentPalette[2];
 }
 
 #endif
