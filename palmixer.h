@@ -24,7 +24,8 @@ public:
   void SetTransitionTimer(float transitionTimer);
   void SetDefaultPalette(int defaultPalette);
   CRGBPalette256 GetPalette();  // defaults to palette in slot 0
-  CRGBPalette256 GetPalette(int8_t slot);  
+  CRGBPalette256 GetPalette(int8_t index);
+  int GetPaletteIndex();
 private:
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
   // An array of palette pointers so we can randomly choose one
@@ -36,10 +37,10 @@ private:
   CRGBPalette256* _nextPalette;
   CRGBPalette256* _currentPalette;
   CRGBPalette256* _finalPalette;
-  bool active[3] = {false, false, false};  // are we currently animating anything?
-  long timer = 10000000;  // set a sane default
+  bool active[3] = {false, false, false}; // are we currently animating anything?
+  long timer = 1000000;
   long timeLeftTilPalChange;
-  float seconds = 4.0f;  // set a tranition time of 4s
+  float seconds = 4.0f;
   int defaultPalette = 0;
 };
 

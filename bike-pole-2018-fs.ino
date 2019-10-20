@@ -85,7 +85,7 @@ Palmixer palmixer = Palmixer(
 		palettes.palettes,
 		palettes.currentPalette,
 		palettes.nextPalette,
-		palettes.finalPalette);
+	  palettes.finalPalette);
 
 Mixer mixer = Mixer(outputBuffer);
 
@@ -103,8 +103,11 @@ const long timeTilPrint = 1000;
 const long timeTilAnimate = 10;
 const long timeTilRender = 16; // 60Hz rendering
 const long timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-// const long timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
-const long timeTilPalChange = 1000000; 
+const long timeTilPalChange = 1000000;
+
+// Decide which one to use.
+const float transitionTimer = 0.2f;
+float timeForPaletteTransition = 0.2f;  // time 
 
 long timeLeftTillPrint = timeTilPrint;
 long timeLeftTilAnimate = timeTilAnimate;
@@ -112,7 +115,6 @@ long timeLeftTilOrientation = timeTilOrientation;
 long timeLeftTilRender = timeTilRender;
 long timeLeftTilPalChange = 0; // Force a palette change.
 
-float timeForPaletteTransition = 0.2f;  // time 
 
 unsigned long lastPrint = 0;
 unsigned long lastMillis = 0;
@@ -175,7 +177,7 @@ void setup() {
 	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
-	palmixer.SetTransitionTimer(timeForPaletteTransition);
+	palmixer.SetTransitionTimer(transitionTimer);
 
 	pinMode(HEARTBEAT_PIN, OUTPUT);
 

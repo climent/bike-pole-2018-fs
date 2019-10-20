@@ -10,8 +10,6 @@ Palmixer::Palmixer(
   _nextPalette = nextPalette;
   _currentPalette = currentPalette;
   _finalPalette = finalPalette;
-	// Number of palettes in the array
-  _kNumPalettes = *(&_palettes + 1) - _palettes;
 }
 
 void Palmixer::Animate(float mics) {
@@ -55,15 +53,20 @@ void Palmixer::SetDefaultPalette(int _defaultPalette) {
 	defaultPalette = _defaultPalette;
 }
 
-CRGBPalette256 Palmixer::GetPalette(int8_t slot) {
-	return _finalPalette[slot];
+CRGBPalette256 Palmixer::GetPalette(int8_t index) {
+	return _finalPalette[index];
 }
 
 CRGBPalette256 Palmixer::GetPalette() {
 	return GetPalette(defaultPalette);
 }
 
+int Palmixer::GetPaletteIndex() {
+	return defaultPalette;
+}
+
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	if (newPal >= _kNumPalettes) return;
 
 	_currentPalette[whichSlot] = _finalPalette[whichSlot];
@@ -76,6 +79,7 @@ void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
 }
 
 void Palmixer::UpdatePalettes(int deltaMicros) {
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
