@@ -38,7 +38,7 @@ public:
 
   bool waitToEnd;
   bool ended;
-  uint8_t pal; // pal index 0, 1 or 2
+  uint8_t pal = 0; // pal index 0, 1 or 2
   CRGBPalette256* finalPalette = NULL;
 private:
   bool _singleString = false;

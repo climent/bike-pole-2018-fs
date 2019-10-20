@@ -11,8 +11,8 @@ class Palmixer {
 public:
   Palmixer(
     CRGBPalette16* palettes,
-    CRGBPalette256* nextPalette,
     CRGBPalette256* currentPalette,
+    CRGBPalette256* nextPalette,
     CRGBPalette256* finalPalette
     );
   float fader[3] = {0.0f, 0.0f, 0.0f};    // Goes from 0.0f to 1.0f
@@ -20,9 +20,14 @@ public:
   fract8 fraction[3];
   void UpdatePalettes(int deltaMicros);
   void Animate(float mics);
-  void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
-  void SetTimer(int timeTilPalChange);
+  void SetTimer(long timeTilPalChange);
+  void SetTransitionTimer(float transitionTimer);
+  void SetDefaultPalette(int defaultPalette);
+  CRGBPalette256 GetPalette();  // defaults to palette in slot 0
+  CRGBPalette256 GetPalette(int8_t index);
+  int GetPaletteIndex();
 private:
+  void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
   // An array of palette pointers so we can randomly choose one
   int _kNumPalettes;
   CRGBPalette16* _palettes;
@@ -34,8 +39,10 @@ private:
   CRGBPalette256* _currentPalette;
   CRGBPalette256* _finalPalette;
   bool active[3] = {false, false, false}; // are we currently animating anything?
-  int timer;
-  int timeLeftTilPalChange;
+  long timer = 1000000;
+  long timeLeftTilPalChange;
+  float seconds = 4.0f;
+  int defaultPalette = 0;
 };
 
 #endif

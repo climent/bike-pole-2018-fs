@@ -68,7 +68,6 @@ private:
 
   int var;
   int timer;
-  // int timeLeftTilEffectChanges;
 
   long timeLeftTilRender;
   long timeTilRender;

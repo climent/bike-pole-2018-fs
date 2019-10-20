@@ -74,11 +74,16 @@ const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 Button eventButton = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
-Controller controller = Controller(currentBuffers[0], currentBuffers[1],
-		nextBuffers[0], nextBuffers[1]);
+Controller controller = Controller(
+		currentBuffers[0],
+		currentBuffers[1],
+		nextBuffers[0],
+		nextBuffers[1]);
 
 Palmixer palmixer = Palmixer(
-		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
+		palettes.palettes,
+		palettes.currentPalette,
+		palettes.nextPalette,
 	  palettes.finalPalette);
 
 Mixer mixer = Mixer(outputBuffer);
@@ -97,7 +102,8 @@ const long timeTilPrint = 1000;
 const long timeTilAnimate = 10;
 const long timeTilRender = 16; // 60Hz rendering
 const long timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-const long timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
+const long timeTilPalChange = 1000000;
+const float transitionTimer = 0.2f;
 
 long timeLeftTillPrint = timeTilPrint;
 long timeLeftTilAnimate = timeTilAnimate;
@@ -160,15 +166,13 @@ void setup() {
 	effects[currentEffect]->Initialize();
 
   // noise effect uses a palette to render colors
-  noise->SetPaleteIndex(0);
 	noise->SetPalette(palettes.finalPalette);
-	pools->SetPaleteIndex(0);
 	pools->SetPalette(palettes.finalPalette);
-  paltest->SetPaleteIndex(0);
 	paltest->SetPalette(palettes.finalPalette);
 	modchase->SetPalette(palettes.finalPalette);
 
 	palmixer.SetTimer(timeTilPalChange);
+	palmixer.SetTransitionTimer(transitionTimer);
 
 	pinMode(HEARTBEAT_PIN, OUTPUT);
 
