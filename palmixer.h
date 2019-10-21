@@ -15,6 +15,7 @@ public:
     CRGBPalette256* nextPalette,
     CRGBPalette256* finalPalette
     );
+  void Initialize();
   float fader[3] = {0.0f, 0.0f, 0.0f};    // Goes from 0.0f to 1.0f
   float deltaFade[3];                     // amount to fade per second
   fract8 fraction[3];
@@ -26,6 +27,7 @@ public:
   CRGBPalette256 GetPalette();  // defaults to palette in slot 0
   CRGBPalette256 GetPalette(int8_t index);
   int GetPaletteIndex();
+  void SetRandomPalettes(bool randomly);
 private:
   void SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds);
   // An array of palette pointers so we can randomly choose one
@@ -42,6 +44,8 @@ private:
   long timeLeftTilPalChange;
   float seconds = 4.0f;
   int defaultPalette = 0;
+  bool randomly = true;
+  int incrementalPalette = 0;
 };
 
 #endif

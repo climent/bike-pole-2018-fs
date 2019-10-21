@@ -53,8 +53,8 @@ public:
 
   CRGB* outputBuffer;
 
-  CRGBPalette256* finalPalette;
-  CRGBPalette256* nextFinalPalette;
+  // CRGBPalette256* finalPalette;
+  // CRGBPalette256* nextFinalPalette;
 
 private:
   void PreRender(unsigned long deltaMillis);

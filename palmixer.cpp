@@ -10,11 +10,16 @@ Palmixer::Palmixer(
   _nextPalette = nextPalette;
   _currentPalette = currentPalette;
   _finalPalette = finalPalette;
+  _kNumPalettes = *(&_palettes + 1) - _palettes;
+}
+
+void Palmixer::Initialize() {
+	// Nothing to do so far.
 }
 
 void Palmixer::Animate(float mics) {
+	UpdatePalettes(mics);
   float dt = (float)(mics) / 1000000.0f;
-
   // Serial.println("Blending...");
 	for (int i = 0; i < 3; i++)
 	{
@@ -30,7 +35,6 @@ void Palmixer::Animate(float mics) {
 				fraction[i] = 255;
 				active[i] = false;
 			}
-
 			// Serial.printf("Blending: %d",fraction);
 			// Use blend to move toward target palette
 			for (int j = 0; j < 256; j++)
@@ -65,8 +69,11 @@ int Palmixer::GetPaletteIndex() {
 	return defaultPalette;
 }
 
+void Palmixer::SetRandomPalettes(bool _randomly) {
+	randomly = _randomly;
+}
+
 void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
-  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	if (newPal >= _kNumPalettes) return;
 
 	_currentPalette[whichSlot] = _finalPalette[whichSlot];
@@ -79,18 +86,26 @@ void Palmixer::SetNewPalette(uint8_t whichSlot, uint8_t newPal, float seconds) {
 }
 
 void Palmixer::UpdatePalettes(int deltaMicros) {
-  _kNumPalettes = *(&_palettes + 1) - _palettes;
 	timeLeftTilPalChange -= deltaMicros;
 	if (timeLeftTilPalChange <= 0)
 	{
+		if (randomly) {
 		// Serial.printf("Changing palettes...\n");
-		int newpal;  // random value of the new palette
-		newpal = random(0, _kNumPalettes);
-		SetNewPalette(0, newpal, seconds);
-		newpal = random(0, _kNumPalettes);
-		SetNewPalette(1, newpal, seconds);
-		newpal = random(0, _kNumPalettes);
-		SetNewPalette(2, newpal, seconds);
+			int newpal;  // random value of the new palette
+			newpal = random(0, _kNumPalettes);
+			SetNewPalette(0, newpal, seconds);
+			newpal = random(0, _kNumPalettes);
+			SetNewPalette(1, newpal, seconds);
+			newpal = random(0, _kNumPalettes);
+			SetNewPalette(2, newpal, seconds);
+		} else {
+			incrementalPalette++;
+			if (incrementalPalette == _kNumPalettes) incrementalPalette = 0;
+			SetNewPalette(0, incrementalPalette, seconds);
+			SetNewPalette(1, incrementalPalette, seconds);
+			SetNewPalette(2, incrementalPalette, seconds);
+
+		}
 		timeLeftTilPalChange = timer;
 	}
 }

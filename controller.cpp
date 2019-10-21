@@ -154,23 +154,27 @@ void Controller::SetOutputBuffer(CRGB* dest) {
 
 void Controller::SetBaseEffect(Effect* effect) {
   baseEffect = effect;
+  baseEffect->SetPalette(finalPalette);
   baseEffect->SetBuffer(baseBuffer);
 }
 
 void Controller::SetLayerEffect(Effect* effect) {
   layerEffect = effect;
+  layerEffect->SetPalette(finalPalette);
   layerEffect->SetBuffer(layerBuffer);
 }
 
 void Controller::SetNextBaseEffect(Effect* effect) {
   nextBaseEffect = effect;
   nextBaseEffect->Reset();
+  nextBaseEffect->SetPalette(finalPalette);
   nextBaseEffect->SetBuffer(nextBaseBuffer);
 }
 
 void Controller::SetNextLayerEffect(Effect* effect) {
   nextLayerEffect = effect;
   nextLayerEffect->Reset();
+  nextLayerEffect->SetPalette(finalPalette);
   nextLayerEffect->SetBuffer(nextLayerBuffer);
 }
 
@@ -205,7 +209,6 @@ void Controller::InitiateTransition(Effect* effect, bool fast) {
   //   transitionActive = false;
   //   Serial.println("Blending done...");
   // } else {
-    // effect->SetPalette(finalPalette);
     SetNextBaseEffect(effect);
     transitionActive = true;
   // }

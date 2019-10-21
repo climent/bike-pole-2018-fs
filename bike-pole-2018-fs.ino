@@ -52,18 +52,18 @@ Effect* paltest = new PalTest();
 // Effect* roller = new Roller(CRGB::White, CRGB::White, 2),
 
 Effect* effects[] = {
-	paltest,
+	// paltest,
 	// null,
 	// test0,
   // test1,
 	// test2,
 	// modchase,
-	// pools,
-	// noise,
+	pools,
+	noise,
 	// flash,
 	// bounce,
 	// twinkles,
-	// sparkles,
+	sparkles,
 	// pile,
 };
 
@@ -93,12 +93,15 @@ Mixer mixer = Mixer(outputBuffer);
 int brightnessMap[] = { 8, 16, 32, 64, 128, 255 };
 const byte brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
 int briLevel = 1;
+
 int currentEffect = 0;
 int nextEffect = 0;
+int currentBaseEffect = 0;
+int currentLayerEffect = 0;
+int nextBaseEffect = 0;
+int nextLayerEffect = 0;
 
 // Timers
-// int timeTillPrint = 1000; // Print diagnostics once per second
-// Initial timers
 const long timeTilPrint = 1000;
 const long timeTilAnimate = 10;
 const long timeTilRender = 16; // 60Hz rendering
@@ -155,7 +158,14 @@ void setup() {
 	// InitMotion();
 	GenerateGlobalPalettes();
 
+	palmixer.Initialize();
+	palmixer.SetRandomPalettes(false);
+	palmixer.SetTimer(timeTilPalChange);
+	palmixer.SetTransitionTimer(transitionTimer);
+
 	controller.Initialize();
+	controller.SetTimer(timeTilRender);
+	controller.SetPalette(palettes.finalPalette);
 
 	if (USEMIXER) {
 		controller.SetBaseEffect(effects[0]);
@@ -166,18 +176,13 @@ void setup() {
 		controller.SetOutputBuffer(outputBuffer);
 	}
 
-	controller.SetTimer(timeTilRender);
-	// controller.SetPalette(palettes.finalPalette);
 	effects[currentEffect]->Initialize();
 
   // noise effect uses a palette to render colors
-	noise->SetPalette(palettes.finalPalette);
-	pools->SetPalette(palettes.finalPalette);
-	paltest->SetPalette(palettes.finalPalette);
-	modchase->SetPalette(palettes.finalPalette);
-
-	palmixer.SetTimer(timeTilPalChange);
-	palmixer.SetTransitionTimer(transitionTimer);
+	// noise->SetPalette(palettes.finalPalette);
+	// pools->SetPalette(palettes.finalPalette);
+	// paltest->SetPalette(palettes.finalPalette);
+	// modchase->SetPalette(palettes.finalPalette);
 
 	pinMode(HEARTBEAT_PIN, OUTPUT);
 
@@ -193,11 +198,7 @@ void loop() {
 
   UpdateTimers();
 
-	palmixer.UpdatePalettes(deltaMicros);
 	palmixer.Animate(deltaMicros);
-
-	// Serial.println("Animating...");
-
 	controller.Animate(deltaMicros);
 
   // Right now all the motion code is not working correctly.

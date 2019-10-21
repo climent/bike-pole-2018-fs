@@ -54,8 +54,8 @@ enum PalChoice {
 
 struct Palettes {
   CRGBPalette16  palettes[kNumPalettes];
-  CRGBPalette256 currentPalette[3];
   CRGBPalette256 nextPalette[3];
+  CRGBPalette256 currentPalette[3];
   CRGBPalette256 finalPalette[3];
 };
 typedef struct Palettes Palettes;
