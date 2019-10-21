@@ -52,7 +52,7 @@ Effect* paltest = new PalTest();
 // Effect* roller = new Roller(CRGB::White, CRGB::White, 2),
 
 Effect* effects[] = {
-	// paltest,
+	paltest,
 	// null,
 	// test0,
   // test1,
@@ -148,7 +148,8 @@ void setup() {
   Serial.printf("Random seed is: %d\n", val);
 	Serial.printf("Number of Effects: %d\n", numEffects);
 
-	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
+	// FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
+	FastLED.addLeds<NEOPIXEL, DATA_PIN>(
 		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
 
