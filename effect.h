@@ -282,4 +282,16 @@ public:
 private:
 };
 
+class Config : public Effect {
+public:
+  Config(CRGB* configOutput);
+  String Identify();
+  // void Animate();
+  void Render();
+  void Output(int index);
+private:
+  int index = 0;
+  CRGB* configLeds;
+};
+
 #endif

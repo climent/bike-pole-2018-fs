@@ -17,6 +17,7 @@
 // #endif
 
 #define DATA_PIN 8
+#define CONFIG_DATA_PIN 7
 #define HEARTBEAT_PIN 13
 #define AGRESSIVE 1
 
@@ -50,6 +51,9 @@ Effect* paltest = new PalTest();
 // Effect* test1 = new Test(10, CRGB::Red);
 // Effect* test2 = new Test(20, CRGB::Blue);
 // Effect* roller = new Roller(CRGB::White, CRGB::White, 2),
+
+CRGB configLeds[CONFIG_NUM_LEDS];
+Config config = Config(configLeds);
 
 Effect* effects[] = {
 	paltest,
@@ -153,6 +157,9 @@ void setup() {
 		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
 
+	FastLED.addLeds<WS2812B, CONFIG_DATA_PIN, GRB>(
+		configLeds, CONFIG_NUM_LEDS).setCorrection(TypicalLEDStrip);
+
 	// Limit to 2 amps to begin with
   set_max_power_in_volts_and_milliamps(5, 2000);
 
@@ -225,6 +232,8 @@ void loop() {
     hearbeat == true ? hearbeat = false : hearbeat = true;
   }
   hearbeat == true ? digitalWrite(HEARTBEAT_PIN, HIGH) : digitalWrite(HEARTBEAT_PIN, LOW);
+
+	config.Output(currentEffect);
 }
 
 void UpdateTimers() {

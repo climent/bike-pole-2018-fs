@@ -1,5 +1,15 @@
 #include "effect.h"
-// #include "ef_flash.h"
+
+Flash::Flash() {
+  Initialize();
+  hasColor = false;
+}
+
+Flash::Flash(CRGB color) {
+  Initialize();
+  hasColor = true;
+  _color = color;
+}
 
 void Flash::Initialize() {
   ledOn = false;
@@ -11,17 +21,6 @@ void Flash::Initialize() {
   flashTime = 15;
   lastShortFlash = millis();
   ended = true;
-}
-
-Flash::Flash() {
-  Initialize();
-  hasColor = false;
-}
-
-Flash::Flash(CRGB color) {
-  Initialize();
-  hasColor = true;
-  _color = color;
 }
 
 void Flash::SetColor(CRGB color) {
