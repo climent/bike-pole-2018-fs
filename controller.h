@@ -23,15 +23,22 @@ public:
       CRGB* outputLeds);
   String Identify();
   void Animate(unsigned long mics);
+  
   void SetEffect(Effect* effect);
+  void SetNextEffect(Effect* effect);
+  String GetEffect();
+  String GetNextEffect();
+
   void SetBaseEffect(Effect* effect);
   void SetLayerEffect(Effect* effect);
   String GetBaseEffect();
   String GetLayerEffect();
+  
   void SetNextBaseEffect(Effect* effect);
   void SetNextLayerEffect(Effect* effect);
   String GetNextBaseEffect();
   String GetNextLayerEffect();
+  
   bool CheckEnd();
   void Reset();
   void SetBuffer(CRGB* dest);

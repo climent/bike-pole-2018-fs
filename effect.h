@@ -282,6 +282,7 @@ public:
 private:
 };
 
+#ifdef TEST_BOARD
 class Config : public Effect {
 public:
   Config(CRGB* configOutput);
@@ -293,5 +294,5 @@ private:
   int index = 0;
   CRGB* configLeds;
 };
-
+#endif
 #endif

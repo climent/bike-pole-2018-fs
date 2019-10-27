@@ -12,25 +12,10 @@
 #include "mixer.h"
 #include "selector.h"
 
-// #ifdef MOTION
+#ifdef MOTION
 #include "motion.h"
-// #endif
+#endif
 
-#define DATA_PIN 8
-#define CONFIG_DATA_PIN 7
-#define HEARTBEAT_PIN 13
-#define AGRESSIVE 1
-
-// Define the array of leds:
-// There 2 sets of 3 buffers. For each set:
-//  * buffer 0 and 1 are for base and layer effects
-//    * effect->Animate animates the effects
-//    * effect->Render renders the effect in the buffers
-//  * buffer 2 is a buffer for layer composition
-//    * mixer->Mix renders the layering
-//  * finally, outputBuffer is used to transition from one effect to another
-//    * selector->ChangeEffect selects a new effect combination
-//    *
 CRGB leds[3][NUM_LEDS];
 CRGB currentBuffers[3][NUM_LEDS];
 CRGB nextBuffers[3][NUM_LEDS];
@@ -52,8 +37,10 @@ Effect* paltest = new PalTest();
 // Effect* test2 = new Test(20, CRGB::Blue);
 // Effect* roller = new Roller(CRGB::White, CRGB::White, 2),
 
+#ifdef TEST_BOARD
 CRGB configLeds[CONFIG_NUM_LEDS];
 Config config = Config(configLeds);
+#endif
 
 Effect* effects[] = {
 	paltest,
@@ -152,13 +139,15 @@ void setup() {
   Serial.printf("Random seed is: %d\n", val);
 	Serial.printf("Number of Effects: %d\n", numEffects);
 
-	// FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
-	FastLED.addLeds<NEOPIXEL, DATA_PIN>(
+	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
+	// FastLED.addLeds<NEOPIXEL, DATA_PIN>(
 		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip);;
 	FastLED.setDither(0);
 
+#ifdef TEST_BOARD
 	FastLED.addLeds<WS2812B, CONFIG_DATA_PIN, GRB>(
 		configLeds, CONFIG_NUM_LEDS).setCorrection(TypicalLEDStrip);
+#endif
 
 	// Limit to 2 amps to begin with
   set_max_power_in_volts_and_milliamps(5, 2000);
@@ -233,7 +222,9 @@ void loop() {
   }
   hearbeat == true ? digitalWrite(HEARTBEAT_PIN, HIGH) : digitalWrite(HEARTBEAT_PIN, LOW);
 
+#ifdef TEST_BOARD
 	config.Output(currentEffect);
+#endif
 }
 
 void UpdateTimers() {

@@ -20,6 +20,10 @@ Leds Effect::SetPixels(uint16_t elevation) {
 }
 
 uint16_t Effect::SetPixelsSingle(uint16_t elevation) {
+	if (elevation % 2 == 0) return (elevation / 2);
+	// return (NUM_LEDS - elevation) / 2;
+	return 0;
+
 	if (elevation < NUM_LEDS) return elevation;
 
 	if (elevation < lowerBlock)

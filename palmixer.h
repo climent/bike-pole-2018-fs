@@ -4,7 +4,9 @@
 #define FASTLED_INTERNAL 1
 #include <FastLED.h>
 
-// In this class we animate some faders or increments
+// In this class we 
+// 4 different sets of data, passed to the
+// constructorIn this class we animate some faders or increments
 // and then support mixing of the two renderbuffers into the frontbuffer
 // Which then gets replicated (or not) and displayed
 class Palmixer {
@@ -22,6 +24,8 @@ public:
   void UpdatePalettes(int deltaMicros);
   void Animate(float mics);
   void SetTimer(long timeTilPalChange);
+  void SetChanger(bool changer);
+  bool GetChanger();
   void SetTransitionTimer(float transitionTimer);
   void SetDefaultPalette(int defaultPalette);
   CRGBPalette256 GetPalette();  // defaults to palette in slot 0

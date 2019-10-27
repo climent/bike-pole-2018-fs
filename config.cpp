@@ -1,4 +1,5 @@
 #include "effect.h"
+#ifdef TEST_BOARD
 
 Config::Config(CRGB* _configLeds) {
   configLeds = _configLeds;
@@ -19,3 +20,5 @@ void Config::Output(int index) {
   fadeToBlackBy(configLeds, CONFIG_NUM_LEDS, 1);
   configLeds[index] = CRGB::Red;
 }
+
+#endif
