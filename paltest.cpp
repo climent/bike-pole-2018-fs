@@ -6,9 +6,10 @@ PalTest::PalTest() {
 void PalTest::Render() {
   fadeToBlackBy(dst, NUM_LEDS, 1);
   for (uint16_t j = 0; j < NUM_LEDS; j++) {
-    int palindex = j;
-    palindex = map(palindex, 0, NUM_LEDS, 0, 255);
-    CRGB c = finalPalette[pal][palindex];
+    // int palindex = j;
+    // palindex = map(palindex, 0, NUM_LEDS, 0, 255);
+    // CRGB c = finalPalette[pal][j];
+    CRGB c = SetColorByPalette(finalPalette, pal, j);
     dst[SetPixelsSingle(j)] = c;
   }
 }

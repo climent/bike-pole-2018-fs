@@ -31,6 +31,11 @@ public:
   uint16_t SetPixelsSingle(uint16_t elevation);
   uint16_t SetPixel(uint16_t elevation);
 
+  CRGB SetColorByPalette(
+    CRGBPalette256* finalPalette,
+    int pal,
+    uint16_t palindex);
+
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
   void SetPalette(CRGBPalette256* finalPalette);

@@ -20,10 +20,6 @@ Leds Effect::SetPixels(uint16_t elevation) {
 }
 
 uint16_t Effect::SetPixelsSingle(uint16_t elevation) {
-	if (elevation % 2 == 0) return (elevation / 2);
-	// return (NUM_LEDS - elevation) / 2;
-	return 0;
-
 	if (elevation < NUM_LEDS) return elevation;
 
 	if (elevation < lowerBlock)
@@ -57,6 +53,23 @@ uint16_t Effect::SetPixel(uint16_t elevation) {
 		return -1;
 	}
 }
+
+CRGB Effect::SetColorByPalette(CRGBPalette256* finalPalette, int pal,
+    uint16_t palindex) {
+#ifdef TEST_BOARD
+#endif
+
+#ifdef CARDBOARD_TUBE
+	if (palindex < NUM_LEDS / 2) {
+		palindex = map(palindex, 0, NUM_LEDS / 2, 0, 255);
+		CRGB c = finalPalette[pal][palindex];
+		return c;
+	}
+	palindex = map(palindex, NUM_LEDS / 2, NUM_LEDS, 255, 0);
+	CRGB c = finalPalette[pal][palindex];
+	return c;
+#endif
+	}
 
 void Effect::FadeAll(CRGB leds[NUM_LEDS], int fade) {
 	for (uint16_t i = 0; i < NUM_LEDS; i++) {
