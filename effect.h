@@ -247,9 +247,9 @@ public:
   void Initialize();
   void Animate(unsigned long mics);
   void Render();
-  float nodes[9];    // units are frontpalette space (0-255)
-  float vels[9];     // in frontpalette units per second
-  float locs[9];  // the node locations in strip space
+  float nodes[9];  // units are frontpalette space (0-255)
+  float vels[9];   // in frontpalette units per second
+  float locs[9];   // the node locations in strip space
   uint16_t m_length;
 private:
   bool _singleString;

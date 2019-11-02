@@ -25,11 +25,11 @@
 // Button pins for up and down
 #define PIN_UP 9
 #define PIN_DOWN 11
-#define PIN_EFFECT 6 // burning man box
+#define PIN_EFFECT 6  // burning man box
 #endif
 
 #ifdef CARDBOARD_TUBE
-#define DATA_PIN 8         // test board, burning man box
+#define DATA_PIN 8    // test board, burning man box
 
 // How many leds in your strip?
 #define NUM_LEDS 296  // cardboard tube

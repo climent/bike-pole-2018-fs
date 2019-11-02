@@ -94,11 +94,11 @@ void Pools::Render() {
       int palindex = (int)(curp);
       if (palindex < 0) palindex = 0;
       if (palindex > 255) palindex = 255;
-      if (!_singleString) {
-        dst[l] = finalPalette[pal][palindex];
-      } else {
+#ifdef CARDBOARD_TUBE
+        dst[l] = SetColorByPalette(finalPalette, pal, palindex);
+#else
         dst[SetPixelsSingle(l)] = finalPalette[pal][palindex];
-      }
+#endif
       curp += pdelta;
     }
   }
