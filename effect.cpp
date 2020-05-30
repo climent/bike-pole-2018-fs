@@ -3,6 +3,11 @@
 int lowerBlock = 30;
 int upperBlock = 40;
 
+uint16_t Effect::SetPixelElevation(uint16_t elevation) {
+	
+	return ;
+}
+
 // Returns a triplet of pixels for a single pixel elevation, turning then
 // entire pole into a single elevation.
 Leds Effect::SetPixels(uint16_t elevation) {
@@ -18,7 +23,6 @@ Leds Effect::SetPixels(uint16_t elevation) {
 	}
 	return leds;
 }
-
 uint16_t Effect::SetPixelsSingle(uint16_t elevation) {
 	if (elevation < NUM_LEDS) return elevation;
 
@@ -56,10 +60,16 @@ uint16_t Effect::SetPixel(uint16_t elevation) {
 
 CRGB Effect::SetColorByPalette(CRGBPalette256* finalPalette, int pal,
     uint16_t palindex) {
-#ifdef TEST_BOARD
+#ifndef TEST_BOARD
 #endif
 
-#ifdef CARDBOARD_TUBE
+#ifdef MONITOR_FOAM
+	palindex = map(palindex, 0, NUM_LEDS, 0, 255);
+	CRGB c = finalPalette[pal][palindex];
+	return c;
+#endif
+
+#ifdef TEST_BOARD
 	if (palindex < NUM_LEDS / 2) {
 		palindex = map(palindex, 0, NUM_LEDS / 2, 0, 255);
 		CRGB c = finalPalette[pal][palindex];

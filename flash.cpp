@@ -18,7 +18,7 @@ void Flash::Initialize() {
   numberOfFlashes = 3;
   hue = 0;
   _totalFlashes = 0;
-  flashTime = 15;
+  flashTime = 25;
   lastShortFlash = millis();
   ended = true;
 }
@@ -31,7 +31,7 @@ void Flash::Blink() {
   now = millis();
   if (now - lastShortFlash > flashTime){
     if (!ledOn){
-      for (int i = 0; i < NUM_LEDS / 3; i++){
+      for (uint16_t i = 0; i < NUM_LEDS; i++){
         _leds = SetPixels(i);
         if (hasColor){
           dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _color;
@@ -40,7 +40,7 @@ void Flash::Blink() {
         }
       }
     } else {
-      for (int i = 0; i < NUM_LEDS; i++){
+      for (uint16_t i = 0; i < NUM_LEDS; i++){
         dst[i] = CHSV(0, 0, 0);
       }
       _totalFlashes += 1;

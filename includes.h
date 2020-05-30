@@ -13,11 +13,12 @@
 #define HEARTBEAT_PIN 13
 
 // #define ALU_TUBE
-#define CARDBOARD_TUBE
+// #define CARDBOARD_TUBE
 // #define TEST_BOARD
+#define MONITOR_FOAM
 
 #ifdef ALU_TUBE
-#define DATA_PIN 8         // test board, burning man box
+#define DATA_PIN 8    // test board, burning man box
 
 // How many leds in your strip?
 #define NUM_LEDS 288  // aluminum tube
@@ -26,6 +27,20 @@
 #define PIN_UP 9
 #define PIN_DOWN 11
 #define PIN_EFFECT 6  // burning man box
+#define PIN_ON_OFF 0
+#endif
+
+#ifdef MONITOR_FOAM
+#define DATA_PIN 8    // test board, burning man box
+
+// How many leds in your strip?
+#define NUM_LEDS 166  // aluminum tube
+
+// Button pins for up and down
+#define PIN_UP 9
+#define PIN_DOWN 11
+#define PIN_EFFECT 6  // burning man box
+#define PIN_ON_OFF 4
 #endif
 
 #ifdef CARDBOARD_TUBE
@@ -38,6 +53,7 @@
 #define PIN_UP 9
 #define PIN_DOWN 11
 #define PIN_EFFECT 6
+#define PIN_ON_OFF 0
 #endif
 
 #ifdef TEST_BOARD
@@ -52,6 +68,7 @@
 #define PIN_UP 9
 #define PIN_DOWN 11
 #define PIN_EFFECT 16
+#define PIN_ON_OFF 0
 #endif
 
 /*
@@ -63,7 +80,7 @@
   ->############### ------->############### -
 */
 struct Leds {
-  int o, p, q;
+  uint16_t o, p, q;
 };
 typedef struct Leds Leds;
 

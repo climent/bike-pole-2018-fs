@@ -28,6 +28,8 @@ public:
   virtual void Render();
 
   Leds SetPixels(uint16_t elevation);
+  
+  uint16_t SetPixelElevation(uint16_t elevation);
   uint16_t SetPixelsSingle(uint16_t elevation);
   uint16_t SetPixel(uint16_t elevation);
 

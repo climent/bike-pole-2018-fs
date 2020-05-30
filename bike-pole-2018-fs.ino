@@ -4,6 +4,7 @@
 #include "palette_data.h"
 #include "palettes.h"
 #include "includes.h"
+#include "layout.h"
 #include "effect.h"
 #include "controller.h"
 #include "button.h"
@@ -43,27 +44,28 @@ Config config = Config(configLeds);
 #endif
 
 Effect* effects[] = {
-	paltest,
+	// paltest,
 	// null,
 	// test0,
   // test1,
 	// test2,
 	// modchase,
-	pools,
-	noise,
-	// flash,
-	// bounce,
-	// twinkles,
+	// pools,
+	// noise,
+	flash,   //
+	bounce,  //
+	twinkles,
 	sparkles,
-	// pile,
+	pile,    //
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
-//Button briUpButton = Button(PIN_UP);
-//Button briDwButton = Button(PIN_DOWN);
-//Button effectButton = Button(PIN_EFFECT);
+// Button briUpButton = Button(PIN_UP);
+// Button briDwButton = Button(PIN_DOWN);
+// Button effectButton = Button(PIN_EFFECT);
 Button eventButton = Button(PIN_EFFECT);
+Button onoffButton = Button(PIN_ON_OFF);
 
 // Controller controller = Controller(leds[0], leds[1]);
 Controller controller = Controller(
@@ -81,9 +83,9 @@ Palmixer palmixer = Palmixer(
 Mixer mixer = Mixer(outputBuffer);
 
 // Global Brightness
-int brightnessMap[] = { 8, 16, 32, 64, 128, 255 };
+int brightnessMap[] = { 0, 8, 16, 32, 64, 128, 255 };
 const byte brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
-int briLevel = 1;
+int briLevel = 2;
 
 int currentEffect = 0;
 int nextEffect = 0;
@@ -204,6 +206,7 @@ void loop() {
 	// CheckBumps();
 
   CheckButtonEvent();
+	CheckOnOff();
 
 	if (timeLeftTillPrint <= 0)
 	{
@@ -296,15 +299,15 @@ void CheckButtonEvent() {
 			if (DEBUG) Serial.println("  button event 1");
 			NextEffect();
 			break;
-		case 2:
+		case 3:
 			if (DEBUG && briLevel > 0)
 			  Serial.print("> Bri down: ");
-			if (briLevel > 0) {
+			if (briLevel > 1) {
 				briLevel -= 1;
 				if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
 			}
 			break;
-		case 3:
+		case 2:
 			if (DEBUG && briLevel < brightnessCount - 1)
 				Serial.print("> Bri up: ");
 			if (briLevel < brightnessCount - 1) {
@@ -316,12 +319,18 @@ void CheckButtonEvent() {
 	FastLED.setBrightness(brightnessMap[briLevel]);
 }
 
-// void CheckEffect() {
-// 	if (eventButton.Read()) {
-// 		if (DEBUG) Serial.println("  button change pressed");
-// 		NextEffect();
-// 	}
-// }
+int old_briLevel;
+void CheckOnOff() {
+	if (onoffButton.Read()) {
+		if (DEBUG) Serial.println("  button change pressed");
+		if (briLevel != 0) {
+			old_briLevel = briLevel;
+			briLevel = 0;
+		} else {
+			briLevel = old_briLevel;
+		}
+	}
+}
 // void CheckBrightness() {
 // 	if (briUpButton.Read()) {
 // 		if (DEBUG) Serial.println("  button up pressed");
