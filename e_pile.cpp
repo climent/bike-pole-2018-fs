@@ -6,13 +6,13 @@ void Pile::Reset() {
 
 void Pile::Initialize() {
 	// initPile = 0;
-	height = NUM_LEDS / 3 - 1;
+	height = NUM_LEDS - 1;
 	now = millis();
 	lastMove = millis();
 	position = height;
 	bottom = 0;
 	ended = false;
-	_speed = 10;
+	_speed = 2;
 	_fcolor = CRGB::Red;
 	_bcolor = CRGB::Black;
 }
@@ -40,23 +40,26 @@ void Pile::Animate(unsigned long mics) {
   if (ended) ended = false;
 	if (now - lastMove > _speed) {
 		// FadeAll(leds, _tail);
-		_leds = SetPixels(position);
-		dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _fcolor;
-		if (position + 1 <= height) {
-			_leds = SetPixels(position + 1);
-			dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _bcolor;
+		dst[SetPixelsSingle(position)] = _fcolor;
+		dst[SetPixelsSingle(position + 1)] = _fcolor;
+		dst[SetPixelsSingle(position + 2)] = _fcolor;
+		if (position + 3 <= height) {
+			dst[SetPixelsSingle(position + 3)] = _bcolor;
 		}
-		if (position == bottom)
+		if (position <= bottom)
 		{
 			position = height;
-			if (bottom == height) {
+			if (bottom >= height) {
 				bottom = 0;
 			} else {
+				bottom++;
+				bottom++;
 				bottom++;
 			}
       if (bottom == 1) ended = true;
 		} else {
 			position--;
+			// position--;
 		}
 		lastMove = millis();
 	}

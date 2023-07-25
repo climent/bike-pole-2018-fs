@@ -1,6 +1,8 @@
 #include "includes.h"
 #include <FastLED.h>
 
+// #include "led_utils.h"
+
 #ifndef EFFECT_H
 #define EFFECT_H
 
@@ -29,7 +31,6 @@ public:
   virtual void Initialize();
   virtual void Render();
   virtual void Render(CRGBPalette256* finalPalette);
-  Leds SetPixels(int elevation);
   int SetPixelsSingle(int elevation);
   void FadeAll(CRGB leds[NUM_LEDS], int fade);
   void FadeOrClear();
@@ -102,7 +103,7 @@ private:
   int  numberOfFlashes;
   int  elevation;
   uint8_t hue;
-  Leds _leds;
+  // Leds _leds;
   int _totalFlashes;
   long flashTime;
   long lastShortFlash;
@@ -124,7 +125,7 @@ private:
   bool direction;
   int position;
   uint8_t hue;
-  Leds _leds;
+  // Leds _leds;
   int _tail;
 };
 
@@ -151,15 +152,15 @@ public:
   bool CheckEnd();
   void Initialize();
 private:
-  int _fcolor;
-  int _bcolor;
+  CRGB _fcolor;
+  CRGB _bcolor;
   int _speed;
   int initPile;
   int height;
   int now;
   int lastMove;
   int position;
-  Leds _leds;
+  // Leds _leds;
   int bottom;
 };
 
@@ -173,14 +174,14 @@ public:
   bool CheckEnd();
   void Initialize();
 private:
-  int _fcolor;
-  int _bcolor;
+  CRGB _fcolor;
+  CRGB _bcolor;
   int _speed;
   int height;
   int now;
   int lastMove;
   int position;
-  Leds _leds;
+  // Leds _leds;
   int bottom;
 };
 

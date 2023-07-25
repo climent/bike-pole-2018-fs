@@ -14,47 +14,50 @@
 #include "motion.h"
 // #endif
 
-#define DATA_PIN 7
+#define DATA_PIN 8
 
 // Define the array of leds
 // buffer 0 and 1 are for mainaining the
-CRGB leds[3][NUM_LEDS];
+// CRGB leds[3][NUM_LEDS];
+CRGBArray<NUM_LEDS> leds[3];
 #define mixedBuffer 2
 
 Effect* effects[] = {
+	new Pile(),
 	new Noise(),
 	new Flash(CRGB::Red),
-	new Bounce(20, 220),
-	new Sparkles(80, 5, true),
-	new Pile(),
+	// new Bounce(2, 240),
+	// new Sparkles(200, 30, true),
 	// new Roller(CRGB::White, CRGB::White, 2),
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
-Button briUpButton = Button(PIN_UP);
-Button briDwButton = Button(PIN_DOWN);
-Button effectButton = Button(PIN_EFFECT);
+Button briUpButton    = Button(PIN_UP);
+Button briDwButton    = Button(PIN_DOWN);
+Button effectButton   = Button(PIN_EFFECT);
 Controller controller = Controller(leds[0], leds[1]);
-Palmixer palmixer = Palmixer((int)kNumPalettes,
-		palettes.palettes, palettes.nextPalette, palettes.currentPalette,
+Palmixer   palmixer   = Palmixer((int)kNumPalettes,
+		palettes.palettes,
+		palettes.nextPalette,
+		palettes.currentPalette,
 		palettes.finalPalette);
-Mixer mixer = Mixer(leds[0], leds[1], leds[2]);
+Mixer      mixer      = Mixer(leds[0], leds[1], leds[2]);
 
 // Global Brightness
-uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
-const byte brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
-uint8_t briLevel = 1;
-uint8_t currentEffect = 0;
+const uint8_t brightnessMap[] = { 16, 32, 64, 128, 255 };
+const byte    brightnessCount = (sizeof(brightnessMap) / sizeof(brightnessMap[0]));
+uint8_t       briLevel        = 1;
+uint8_t       currentEffect   = 0;
 
 // Timers
 // int timeTillPrint = 1000; // Print diagnostics once per second
 // Initial timers
-const int timeTilPrint = 10;
-const int timeTilAnimate = 10;
-const int timeTilRender = 16; // 60Hz rendering
+const int timeTilPrint       = 10;
+const int timeTilAnimate     = 10;
+const int timeTilRender      = 16; // 60Hz rendering
 const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
-const int timeTilPalChange = 10000000; // Let' stry 60hz for motion updates as well
+const int timeTilPalChange   = 10000000; // Let' stry 60hz for motion updates as well
 
 int timeLeftTillPrint = timeTilPrint;
 int timeLeftTilAnimate = timeTilAnimate;
@@ -90,7 +93,7 @@ void setup() {
 	FastLED.setDither(0);
 
 	// Limit to 2 amps to begin with
-  set_max_power_in_volts_and_milliamps(5, 2000);
+  set_max_power_in_volts_and_milliamps(5, 1000);
 
 	// InitMotion();
 	GenerateGlobalPalettes();
@@ -98,7 +101,7 @@ void setup() {
 	controller.Initialize();
 	if (USEMIXER) {
 		controller.SetBaseEffect(effects[0]);
-		controller.SetLayerEffect(effects[3]);
+		// controller.SetLayerEffect(effects[3]);
   } else {
 		controller.SetEffect(effects[currentEffect]);
 		controller.SetBuffer(leds[2]);
@@ -203,11 +206,23 @@ void NextEffect() {
 }
 
 void CheckEffect() {
-	int8_t button = effectButton.Read();
+	int8_t button = effectButton.ReadNew();
 	if (button == 1) {
 		if (DEBUG) Serial.println("button change pressed");
 		waitingForEffectToEnd = true;
 	}
+	if (button == 2) {
+		if (DEBUG) Serial.println("button up pressed");
+		if (DEBUG && briLevel < 4) Serial.println("Bri up");
+		if (briLevel < 4) briLevel += 1;
+	}
+	if (button == 3) {
+		if (DEBUG) Serial.println("button down pressed");
+		if (DEBUG && briLevel > 0) Serial.println("Bri down");
+		if (briLevel > 0) briLevel -= 1;
+	}
+	FastLED.setBrightness(brightnessMap[briLevel]);
+
 }
 
 void CheckBrightness() {

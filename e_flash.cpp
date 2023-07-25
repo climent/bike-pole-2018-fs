@@ -2,12 +2,12 @@
 
 void Flash::Initialize() {
   ledOn = false;
-  timeToFlash = 2000;
+  timeToFlash = 5000;
   lastFlash = millis();
   numberOfFlashes = 3;
   hue = 0;
   _totalFlashes = 0;
-  flashTime = 15;
+  flashTime = 40;
   lastShortFlash = millis();
   ended = true;
 }
@@ -31,12 +31,12 @@ void Flash::Blink() {
   now = millis();
   if (now - lastShortFlash > flashTime){
     if (!ledOn){
-      for (int i = 0; i < NUM_LEDS / 3; i++){
-        _leds = SetPixels(i);
+      for (int i = 0; i < NUM_LEDS ; i++){
+        // _leds = SetPixelsSingle(i);
         if (hasColor){
-          dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = _color;
+          dst[SetPixelsSingle(i)] = _color;
         } else {
-          dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CHSV(hue++, 255, 80);
+          dst[SetPixelsSingle(i)] = CHSV(hue++, 255, 80);
         }
       }
     } else {

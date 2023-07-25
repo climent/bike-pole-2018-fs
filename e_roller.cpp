@@ -6,7 +6,7 @@ void Roller::Reset() {
 
 void Roller::Initialize() {
 	// initRoller = 0;
-	height = NUM_LEDS / 3 - 1;
+	height = NUM_LEDS - 1;
 	now = millis();
 	lastMove = millis();
 	position = height;
@@ -33,11 +33,10 @@ void Roller::Animate() {
   if (ended) ended = false;
 	if (now - lastMove > _speed) {
 		// FadeAll(leds, _tail);
-		_leds = SetPixels(position);
-		dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CRGB::Red;
+		// _leds = SetPixels(position);
+		dst[SetPixelsSingle(position + 1)] = CRGB::Red;
 		if (position + 1 <= height) {
-			_leds = SetPixels(position + 1);
-			dst[_leds.o] = dst[_leds.p] = dst[_leds.q] = CRGB::Black;
+			dst[SetPixelsSingle(position + 1)] = CRGB::Black;
 		}
 		if (position == bottom)
 		{
