@@ -7,7 +7,6 @@
 class Button {
 public:
   Button(int pin);
-  bool Read();
   int ReadEvent();
 private:
   int _pin;

@@ -61,9 +61,6 @@ Effect* effects[] = {
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
 
-// Button briUpButton = Button(PIN_UP);
-// Button briDwButton = Button(PIN_DOWN);
-// Button effectButton = Button(PIN_EFFECT);
 Button eventButton = Button(PIN_EFFECT);
 Button onoffButton = Button(PIN_ON_OFF);
 
@@ -103,14 +100,13 @@ const long timeTilPalChange = 1000000;
 
 // Decide which one to use.
 const float transitionTimer = 0.2f;
-float timeForPaletteTransition = 0.2f;  // time 
+float timeForPaletteTransition = 0.2f;  // time
 
 long timeLeftTillPrint = timeTilPrint;
 long timeLeftTilAnimate = timeTilAnimate;
 long timeLeftTilOrientation = timeTilOrientation;
 long timeLeftTilRender = timeTilRender;
 long timeLeftTilPalChange = 0; // Force a palette change.
-
 
 unsigned long lastPrint = 0;
 unsigned long lastMillis = 0;
@@ -124,8 +120,7 @@ unsigned long currentMillis;
 int framesCount = 0;
 int renderCount = 0;
 
-// Global aggressive var. If set, changing effects does not wait 
-// for completion
+// Global aggressive var. If set, changing effects does not wait for completion
 bool aggressive = false;
 bool demoMode = false;
 bool outputSingleString = false;
@@ -208,8 +203,7 @@ void loop() {
   CheckButtonEvent();
 	CheckOnOff();
 
-	if (timeLeftTillPrint <= 0)
-	{
+	if (timeLeftTillPrint <= 0)	{
 		timeLeftTillPrint = timeTilPrint;
 		Printer();
 	}
@@ -219,7 +213,7 @@ void loop() {
 		renderCount++;
 		FastLED.show();
 	}
-	
+
 	EVERY_N_SECONDS(1) {
     hearbeat == true ? hearbeat = false : hearbeat = true;
   }
@@ -331,27 +325,6 @@ void CheckOnOff() {
 		}
 	}
 }
-// void CheckBrightness() {
-// 	if (briUpButton.Read()) {
-// 		if (DEBUG) Serial.println("  button up pressed");
-// 		if (DEBUG && briLevel < brightnessCount - 1)
-// 			Serial.print("> Bri up: ");
-// 		if (briLevel < brightnessCount - 1) {
-// 			briLevel += 1;
-// 			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
-// 		}
-// 	}
-// 	if (briDwButton.Read()) {
-// 		if (DEBUG) Serial.println("  button down pressed");
-// 		if (DEBUG && briLevel > 0)
-// 		  Serial.print("> Bri down: ");
-// 		if (briLevel > 0) {
-// 			briLevel -= 1;
-// 			if (DEBUG) Serial.printf("%d\n", brightnessMap[briLevel]);
-// 		}
-// 	}
-// 	FastLED.setBrightness(brightnessMap[briLevel]);
-// }
 
 void DebugPrint(String message) {
 	if (DEBUG) {

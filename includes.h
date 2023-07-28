@@ -34,7 +34,8 @@
 #define DATA_PIN 8    // test board, burning man box
 
 // How many leds in your strip?
-#define NUM_LEDS 166  // aluminum tube
+#define NUM_LEDS 200  // aluminum tube
+#define CONFIG_DATA_PIN 7
 
 // Button pins for up and down
 #define PIN_UP 9

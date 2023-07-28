@@ -208,8 +208,8 @@ public:
   void Initialize();
 private:
   bool _singleString;
-  int _fcolor;
-  int _bcolor;
+  CRGB _fcolor;
+  CRGB _bcolor;
   unsigned long _speed;
   uint16_t height;
   unsigned long now;
@@ -230,8 +230,8 @@ public:
   bool CheckEnd();
   void Initialize();
 private:
-  int _fcolor;
-  int _bcolor;
+  CRGB _fcolor;
+  CRGB _bcolor;
   int _speed;
   int height;
   int now;
