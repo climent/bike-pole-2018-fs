@@ -32,7 +32,6 @@ void Flash::Blink() {
   if (now - lastShortFlash > flashTime){
     if (!ledOn){
       for (int i = 0; i < NUM_LEDS ; i++){
-        // _leds = SetPixelsSingle(i);
         if (hasColor){
           dst[SetPixelsSingle(i)] = _color;
         } else {

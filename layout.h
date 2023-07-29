@@ -2,7 +2,7 @@
 #define LAYOUT_H
 
 // Returns the elevation of a single pixel in the string.
-float GetSinglePixelElevation(int elevation) {
+float GetSinglePixelElevation(uint16_t elevation) {
 	return elevation;
  	if (elevation < 100) return elevation;
 	if (elevation >= 100) return 200 - 1 - elevation;

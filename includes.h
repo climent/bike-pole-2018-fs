@@ -1,11 +1,8 @@
 // How many leds in your strip?
 #define NUM_LEDS 200
-// #define DATA_PIN 7
+// #define DATA_PIN 8
 
 // Button pins for up and down
-#define PIN_UP 9
-#define PIN_DOWN 11
-// #define PIN_EFFECT 17
 #define PIN_EFFECT 6
 
 #ifndef STRUCTS_H
@@ -14,20 +11,9 @@
 
 #define DEBUG 1
 #define MOTION 0
-#define USEMIXER 1
+#define USEMIXER 0
 #define MAX_DIMENSION 32
 
-// /*
-//          o
-//     ############### -     ->###############
-//          p           |   |
-//   - ###############<-     - ###############<-
-//  |       q                                   |
-//   ->############### ------->############### -
-// */
-// struct Leds {
-//   int o, p, q;
-// };
-// typedef struct Leds Leds;
+#define HEARTBEAT_PIN 13
 
 #endif

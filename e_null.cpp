@@ -1,16 +1,11 @@
 #include "effect.h"
 
-void Init() {
-}
-
-String Identify() {
+String Null::Identify() {
   return "null effect";
 }
 
-void Reset() {
-}
-
-void Animate() {
+void Null::Animate() {
+  fadeToBlackBy(dst, NUM_LEDS, 255);
 }
 
 // void Render() {

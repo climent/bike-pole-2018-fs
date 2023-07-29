@@ -3,9 +3,6 @@
 
 #include "palette_data.h"
 
-// #define kNumPalettes 64
-// int kNumPalettes = 64;
-
 enum PalChoice {
   kClouds = 0,
   kRainbow,
@@ -60,6 +57,7 @@ struct Palettes {
   CRGBPalette256 nextPalette[3];
   CRGBPalette256 currentPalette[3];
   CRGBPalette256 finalPalette[3];
+	int numPalettes;
 };
 typedef struct Palettes Palettes;
 
@@ -110,6 +108,8 @@ void GenerateGlobalPalettes() {
 	palettes.palettes[kIb63] = ib63_gp;
 	palettes.palettes[kMango] = mango_mystery_gp;
 	palettes.palettes[kSprinkles] = sprinkles_gp;
+
+  palettes.numPalettes = kNumPalettes;
 
 	// Make sure all palettes are initialized
 	// palettes.finalPalette[0] = palettes.palettes[kSchwarzwald];

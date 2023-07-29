@@ -12,7 +12,7 @@ void Pile::Initialize() {
 	position = height;
 	bottom = 0;
 	ended = false;
-	_speed = 2;
+	_speed = 5;
 	_fcolor = CRGB::Red;
 	_bcolor = CRGB::Black;
 }
@@ -62,6 +62,10 @@ void Pile::Animate(unsigned long mics) {
 			// position--;
 		}
 		lastMove = millis();
+		// if (DEBUG) Serial.print("lastmove: ");
+		// if (DEBUG) Serial.println(lastMove);
+		// if (DEBUG) Serial.print("position: ");
+		// if (DEBUG) Serial.println(position);
 	}
 }
 

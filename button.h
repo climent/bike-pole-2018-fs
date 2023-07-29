@@ -7,15 +7,9 @@
 class Button {
 public:
   Button(int pin);
-  int8_t Read();
-  int ReadNew();
+  int Read();
 private:
   int _pin;
-  int millisBtwnPushes;
-  int lastPush;
-  int lastState;
-  int state;
-  int now;
 
   // Button timing variables
   unsigned int debounce = 20; // ms debounce period to prevent flickering when pressing or releasing the button
