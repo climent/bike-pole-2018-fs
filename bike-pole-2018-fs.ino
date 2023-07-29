@@ -37,7 +37,7 @@ CRGBArray<NUM_LEDS> outputBuffer;
 
 Effect* null = new Null();
 Effect* noise = new Noise();
-Effect* flash =	new Flash(CRGB::Red);
+Effect* flash =  new Flash(CRGB::Red);
 Effect* bounce = new Bounce(2, 245);
 Effect* sparkles = new Sparkles(80, 5, true);
 Effect* pile = new Pile();
@@ -53,18 +53,18 @@ Effect* paltest = new PalTest();
 
 Effect* effects[] = {
   // paltest,
-	// null,
-	// test0,
+  // null,
+  // test0,
   // test1,
-	// test2,
-	plasma,
-	pile,
-	noise,
-	flash,
-	bounce,
-	sparkles,
-	// modchase,
-	twinkles,
+  // test2,
+  plasma,
+  pile,
+  noise,
+  flash,
+  bounce,
+  sparkles,
+  // modchase,
+  twinkles,
 };
 
 const byte numEffects = (sizeof(effects) / sizeof(effects[0]));
@@ -74,16 +74,16 @@ Button mainButton  = Button(PIN_EFFECT);
 
 // Controller controller = Controller(leds[0], leds[1]);
 Controller controller = Controller(
-		currentBuffers[0],
-		currentBuffers[1],
-		nextBuffers[0],
-		nextBuffers[1]);
+    currentBuffers[0],
+    currentBuffers[1],
+    nextBuffers[0],
+    nextBuffers[1]);
 
 Palmixer palmixer = Palmixer(
-		palettes.palettes,
-		palettes.nextPalette,
-		palettes.currentPalette,
-		palettes.finalPalette);
+    palettes.palettes,
+    palettes.nextPalette,
+    palettes.currentPalette,
+    palettes.finalPalette);
 
 // Mixer      mixer      = Mixer(leds[0], leds[1], leds[2]);
 Mixer mixer = Mixer(outputBuffer);
@@ -120,18 +120,18 @@ const int timeTilOrientation = 16; // Let' stry 60hz for motion updates as well
 const int timeTilPalChange   = 10000000; // Let' stry 60hz for motion updates as well
 
 // Decide which one to use.
-const float transitionTimer = 2.0f;
+const float transitionTimer    = 2.0f;
 float timeForPaletteTransition = 2.0f;  // time
 
-int timeLeftTillPrint = timeTilPrint;
-int timeLeftTilAnimate = timeTilAnimate;
-int timeLeftTilRender = timeTilRender;
+int timeLeftTillPrint      = timeTilPrint;
+int timeLeftTilAnimate     = timeTilAnimate;
+int timeLeftTilRender      = timeTilRender;
 int timeLeftTilOrientation = timeTilOrientation;
-int timeLeftTilPalChange = 0; // Force a palette change.
+int timeLeftTilPalChange   = 0; // Force a palette change.
 
-unsigned long lastPrint = 0;
-unsigned long lastMillis = 0;
-unsigned long lastMicros = 0;
+unsigned long lastPrint   = 0;
+unsigned long lastMillis  = 0;
+unsigned long lastMicros  = 0;
 unsigned long deltaMillis = 0;
 unsigned long deltaMicros = 0;
 unsigned long currentMicros;
@@ -148,266 +148,234 @@ bool waitingForEffectToEnd = false;
 bool outputSingleString = false;
 
 void setup() {
-	Serial.begin(115200);
-	delay(1000); // Let the serial monitor come up
-	Serial.print("Initializing... ");
-	Serial.println("");
+  Serial.begin(115200);
+  delay(1000); // Let the serial monitor come up
+  Serial.print("Initializing... ");
+  Serial.println("");
 
   // EEPROM.begin(512);
-	// Read EEPROM values
-	uint8_t briLevelTemp = ReadEEPROM(0);
-	if ((briLevelTemp >= limits[0][0]) || (briLevelTemp <= limits[0][1])) {
-		briLevel = briLevelTemp;
-	}
-	int currentEffectTemp = ReadEEPROM(1);
-	if ((currentEffectTemp >= limits[1][0]) || (currentEffect <= limits[1][1])) {
-		currentEffect = currentEffectTemp;
-	}
+  // Read EEPROM values
+  uint8_t briLevelTemp = ReadEEPROM(0);
+  if ((briLevelTemp >= limits[0][0]) || (briLevelTemp <= limits[0][1])) {
+    briLevel = briLevelTemp;
+  }
+  int currentEffectTemp = ReadEEPROM(1);
+  if ((currentEffectTemp >= limits[1][0]) || (currentEffect <= limits[1][1])) {
+    currentEffect = currentEffectTemp;
+  }
   nextEffect = currentEffect + 1;
-	if (nextEffect == numEffects) nextEffect = 0;
+  if (nextEffect == numEffects) nextEffect = 0;
 
-	int val = analogRead(0); // read random value;
+  int val = analogRead(0); // read random value;
   randomSeed(val);
 
   Serial.printf("Random seed is: %d\n", val);
-	Serial.printf("Number of Effects: %d\n", numEffects);
+  Serial.printf("Number of Effects: %d\n", numEffects);
 
-	FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
-		outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip).setTemperature(DirectSunlight);
-	FastLED.setDither(1);
+  FastLED.addLeds<WS2812B, DATA_PIN, GRB>(
+    outputBuffer, NUM_LEDS).setCorrection(TypicalLEDStrip).setTemperature(DirectSunlight);
+  FastLED.setDither(1);
 
-	FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
-	FastLED.clear();
-	FastLED.show();
+  FastLED.setMaxPowerInVoltsAndMilliamps(5, 500);
+  FastLED.clear();
+  FastLED.show();
 
-	// Limit to 2 amps to begin with
+  // Limit to 2 amps to begin with
   // set_max_power_in_volts_and_milliamps(5, 1000);
 
-	// InitMotion();
-	GenerateGlobalPalettes();
+  // InitMotion();
+  GenerateGlobalPalettes();
 
-	palmixer.Initialize();
-	palmixer.SetRandomPalettes(true);
-	palmixer.SetTimer(timeTilPalChange);
-	palmixer.SetTransitionTimer(transitionTimer);
-	palmixer.SetNumPalettes(palettes.numPalettes);
+  palmixer.Initialize();
+  palmixer.SetRandomPalettes(true);
+  palmixer.SetTimer(timeTilPalChange);
+  palmixer.SetTransitionTimer(transitionTimer);
+  palmixer.SetNumPalettes(palettes.numPalettes);
 
-	controller.Initialize();
+  controller.Initialize();
   controller.SetTimer(timeTilRender);
-	controller.SetPalette(palettes.finalPalette);
+  controller.SetPalette(palettes.finalPalette);
 
-	if (USEMIXER) {
-		// controller.SetBaseEffect(effects[currentEffect]);
-		// controller.SetLayerEffect(effects[3]);
-		controller.SetBaseEffect(effects[currentEffect]);
-		controller.SetLayerEffect(effects[nextEffect]);
-		controller.SetOutputBuffer(outputBuffer);
+  if (USEMIXER) {
+    // controller.SetBaseEffect(effects[currentEffect]);
+    // controller.SetLayerEffect(effects[3]);
+    controller.SetBaseEffect(effects[currentEffect]);
+    controller.SetLayerEffect(effects[nextEffect]);
+    controller.SetOutputBuffer(outputBuffer);
   } else {
-		controller.SetEffect(effects[currentEffect]);
-		// controller.SetBuffer(leds[2]);
-		controller.SetOutputBuffer(outputBuffer);
-	}
-	effects[currentEffect]->Initialize();
+    controller.SetEffect(effects[currentEffect]);
+    // controller.SetBuffer(leds[2]);
+    controller.SetOutputBuffer(outputBuffer);
+  }
+  effects[currentEffect]->Initialize();
 
-	pinMode(HEARTBEAT_PIN, OUTPUT);
-	Serial.println("Setup done...");
+  pinMode(HEARTBEAT_PIN, OUTPUT);
+  Serial.println("Setup done...");
 }
 
 bool hearbeat = true;
 
 void loop() {
-	// Serial.println("Looping...");
-	framesCount++;
+  // Serial.println("Looping...");
+  framesCount++;
 
   UpdateTimers();
 
-	palmixer.Animate(deltaMicros);
-	controller.Animate(deltaMicros);
+  palmixer.Animate(deltaMicros);
+  controller.Animate(deltaMicros);
 
   // Right now all the motion code is not working correctly.
-	// UpdateMotion(micros());
-	// getOrientation(&roll,&pitch,&heading,&x,&y,&z);
-	// CheckBumps();
+  // UpdateMotion(micros());
+  // getOrientation(&roll,&pitch,&heading,&x,&y,&z);
+  // CheckBumps();
 
-	CheckButtons();
-	// CheckOnOff();
+  CheckButtons();
+  // CheckOnOff();
 
-	if (timeLeftTillPrint <= 0)
-	{
-		timeLeftTillPrint = timeTilPrint;
-	}
+  if (timeLeftTillPrint <= 0) {
+    timeLeftTillPrint = timeTilPrint;
+  }
 
-	// Render all active buffers and mixdown, then show with power limits applied
-	// if (timeLeftTilRender <= 0)	{
-	// 	renderCount++;
-	// 	timeLeftTilRender = timeTilRender;
-	// 	controller.Render(palettes.finalPalette);
-	// 	mixer.Mix();
-	// 	FastLED.show();
-  // }
+  // Render all active buffers and mixdown
+  if (controller.Render(deltaMillis)) {
+    renderCount++;
+    FastLED.show();
+  }
 
-	// Render all active buffers and mixdown
-	if (controller.Render(deltaMillis)) {
-		renderCount++;
-		FastLED.show();
-	}
-
-	EVERY_N_SECONDS(1) {
+  EVERY_N_SECONDS(1) {
     hearbeat == true ? hearbeat = false : hearbeat = true;
   }
   hearbeat == true ? digitalWrite(HEARTBEAT_PIN, HIGH) : digitalWrite(HEARTBEAT_PIN, LOW);
 }
 
 void UpdateTimers() {
-	currentMicros = micros();
-	currentMillis = millis();
+  currentMicros = micros();
+  currentMillis = millis();
 
   deltaMicros = currentMicros - lastMicros;
   lastMicros = currentMicros;
 
-	// EVERY_N_MILLISECONDS(5) {
-		// if (controller.IsTransitionActive()){
-	if ((DEBUG) && (lastMillis > currentMillis)) {
-		Serial.print("deltaMillis: ");
-		Serial.print(deltaMillis);
-		Serial.print(" currentMillis: ");
-		Serial.print(currentMillis);
-		Serial.print(" lastMillis: ");
-		Serial.println(lastMillis);
-	}
-		// }
-	// }
+  // EVERY_N_MILLISECONDS(5) {
+    // if (controller.IsTransitionActive()){
+  if ((DEBUG) && (lastMillis > currentMillis)) {
+    Serial.print("deltaMillis: ");
+    Serial.print(deltaMillis);
+    Serial.print(" currentMillis: ");
+    Serial.print(currentMillis);
+    Serial.print(" lastMillis: ");
+    Serial.println(lastMillis);
+  }
+    // }
+  // }
 
   deltaMillis = currentMillis - lastMillis;
   lastMillis = currentMillis;
 
-	if ((DEBUG) && (deltaMillis > currentMillis)) {
-		Serial.print("deltaMillis: ");
-		Serial.print(deltaMillis);
-		Serial.print(" currentMillis: ");
-		Serial.print(currentMillis);
-		Serial.print(" lastMillis: ");
-		Serial.println(lastMillis);
-	}
+  if ((DEBUG) && (deltaMillis > currentMillis)) {
+    Serial.print("deltaMillis: ");
+    Serial.print(deltaMillis);
+    Serial.print(" currentMillis: ");
+    Serial.print(currentMillis);
+    Serial.print(" lastMillis: ");
+    Serial.println(lastMillis);
+  }
 
   // Decrement our timers
   timeLeftTillPrint -= deltaMillis;
   timeLeftTilRender -= deltaMillis;
-	timeLeftTilAnimate -= deltaMillis;
+  timeLeftTilAnimate -= deltaMillis;
   timeLeftTilOrientation -= deltaMillis;
 }
 
-// move this code to palmixer.UpdatePalette() or palmixer.Animate()
-// void UpdatePalette() {
-// 	// Periodically change the palette
-// 	timeLeftTilPalChange -= deltaMicros;
-// 	if (timeLeftTilPalChange <= 0)
-// 	{
-// 		// For now change all palettes
-// 		// if (DEBUG) Serial.printf("Changing palettes...\n");
-// 		int newpal = random(0, kNumPalettes);
-// 		// one second fade to next palette
-// 		palmixer.SetNewPalette(0, newpal, 4.0f);
-// 		newpal = random(0, kNumPalettes);
-// 		// one second fade to next palette
-// 		palmixer.SetNewPalette(1, newpal, 4.0f);
-// 		newpal = random(0, kNumPalettes);
-// 		// one second fade to next palette
-// 		palmixer.SetNewPalette(2, newpal, 4.0f);
-
-// 		timeLeftTilPalChange = timeTilPalChange;
-// 	}
-// }
-
 void NextEffect() {
-	waitingForEffectToEnd = false;
-	currentEffect += 1;
-	if (currentEffect == numEffects) currentEffect = 0;
-	if (USEMIXER) {
-		controller.InitiateTransition(effects[currentEffect], aggressive);
-	} else {
-		controller.SetEffect(effects[currentEffect]);
-		FastLED.clear();
- 		FastLED.show();
-	}
+  waitingForEffectToEnd = false;
+  currentEffect += 1;
+  if (currentEffect == numEffects) currentEffect = 0;
+  if (USEMIXER) {
+    controller.InitiateTransition(effects[currentEffect], aggressive);
+  } else {
+    controller.SetEffect(effects[currentEffect]);
+    FastLED.clear();
+     FastLED.show();
+  }
 
-	if (DEBUG) {
-		if (aggressive) {
-		  Serial.print(F("Changing effect to index "));
-		  Serial.print(currentEffect);
-		  Serial.print(", ");
-		  Serial.println(effects[currentEffect]->Identify());
-		} else {
-			Serial.print("> Changing effects to: ");
-			Serial.print("[");
-			Serial.print(controller.GetNextBaseEffect());
-			Serial.print("] [");
-			Serial.print(controller.GetNextLayerEffect());
-			Serial.println("]");
-			Serial.print("deltaMillis: ");
-			Serial.print(deltaMillis);
-			Serial.print(" currentMillis: ");
-			Serial.print(currentMillis);
-			Serial.print(" lastMillis: ");
-			Serial.println(lastMillis);
-		}
-	}
+  if (DEBUG) {
+    if (aggressive) {
+      Serial.print(F("Changing effect to index "));
+      Serial.print(currentEffect);
+      Serial.print(", ");
+      Serial.println(effects[currentEffect]->Identify());
+    } else {
+      Serial.print("> Changing effects to: ");
+      Serial.print("[");
+      Serial.print(controller.GetNextBaseEffect());
+      Serial.print("] [");
+      Serial.print(controller.GetNextLayerEffect());
+      Serial.println("]");
+      Serial.print("deltaMillis: ");
+      Serial.print(deltaMillis);
+      Serial.print(" currentMillis: ");
+      Serial.print(currentMillis);
+      Serial.print(" lastMillis: ");
+      Serial.println(lastMillis);
+    }
+  }
 
-	controller.Reset();
+  controller.Reset();
 
-	WriteEEPROM(1, currentEffect);
+  WriteEEPROM(1, currentEffect);
 }
 
 void CheckButtons() {
-	int8_t button = mainButton.Read();
-	if (button != 0) eepromOutdated = true;
-	if (button == 1) {
-		if (DEBUG) Serial.println("CheckButtons(): Change effect");
-		NextEffect();
-		// waitingForEffectToEnd = true;
-	}
-	if (button == 2) {
-		// if (DEBUG) Serial.println("button up pressed");
-		if (DEBUG && briLevel < 4) Serial.println("CheckButtons(): Brightness up");
-		if (briLevel < limits[0][1]) briLevel += 1;
-	}
-	if (button == 3) {
-		// if (DEBUG) Serial.println("button down pressed");
-		if (DEBUG && briLevel > 0) Serial.println("CheckButtons(): Brightness down");
-		if (briLevel > limits[0][0]) briLevel -= 1;
-	}
-	if ((button == 2) || (button == 3)) {
-		WriteEEPROM(0, briLevel);
-	}
-	FastLED.setBrightness(brightnessMap[briLevel]);
+  int8_t button = mainButton.Read();
+  if (button != 0) eepromOutdated = true;
+  if (button == 1) {
+    if (DEBUG) Serial.println("CheckButtons(): Change effect");
+    NextEffect();
+    // waitingForEffectToEnd = true;
+  }
+  if (button == 2) {
+    // if (DEBUG) Serial.println("button up pressed");
+    if (DEBUG && briLevel < 4) Serial.println("CheckButtons(): Brightness up");
+    if (briLevel < limits[0][1]) briLevel += 1;
+  }
+  if (button == 3) {
+    // if (DEBUG) Serial.println("button down pressed");
+    if (DEBUG && briLevel > 0) Serial.println("CheckButtons(): Brightness down");
+    if (briLevel > limits[0][0]) briLevel -= 1;
+  }
+  if ((button == 2) || (button == 3)) {
+    WriteEEPROM(0, briLevel);
+  }
+  FastLED.setBrightness(brightnessMap[briLevel]);
 }
 
 void DebugPrint(String message) {
-	if (DEBUG) {
-		Serial.println(message);
-	}
+  if (DEBUG) {
+    Serial.println(message);
+  }
 }
 
 // void Printer() {
-// 	if (DEBUG) {
-// 		Serial.print("Orientation (h, p, r): ");
-// 	  Serial.print(heading);
-// 	  Serial.print(" ");
-// 	  Serial.print(pitch);
-// 	  Serial.print(" ");
-//   	Serial.println(roll);
+//   if (DEBUG) {
+//     Serial.print("Orientation (h, p, r): ");
+//     Serial.print(heading);
+//     Serial.print(" ");
+//     Serial.print(pitch);
+//     Serial.print(" ");
+//     Serial.println(roll);
 //  }
 // }
 
 // void CheckBumps() {
-// 	if (gotBumped) {
-// 		waitingForEffectToEnd = true;
-// 		gotBumped = false;
-// 		maxAx = 0.0;
-// 		maxAy = 0.0;
-// 		maxAz = 0.0;
-// 		minAx = 0.0;
-// 		minAy = 0.0;
-// 		minAz = 0.0;
-// 	}
+//   if (gotBumped) {
+//     waitingForEffectToEnd = true;
+//     gotBumped = false;
+//     maxAx = 0.0;
+//     maxAy = 0.0;
+//     maxAz = 0.0;
+//     minAx = 0.0;
+//     minAy = 0.0;
+//     minAz = 0.0;
+//   }
 // }
